@@ -1,0 +1,57 @@
+{
+  "apiCalls": [
+    {
+      "id": "call_1766903209306_9feq0rsu8",
+      "customerId": "demo_customer",
+      "apiKey": "vmize_pk_demo_test_1234567890",
+      "endpoint": "/api/tryon",
+      "method": "POST",
+      "status": "error",
+      "duration": 1618,
+      "timestamp": "2025-12-28T06:26:49.306Z",
+      "error": "Fashn API error"
+    },
+    {
+      "id": "call_1766903324502_5p4btim4w",
+      "customerId": "demo_customer",
+      "apiKey": "vmize_pk_demo_test_1234567890",
+      "endpoint": "/api/tryon",
+      "method": "POST",
+      "status": "error",
+      "duration": 1023,
+      "timestamp": "2025-12-28T06:28:44.502Z",
+      "error": "Fashn API error"
+    }
+  ],
+  "customers": {
+    "demo_customer": {
+      "totalCalls": 2,
+      "successfulCalls": 0,
+      "failedCalls": 2,
+      "totalDuration": 2641,
+      "firstSeen": "2025-12-28T06:26:49.306Z",
+      "lastSeen": "2025-12-28T06:28:44.502Z",
+      "revenue": 0
+    }
+  },
+  "dailyStats": {
+    "2025-12-28": {
+      "totalCalls": 2,
+      "successfulCalls": 0,
+      "failedCalls": 2,
+      "uniqueCustomers": {},
+      "revenue": 0
+    }
+  },
+  "eventCounts": {
+    "tryon_initiated": 2,
+    "photo_uploaded": 2,
+    "result_generated": 0,
+    "result_viewed": 0,
+    "add_to_cart": 0,
+    "purchase": 0,
+    "api_error": 2
+  },
+  "revenue": 0,
+  "startDate": "2025-12-28T06:05:04.905Z"
+}

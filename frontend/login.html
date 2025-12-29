@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vmize Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-purple-hover: #5a3dd5;
+            --vmize-blue: #4CC9F0;
+            --vmize-red: #dc3545;
+            --vmize-green: #28a745;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .auth-subtitle {
+            font-size: 15px;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--vmize-purple);
+            box-shadow: 0 0 0 4px rgba(107, 76, 230, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--vmize-red);
+        }
+
+        .error-message {
+            color: var(--vmize-red);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 76, 230, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--vmize-purple);
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-auth a {
+            color: var(--vmize-purple);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .toggle-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid var(--vmize-green);
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: var(--vmize-green);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <div class="logo-icon">V</div>
+            <div class="logo-text">Vmize Studio</div>
+        </div>
+
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to access your dashboard</p>
+
+        <div id="loginError" class="error-message"></div>
+        <div id="loginSuccess" class="success-message"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" class="form-input" required autocomplete="email" placeholder="you@example.com">
+                <div class="error-message" id="loginEmailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" class="form-input" required autocomplete="current-password" placeholder="Enter your password">
+                <div class="error-message" id="loginPasswordError"></div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+
+        <div class="toggle-auth">
+            Don't have an account? <a href="register.html">Create account</a>
+        </div>
+    </div>
+
+    <script>
+        // Form Validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Login Form
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Clear previous errors
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginEmailError').classList.remove('show');
+            document.getElementById('loginPasswordError').classList.remove('show');
+
+            // Validate
+            let hasError = false;
+
+            if (!validateEmail(email)) {
+                document.getElementById('loginEmailError').textContent = 'Please enter a valid email';
+                document.getElementById('loginEmailError').classList.add('show');
+                document.getElementById('loginEmail').classList.add('error');
+                hasError = true;
+            }
+
+            if (!password) {
+                document.getElementById('loginPasswordError').textContent = 'Password is required';
+                document.getElementById('loginPasswordError').classList.add('show');
+                document.getElementById('loginPassword').classList.add('error');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Show loading
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
+            submitBtn.classList.add('loading');
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            try {
+                // For demo: accept any login
+                localStorage.setItem('vmize_user', JSON.stringify({ 
+                    email, 
+                    name: email.split('@')[0],
+                    loginTime: new Date().toISOString()
+                }));
+                
+                if (rememberMe) {
+                    localStorage.setItem('vmize_remember', 'true');
+                }
+                
+                document.getElementById('loginSuccess').textContent = 'Login successful! Redirecting...';
+                document.getElementById('loginSuccess').classList.add('show');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard-complete.html';
+                }, 1000);
+                
+            } catch (error) {
+                document.getElementById('loginError').textContent = error.message || 'Login failed. Please try again.';
+                document.getElementById('loginError').classList.add('show');
+                submitBtn.textContent = originalText;
+                submitBtn.classList.remove('loading');
+            }
+        });
+
+        // Clear errors on input
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                const errorId = this.id + 'Error';
+                const errorEl = document.getElementById(errorId);
+                if (errorEl) {
+                    errorEl.classList.remove('show');
+                }
+            });
+        });
+
+        // Check if already logged in
+        if (localStorage.getItem('vmize_user')) {
+            window.location.href = 'dashboard-complete.html';
+        }
+    </script>
+</body>
+</html>

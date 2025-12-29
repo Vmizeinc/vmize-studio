@@ -1,0 +1,5 @@
+# Netlify Redirects Configuration for Vmize Studio
+# This ensures all routes work properly
+
+# Redirect all paths to index.html for client-side routing
+/*    /index.html   200

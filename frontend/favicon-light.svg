@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="V icon">
+  <defs>
+    <linearGradient id="vmizeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4FC3F7"/>
+      <stop offset="100%" stop-color="#7B1FA2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left V -->
+  <path d="M14 10 L28 52 L34 52 L20 10 Z" fill="url(#vmizeGradient)"/>
+
+  <!-- Right V -->
+  <path d="M44 10 L30 52 L36 52 L50 10 Z" fill="url(#vmizeGradient)"/>
+
+  <!-- Diagonal cut (light = white) -->
+  <rect x="30" y="6" width="3" height="52" transform="rotate(15 32 32)" fill="#ffffff"/>
+</svg>

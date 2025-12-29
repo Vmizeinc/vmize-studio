@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vmize Studio - AI-Powered Virtual Try-On for E-commerce</title>
+    <link rel="icon" href="favicon.svg">
+    <link rel="icon" href="favicon-light.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="favicon-dark.svg" media="(prefers-color-scheme: dark)">
+        <script src="/config.js"></script>
+        <script>
+            const BACKEND_URL = window.VMIZE_CONFIG.BACKEND_URL;
+            const DEMO_API_KEY = window.VMIZE_CONFIG.API_KEY;
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-purple-hover: #5a3dd5;
+            --vmize-blue: #4CC9F0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 1000;
+            padding: 16px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 76, 230, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--vmize-purple);
+            color: var(--vmize-purple);
+        }
+
+        .btn-secondary:hover {
+            background: var(--vmize-purple);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 100px 24px;
+            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: flex;
+            gap: 48px;
+            justify-content: center;
+            margin-top: 48px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Section Styles */
+        .section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 24px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 64px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Try-On Demo Section */
+        .tryon-demo {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .tryon-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .upload-zone {
+            border: 3px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--vmize-purple);
+            background: #f5f3ff;
+        }
+
+        .upload-zone.active {
+            border-color: var(--vmize-purple);
+            background: linear-gradient(135deg, rgba(107, 76, 230, 0.05), rgba(76, 201, 240, 0.05));
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .preview-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 16px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .tryon-count {
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .tryon-count strong {
+            color: var(--vmize-purple);
+            font-size: 18px;
+        }
+
+        .email-form {
+            display: none;
+            background: linear-gradient(135deg, rgba(107, 76, 230, 0.1), rgba(76, 201, 240, 0.1));
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .email-form.show {
+            display: block;
+        }
+
+        .email-input {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .email-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .email-input input:focus {
+            outline: none;
+            border-color: var(--vmize-purple);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 32px;
+            border-radius: 12px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--vmize-purple);
+            box-shadow: 0 10px 30px rgba(107, 76, 230, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Integration Showcase */
+        .integration-showcase {
+            background: #1a1a1a;
+            color: white;
+            border-radius: 16px;
+            padding: 48px;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .platform-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .platform-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--vmize-purple);
+        }
+
+        .platform-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .platform-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .platform-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .code-example {
+            background: #0d1117;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+            overflow-x: auto;
+        }
+
+        .code-example pre {
+            color: #58a6ff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .code-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .copy-code-btn {
+            background: var(--vmize-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--vmize-purple);
+            background: linear-gradient(135deg, rgba(107, 76, 230, 0.05), rgba(76, 201, 240, 0.05));
+            transform: scale(1.05);
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .plan-period {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .plan-features li:before {
+            content: "✓";
+            color: var(--vmize-purple);
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 60px 24px 24px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 16px;
+        }
+
+        .footer-section a {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Loading & Success States */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--vmize-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .tryon-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid,
+            .pricing-grid,
+            .platforms-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+                <div class="nav-container">
+                        <a href="index.html" class="logo" style="gap: 12px; align-items: center; display: flex;">
+                                <span style="display: flex; align-items: center;">
+                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="40" height="40" rx="10" fill="url(#paint0_linear_1_2)"/>
+                                        <path d="M12 28L20 12L28 28H25.5L20 17.5L14.5 28H12Z" fill="white"/>
+                                        <defs>
+                                            <linearGradient id="paint0_linear_1_2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#6B4CE6"/>
+                                                <stop offset="1" stop-color="#4CC9F0"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                </span>
+                                <span class="logo-text">Vmize Studio</span>
+                        </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#demo">Try Demo</a>
+                <a href="#pricing">Pricing</a>
+                <a href="integration.html">Integration</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="login.html">Login</a>
+                <a href="register.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>AI-Powered Virtual Try-On<br>for E-commerce</h1>
+        <p>Let your customers see how products look on them before they buy. Seamless integration with Shopify, WooCommerce, and custom sites.</p>
+        <div class="hero-cta">
+            <a href="register.html" class="btn btn-primary">Start Free Trial</a>
+            <a href="#demo" class="btn btn-secondary">Try Demo Now</a>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">5 min</div>
+                <div class="stat-label">Setup Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">$29</div>
+                <div class="stat-label">Starting Price</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Platforms Supported</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <h2 class="section-title">Why Choose Vmize Studio?</h2>
+        <p class="section-subtitle">Everything you need to bring virtual try-on to your store</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>AI-Powered Try-On</h3>
+                <p>State-of-the-art AI generates realistic virtual try-ons in seconds using Fashn.AI technology</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>5-Minute Setup</h3>
+                <p>Copy-paste integration. Works with Shopify, WooCommerce, and custom sites</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Real-Time Analytics</h3>
+                <p>Track usage, engagement, and performance in your dashboard</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy First</h3>
+                <p>Customer photos deleted after 72 hours. GDPR & CCPA compliant</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Optimized</h3>
+                <p>Works perfectly on any device - desktop, tablet, or mobile</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Pay As You Grow</h3>
+                <p>Flexible pricing starting at $29/month. No hidden fees</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Try-On Demo Section -->
+    <section class="section" id="demo">
+        <h2 class="section-title">Try It Yourself</h2>
+        <p class="section-subtitle">Upload a model photo and a garment to see virtual try-on in action</p>
+        
+        <div class="tryon-demo">
+            <div class="tryon-count">
+                You have <strong id="triesRemaining">1</strong> free try remaining. 
+                <span id="emailPrompt">Provide your email to get 5 more tries!</span>
+            </div>
+
+            <div class="email-form" id="emailForm">
+                <h3 style="margin-bottom: 8px;">Get 5 More Free Tries</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">Enter your email to unlock 5 additional virtual try-ons</p>
+                <div class="email-input">
+                    <input type="email" id="userEmail" placeholder="you@example.com" required>
+                    <button class="btn btn-primary" onclick="submitEmail()">Get 5 More Tries</button>
+                </div>
+            </div>
+
+            <div class="tryon-grid">
+                <div>
+                    <div class="upload-zone" id="modelUpload" onclick="document.getElementById('modelFile').click()">
+                        <div class="upload-icon">👤</div>
+                        <div class="upload-text">Upload Model Photo</div>
+                        <div class="upload-hint">Person wearing clothes</div>
+                    </div>
+                    <input type="file" id="modelFile" accept="image/*" onchange="handleModelUpload(event)">
+                    <div id="modelPreview"></div>
+                </div>
+
+                <div>
+                    <div class="upload-zone" id="garmentUpload" onclick="document.getElementById('garmentFile').click()">
+                        <div class="upload-icon">👕</div>
+                        <div class="upload-text">Upload Garment</div>
+                        <div class="upload-hint">Clothing item only</div>
+                    </div>
+                    <input type="file" id="garmentFile" accept="image/*" onchange="handleGarmentUpload(event)">
+                    <div id="garmentPreview"></div>
+                </div>
+
+                <div>
+                    <div class="upload-zone" id="resultZone" style="min-height: 200px;">
+                        <div class="upload-icon">✨</div>
+                        <div class="upload-text">Result</div>
+                        <div class="upload-hint">Virtual try-on result will appear here</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Generating virtual try-on...</p>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+                <img id="resultImage" class="preview-image" alt="Try-on result">
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 24px;" onclick="generateTryOn()" id="generateBtn">
+                Generate Virtual Try-On
+            </button>
+
+            <p style="text-align: center; margin-top: 16px; color: var(--text-secondary); font-size: 14px;">
+                ⚠️ Demo uses sample API. <a href="register.html" style="color: var(--vmize-purple);">Sign up</a> to get your own API key.
+            </p>
+        </div>
+    </section>
+
+    <!-- Integration Showcase -->
+    <section class="section">
+        <div class="integration-showcase">
+            <h2 style="text-align: center; font-size: 42px; margin-bottom: 16px;">Works With Your Platform</h2>
+            <p style="text-align: center; color: rgba(255, 255, 255, 0.7); margin-bottom: 48px;">
+                Seamless integration with all major e-commerce platforms
+            </p>
+
+            <div class="platforms-grid">
+                <div class="platform-card">
+                    <div class="platform-icon">🛍️</div>
+                    <h3>Shopify</h3>
+                    <p>One-click app installation</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">📝</div>
+                    <h3>WordPress</h3>
+                    <p>Easy plugin integration</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">🛒</div>
+                    <h3>WooCommerce</h3>
+                    <p>WordPress e-commerce plugin</p>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">⚙️</div>
+                    <h3>Custom Sites</h3>
+                    <p>Simple JavaScript widget</p>
+                </div>
+            </div>
+
+            <div class="code-example">
+                <div class="code-header">
+                    <span class="code-label">Add to any product page:</span>
+                    <button class="copy-code-btn" onclick="copyCode()">Copy Code</button>
+                </div>
+                <pre id="codeSnippet">&lt;!-- Vmize Virtual Try-On Widget --&gt;
+&lt;script src="https://cdn.vmizestudio.com/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  VmizeWidget.init({
+    apiKey: 'vmize_pk_live_YOUR_KEY_HERE',
+    productId: 'SKU-12345',
+    buttonText: 'Try It On',
+    position: 'add-to-cart'
+  });
+&lt;/script&gt;</pre>
+            </div>
+
+            <div style="text-align: center; margin-top: 32px;">
+                <a href="integration.html" class="btn btn-primary">View Full Integration Guide →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" id="pricing">
+        <h2 class="section-title">Simple, Transparent Pricing</h2>
+        <p class="section-subtitle">Start free, scale as you grow. No hidden fees.</p>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">$29</div>
+                <div class="plan-period">per month</div>
+                <ul class="plan-features">
+                    <li>100 try-ons/month</li>
+                    <li>Basic analytics</li>
+                    <li>Email support</li>
+                    <li>All integrations</li>
+                    <li>$0.25 per extra try-on</li>
+                </ul>
+                <a href="register.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+            </div>
+
+            <div class="pricing-card featured">
+                <div class="plan-name">Professional</div>
+                <div class="plan-price">$79</div>
+                <div class="plan-period">per month</div>
+                <ul class="plan-features">
+                    <li>500 try-ons/month</li>
+                    <li>Advanced analytics</li>
+                    <li>Priority support</li>
+                    <li>All integrations</li>
+                    <li>$0.20 per extra try-on</li>
+                </ul>
+                <a href="register.html" class="btn btn-primary" style="width: 100%;">Get Started</a>
+            </div>
+
+            <div class="pricing-card">
+                <div class="plan-name">Business</div>
+                <div class="plan-price">$199</div>
+                <div class="plan-period">per month</div>
+                <ul class="plan-features">
+                    <li>2,000 try-ons/month</li>
+                    <li>Enterprise analytics</li>
+                    <li>24/7 phone support</li>
+                    <li>Custom integration</li>
+                    <li>$0.15 per extra try-on</li>
+                </ul>
+                <a href="register.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#demo">Try Demo</a>
+                <a href="#pricing">Pricing</a>
+                <a href="integration.html">Integration</a>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <a href="about.html">About</a>
+                <a href="terms.html">Terms</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="/cdn-cgi/l/email-protection#74171b1a0015170001073402191d0e115a171b19">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="integration.html">Documentation</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <a href="/cdn-cgi/l/email-protection#5e3d31302a3f3d2a2b2d1e283337243b703d3133"><span class="__cf_email__" data-cfemail="bfdcd0d1cbdedccbcaccffc9d2d6c5da91dcd0d2">[email&#160;protected]</span></a>
+                <a href="#">San Jose, California</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Vmize Studio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Demo state
+        let triesRemaining = 1;
+        let modelImage = null;
+        let garmentImage = null;
+        let emailSubmitted = false;
+
+        // Check for existing email in localStorage
+        if (localStorage.getItem('vmize_demo_email')) {
+            emailSubmitted = true;
+            triesRemaining = parseInt(localStorage.getItem('vmize_demo_tries') || 5);
+            document.getElementById('emailPrompt').style.display = 'none';
+        }
+
+        // Update tries display
+        function updateTriesDisplay() {
+            document.getElementById('triesRemaining').textContent = triesRemaining;
+            
+            if (triesRemaining === 0 && !emailSubmitted) {
+                document.getElementById('emailForm').classList.add('show');
+                document.getElementById('generateBtn').disabled = true;
+                document.getElementById('generateBtn').textContent = 'Submit Email for More Tries';
+            }
+        }
+
+        // Submit email
+        function submitEmail() {
+            const email = document.getElementById('userEmail').value.trim();
+            
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            localStorage.setItem('vmize_demo_email', email);
+            localStorage.setItem('vmize_demo_tries', '5');
+            triesRemaining = 5;
+            emailSubmitted = true;
+
+            document.getElementById('emailForm').classList.remove('show');
+            document.getElementById('emailPrompt').textContent = 'Thanks! You now have 5 tries.';
+            document.getElementById('generateBtn').disabled = false;
+            document.getElementById('generateBtn').textContent = 'Generate Virtual Try-On';
+            updateTriesDisplay();
+
+            // In production, send email to your backend
+            console.log('Email submitted:', email);
+        }
+
+        // Handle model upload
+        function handleModelUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    modelImage = e.target.result;
+                    document.getElementById('modelUpload').classList.add('active');
+                    const modelPrev = document.getElementById('modelPreview');
+                    modelPrev.innerHTML = '';
+                    const modelImg = document.createElement('img');
+                    modelImg.src = e.target.result;
+                    modelImg.className = 'preview-image';
+                    modelImg.alt = 'Model';
+                    modelPrev.appendChild(modelImg);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle garment upload
+        function handleGarmentUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    garmentImage = e.target.result;
+                    document.getElementById('garmentUpload').classList.add('active');
+                    const garmentPrev = document.getElementById('garmentPreview');
+                    garmentPrev.innerHTML = '';
+                    const garmentImg = document.createElement('img');
+                    garmentImg.src = e.target.result;
+                    garmentImg.className = 'preview-image';
+                    garmentImg.alt = 'Garment';
+                    garmentPrev.appendChild(garmentImg);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Generate try-on
+        async function generateTryOn() {
+            if (!modelImage || !garmentImage) {
+                alert('Please upload both model and garment images');
+                return;
+            }
+
+            if (triesRemaining === 0 && !emailSubmitted) {
+                document.getElementById('emailForm').classList.add('show');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('resultContainer').classList.remove('show');
+
+            try {
+                // Simulate API call (replace with actual Fashn.AI API call in production)
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                // Demo: just show the model image as result
+                // In production, this would be the actual AI-generated result
+                document.getElementById('resultImage').src = modelImage;
+                document.getElementById('resultContainer').classList.add('show');
+                const resultZone = document.getElementById('resultZone');
+                resultZone.innerHTML = '';
+                const resImg = document.createElement('img');
+                resImg.src = modelImage;
+                resImg.className = 'preview-image';
+                resImg.alt = 'Result';
+                resImg.style.margin = '0';
+                resultZone.appendChild(resImg);
+
+                // Decrease tries
+                triesRemaining--;
+                localStorage.setItem('vmize_demo_tries', triesRemaining.toString());
+                updateTriesDisplay();
+
+                // Show email form if out of tries
+                if (triesRemaining === 0 && !emailSubmitted) {
+                    setTimeout(() => {
+                        document.getElementById('emailForm').classList.add('show');
+                    }, 1000);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate try-on. Please try again.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+
+        // Copy code snippet
+        function copyCode() {
+            const code = document.getElementById('codeSnippet').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy Code';
+                }, 2000);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = documen

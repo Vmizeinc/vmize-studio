@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Customizer - Vmize Studio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --google-green: #1e8e3e;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px 32px;
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 45px;
+        }
+
+        .smart-back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .smart-back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 42px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .page-title p {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        /* Layout */
+        .customizer-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Sidebar Controls */
+        .controls-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .control-section {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .control-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--vmize-purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group {
+            margin-bottom: 16px;
+        }
+
+        .control-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .control-hint {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        input[type="text"],
+        input[type="color"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--vmize-purple);
+            box-shadow: 0 0 0 3px rgba(107, 76, 230, 0.1);
+        }
+
+        input[type="color"] {
+            height: 45px;
+            cursor: pointer;
+        }
+
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .radio-option {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .radio-option:hover {
+            border-color: var(--vmize-purple);
+            background: rgba(107, 76, 230, 0.05);
+        }
+
+        .radio-option.active {
+            border-color: var(--vmize-purple);
+            background: var(--vmize-purple);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Live Product Preview */
+        .live-preview-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 32px;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .preview-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--vmize-purple);
+            margin-bottom: 8px;
+        }
+
+        .preview-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Product Page Mock */
+        .product-page {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 40px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Product Image */
+        .product-image-section {
+            position: relative;
+        }
+
+        .product-main-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .product-main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .best-seller-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: black;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Product Info */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stars {
+            color: #ffa500;
+            font-size: 16px;
+        }
+
+        .review-count {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .price-section {
+            margin-bottom: 24px;
+        }
+
+        .current-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #c41e3a;
+        }
+
+        .discount {
+            color: #c41e3a;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 18px;
+            margin-left: 8px;
+        }
+
+        /* Color/Size */
+        .selection {
+            margin-bottom: 24px;
+        }
+
+        .selection-label {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .color-swatches {
+            display: flex;
+            gap: 12px;
+        }
+
+        .color-swatch {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            cursor: pointer;
+        }
+
+        .size-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .size-btn {
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .size-btn:hover {
+            border-color: #333;
+        }
+
+        /* Action Buttons - Updates dynamically */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-add-bag {
+            padding: 16px;
+            background: #c41e3a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add-bag:hover {
+            background: #a01729;
+        }
+
+        /* Vmize Button - UPDATES WITH CUSTOMIZATION */
+        #liveVmizeButton {
+            transition: all 0.3s;
+            cursor: pointer;
+            font-weight: 700;
+            border: none;
+        }
+
+        #liveVmizeButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Code & Other Sections */
+        .other-sections {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .code-output {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .code-title {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .copy-btn, .upload-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .copy-btn {
+            background: var(--vmize-purple);
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background: #5a3dd5;
+            transform: translateY(-2px);
+        }
+
+        .upload-btn {
+            background: var(--google-green);
+            color: white;
+        }
+
+        .upload-btn:hover {
+            background: #137333;
+            transform: translateY(-2px);
+        }
+
+        pre {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #d4d4d4;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .comment { color: #6a9955; }
+        .property { color: #9cdcfe; }
+
+        /* Success Message */
+        .success-message {
+            background: #e6f4ea;
+            border: 2px solid var(--google-green);
+            color: #137333;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 32px;
+            margin-top: 40px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .footer-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .customizer-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" 
+                 alt="Vmize Studio" class="logo-img" id="logoImg">
+            <button class="smart-back-btn" onclick="goBack()">
+                <span>←</span>
+                <span>Back</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>Widget Customizer</h1>
+            <p>Design your button and see exactly how it looks on a real product page</p>
+        </div>
+
+        <div class="customizer-layout">
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <!-- Button Customization -->
+                <div class="control-section">
+                    <div class="section-title">Button Style</div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Button Text</label>
+                        <input type="text" id="buttonText" value="👗 Virtual Try-On" oninput="updateLivePreview()">
+                        <div class="control-hint">Text shown on the button</div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Background Color</label>
+                        <input type="color" id="buttonBgColor" value="#6B4CE6" oninput="updateLivePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Text Color</label>
+                        <input type="color" id="buttonTextColor" value="#FFFFFF" oninput="updateLivePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Size</label>
+                        <select id="buttonSize" onchange="updateLivePreview()">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Border Style</label>
+                        <div class="radio-group">
+                            <div class="radio-option active" onclick="setBorderStyle('none')">None</div>
+                            <div class="radio-option" onclick="setBorderStyle('solid')">Solid</div>
+                            <div class="radio-option" onclick="setBorderStyle('rounded')">Round</div>
+                        </div>
+                    </div>
+
+                    <div class="control-group" id="borderColorGroup" style="display: none;">
+                        <label class="control-label">Border Color</label>
+                        <input type="color" id="borderColor" value="#6B4CE6" oninput="updateLivePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Border Width (px)</label>
+                        <input type="number" id="borderWidth" value="0" min="0" max="10" oninput="updateLivePreview()">
+                    </div>
+                </div>
+
+                <!-- Modal Customization -->
+                <div class="control-section">
+                    <div class="section-title">Modal Style</div>
+
+                    <div class="control-group">
+                        <label class="control-label">Modal Title</label>
+                        <input type="text" id="modalTitle" value="Virtual Try-On" oninput="updateCode()">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Primary Color</label>
+                        <input type="color" id="modalColor" value="#6B4CE6" oninput="updateCode()">
+                    </div>
+                </div>
+
+                <!-- Button Position -->
+                <div class="control-section">
+                    <div class="section-title">Button Position</div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Placement</label>
+                        <select id="buttonPosition" onchange="updateLivePreview()">
+                            <option value="below" selected>Below Add to Bag</option>
+                            <option value="inline">Next to Add to Bag</option>
+                        </select>
+                        <div class="control-hint">Where button appears</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Product Preview -->
+            <div class="live-preview-section">
+                <div class="preview-header">
+                    <h2>Live Product Page Preview</h2>
+                    <p>See exactly how your button appears on a real product page</p>
+                </div>
+
+                <div class="product-page">
+                    <div class="product-container">
+                        <!-- Product Image -->
+                        <div class="product-image-section">
+                            <div class="product-main-image">
+                                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&h=800&fit=crop&q=80" 
+                                     alt="Women's Performance Jacket">
+                            </div>
+                            <div class="best-seller-badge">Best Seller</div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="product-info">
+                            <div class="brand">Premium Activewear</div>
+                            <div class="product-name">Women's Performance Oversized Hooded Sherpa Jacket</div>
+                            
+                            <div class="rating">
+                                <span class="stars">★★★★☆</span>
+                                <span class="review-count">4.3 (213 reviews)</span>
+                            </div>
+
+                            <div class="price-section">
+                                <span class="current-price">$39.75</span>
+                                <span class="discount">(50% off)</span>
+                                <span class="original-price">$79.50</span>
+                            </div>
+
+                            <!-- Color -->
+                            <div class="selection">
+                                <div class="selection-label">Color: Brown Cork</div>
+                                <div class="color-swatches">
+                                    <div class="color-swatch" style="background: #5c4a3a;"></div>
+                                    <div class="color-swatch" style="background: #87ceeb;"></div>
+                                    <div class="color-swatch" style="background: #8b1538;"></div>
+                                    <div class="color-swatch" style="background: #2f4f4f;"></div>
+                                    <div class="color-swatch" style="background: #1a1a1a;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Size -->
+                            <div class="selection">
+                                <div class="selection-label">Size: Please select</div>
+                                <div class="size-options">
+                                    <button class="size-btn">XS</button>
+                                    <button class="size-btn">S</button>
+                                    <button class="size-btn">M</button>
+                                    <button class="size-btn">L</button>
+                                    <button class="size-btn">XL</button>
+                                    <button class="size-btn">2XL</button>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons - Updates based on position -->
+                            <div class="action-buttons" id="actionButtonsContainer">
+                                <button class="btn-add-bag">Add To Bag</button>
+                                <button id="liveVmizeButton">👗 Virtual Try-On</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Section -->
+        <div class="other-sections">
+            <div class="code-output">
+                <div class="code-header">
+                    <div class="code-title">📋 Your Custom Widget Code</div>
+                    <div class="code-actions">
+                        <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                        <button class="upload-btn" onclick="uploadConfig()">💾 Save to Dashboard</button>
+                    </div>
+                </div>
+                <pre><code id="generatedCode"></code></pre>
+            </div>
+            <div class="success-message" id="successMessage">
+                <span style="font-size: 24px;">✅</span>
+                <span>Configuration saved to your dashboard!</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard-complete.html">Dashboard</a>
+                <a href="analytics-live.html">Analytics</a>
+                <a href="tryon-studio.html">Try-On Studio</a>
+                <a href="#">Help</a>
+            </div>
+            <div class="footer-text">
+                © 2025 Vmize Studio. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Load logo
+        fetch('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('logoImg').src = url;
+            });
+
+        // Smart back button
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'dashboard-complete.html';
+            }
+        }
+
+        let currentBorderStyle = 'none';
+
+        function setBorderStyle(style) {
+            currentBorderStyle = style;
+            document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const borderColorGroup = document.getElementById('borderColorGroup');
+            borderColorGroup.style.display = style !== 'none' ? 'block' : 'none';
+            
+            updateLivePreview();
+        }
+
+        function getConfig() {
+            const size = document.getElementById('buttonSize').value;
+            const sizes = {
+                small: { padding: '12px 24px', fontSize: '14px' },
+                medium: { padding: '16px 32px', fontSize: '16px' },
+                large: { padding: '20px 40px', fontSize: '18px' }
+            };
+
+            return {
+                buttonText: document.getElementById('buttonText').value,
+                buttonBgColor: document.getElementById('buttonBgColor').value,
+                buttonTextColor: document.getElementById('buttonTextColor').value,
+                buttonSize: size,
+                padding: sizes[size].padding,
+                fontSize: sizes[size].fontSize,
+                borderWidth: document.getElementById('borderWidth').value,
+                borderColor: document.getElementById('borderColor').value,
+                borderStyle: currentBorderStyle,
+                modalTitle: document.getElementById('modalTitle').value,
+                modalColor: document.getElementById('modalColor').value,
+                buttonPosition: document.getElementById('buttonPosition').value
+            };
+        }
+
+        function updateLivePreview() {
+            const config = getConfig();
+            const btn = document.getElementById('liveVmizeButton');
+            const container = document.getElementById('actionButtonsContainer');
+            
+            // Update button style
+            btn.textContent = config.buttonText;
+            btn.style.background = config.buttonBgColor;
+            btn.style.color = config.buttonTextColor;
+            btn.style.padding = config.padding;
+            btn.style.fontSize = config.fontSize;
+            btn.style.borderWidth = config.borderWidth + 'px';
+            btn.style.borderColor = config.borderColor;
+            btn.style.borderStyle = config.borderStyle === 'none' ? 'none' : 'solid';
+            btn.style.borderRadius = config.borderStyle === 'rounded' ? '50px' : '8px';
+            btn.style.width = '100%';
+            
+            // Update position
+            if (config.buttonPosition === 'inline') {
+                container.style.display = 'grid';
+                container.style.gridTemplateColumns = '1fr 1fr';
+                container.style.gap = '12px';
+            } else {
+                container.style.display = 'flex';
+                container.style.flexDirection = 'column';
+                container.style.gap = '12px';
+            }
+            
+            updateCode();
+        }
+
+        function updateCode() {
+            const config = getConfig();
+            const code = `<span class="comment">&lt;!-- Vmize Virtual Try-On Widget --&gt;</span>
+
+&lt;<span class="keyword">script</span>&gt;
+<span class="keyword">const</span> <span class="property">VMIZE_CONFIG</span> = {
+    <span class="property">apiKey</span>: <span class="string">'YOUR_API_KEY_HERE'</span>,
+    <span class="property">button</span>: {
+        <span class="property">text</span>: <span class="string">'${config.buttonText}'</span>,
+        <span class="property">backgroundColor</span>: <span class="string">'${config.buttonBgColor}'</span>,
+        <span class="property">textColor</span>: <span class="string">'${config.buttonTextColor}'</span>,
+        <span class="property">padding</span>: <span class="string">'${config.padding}'</span>,
+        <span class="property">fontSize</span>: <span class="string">'${config.fontSize}'</span>,
+        <span class="property">borderWidth</span>: <span class="string">'${config.borderWidth}px'</span>,
+        <span class="property">borderColor</span>: <span class="string">'${config.borderColor}'</span>,
+        <span class="property">borderStyle</span>: <span class="string">'${config.borderStyle === 'none' ? 'none' : 'solid'}'</span>,
+        <span class="property">borderRadius</span>: <span class="string">'${config.borderStyle === 'rounded' ? '50px' : '8px'}'</span>,
+        <span class="property">position</span>: <span class="string">'${config.buttonPosition}'</span>
+    },
+    <span class="property">modal</span>: {
+        <span class="property">title</span>: <span class="string">'${config.modalTitle}'</span>,
+        <span class="property">primaryColor</span>: <span class="string">'${config.modalColor}'</span>
+    }
+};
+
+<span class="comment">// Load Vmize Widget</span>
+(<span class="keyword">function</span>() {
+    <span class="keyword">const</span> script = document.<span class="function">createElement</span>(<span class="string">'script'</span>);
+    script.src = <span class="string">'https://cdn.vmizestudio.com/widget/v1/vmize.js'</span>;
+    script.onload = () => <span class="keyword">new</span> <span class="function">VmizeWidget</span>(VMIZE_CONFIG).<span class="function">init</span>();
+    document.head.<span class="function">appendChild</span>(script);
+})();
+&lt;/<span class="keyword">script</span>&gt;`;
+            
+            document.getElementById('generatedCode').innerHTML = code;
+        }
+
+        function copyCode() {
+            const code = document.getElementById('generatedCode').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
+        async function uploadConfig() {
+            const config = getConfig();
+            const btn = event.target;
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Saving...';
+            btn.disabled = true;
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                localStorage.setItem('vmize_widget_config', JSON.stringify(config));
+                
+                btn.textContent = '✓ Saved!';
+                btn.style.background = '#28a745';
+                
+                document.getElementById('successMessage').classList.add('show');
+                
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('show');
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                }, 3000);
+            } catch (error) {
+                console.error('Error:', error);
+                btn.textContent = '❌ Error';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Initial update
+        updateLivePreview();
+    </script>
+</body>
+</html>

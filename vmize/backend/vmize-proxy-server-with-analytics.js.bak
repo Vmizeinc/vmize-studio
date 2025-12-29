@@ -1,0 +1,342 @@
+/**
+ * Vmize Backend Proxy Server with Real Analytics Tracking
+ * Tracks every API call and event in real-time
+ */
+
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+const AnalyticsTracker = require('./analytics-tracker');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const FASHN_API_KEY = process.env.FASHN_API_KEY;
+
+// Initialize analytics
+const analytics = new AnalyticsTracker();
+
+// Middleware
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+
+// Demo customer storage (replace with database in production)
+const demoKeys = {
+    'vmize_pk_demo_test_1234567890': {
+        customerId: 'demo_customer',
+        email: 'demo@example.com',
+        plan: 'professional',
+        limit: 500,
+        used: 0
+    }
+};
+
+// Middleware: Verify API Key
+function verifyVmizeKey(req, res, next) {
+    const apiKey = req.headers['x-vmize-api-key'];
+    
+    if (!apiKey) {
+        return res.status(401).json({ error: 'API key required' });
+    }
+    
+    if (!apiKey.startsWith('vmize_pk_')) {
+        return res.status(401).json({ error: 'Invalid API key format' });
+    }
+    
+    const customer = demoKeys[apiKey];
+    
+    if (!customer) {
+        return res.status(401).json({ error: 'Invalid API key' });
+    }
+    
+    if (customer.used >= customer.limit) {
+        return res.status(429).json({ 
+            error: 'Usage limit exceeded',
+            limit: customer.limit,
+            used: customer.used
+        });
+    }
+    
+    req.customer = customer;
+    req.apiKey = apiKey;
+    next();
+}
+
+// Health Check
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'healthy',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Get Analytics
+app.get('/api/analytics', async (req, res) => {
+    try {
+        const summary = analytics.getAnalyticsSummary();
+        res.json(summary);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get Conversion Funnel
+app.get('/api/analytics/funnel', async (req, res) => {
+    try {
+        const funnel = analytics.getConversionFunnel();
+        res.json(funnel);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Track Event
+app.post('/api/track', async (req, res) => {
+    try {
+        const { eventName, data } = req.body;
+        
+        await analytics.trackEvent(eventName, data);
+        
+        res.json({ 
+            success: true,
+            eventName,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Virtual Try-On Endpoint
+app.post('/api/tryon', verifyVmizeKey, async (req, res) => {
+    const startTime = Date.now();
+    const { model_image, garment_image, category = 'auto', mode = 'quality', age } = req.body;
+    
+    console.log(`🎨 Try-on request from ${req.customer.customerId}`);
+    
+    // Track API call start
+    await analytics.trackEvent('tryon_initiated', {
+        customerId: req.customer.customerId,
+        productId: req.body.productId
+    });
+    
+    try {
+        if (!FASHN_API_KEY) {
+            throw new Error('FASHN_API_KEY not configured');
+        }
+        
+        if (!model_image || !garment_image) {
+            throw new Error('Both model_image and garment_image are required');
+        }
+        
+        // Track photo upload
+        await analytics.trackEvent('photo_uploaded', {
+            customerId: req.customer.customerId
+        });
+        
+        // Build payload and forward optional age if present
+        const payload = {
+            model_name: 'tryon-v1.6',
+            inputs: {
+                model_image,
+                garment_image,
+                category,
+                mode
+            }
+        };
+
+        if (age !== undefined) payload.inputs.age = age;
+
+        // Call Fashn API
+        const response = await fetch('https://api.fashn.ai/v1/run', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${FASHN_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error?.message || 'Fashn API error');
+        }
+        
+        // Increment usage
+        demoKeys[req.apiKey].used++;
+        
+        const duration = Date.now() - startTime;
+        
+        // Track successful API call
+        await analytics.trackApiCall({
+            customerId: req.customer.customerId,
+            apiKey: req.apiKey,
+            endpoint: '/api/tryon',
+            method: 'POST',
+            status: 'success',
+            duration,
+            productId: req.body.productId
+        });
+        
+        res.json({
+            prediction_id: data.id,
+            status: data.status,
+            used: demoKeys[req.apiKey].used,
+            remaining: demoKeys[req.apiKey].limit - demoKeys[req.apiKey].used
+        });
+        
+    } catch (error) {
+        const duration = Date.now() - startTime;
+        
+        // Track failed API call
+        await analytics.trackApiCall({
+            customerId: req.customer.customerId,
+            apiKey: req.apiKey,
+            endpoint: '/api/tryon',
+            method: 'POST',
+            status: 'error',
+            duration,
+            error: error.message
+        });
+        
+        await analytics.trackEvent('api_error', {
+            customerId: req.customer.customerId,
+            error: error.message
+        });
+        
+        console.error('❌ Error:', error);
+        res.status(500).json({ 
+            error: error.message,
+            used: demoKeys[req.apiKey].used,
+            remaining: demoKeys[req.apiKey].limit - demoKeys[req.apiKey].used
+        });
+    }
+});
+
+// Get Try-On Status
+app.get('/api/tryon/:id', verifyVmizeKey, async (req, res) => {
+    const startTime = Date.now();
+    const { id } = req.params;
+    
+    try {
+        if (!FASHN_API_KEY) {
+            throw new Error('FASHN_API_KEY not configured');
+        }
+        
+        const response = await fetch(`https://api.fashn.ai/v1/status/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${FASHN_API_KEY}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error?.message || 'Status check failed');
+        }
+        
+        const duration = Date.now() - startTime;
+        
+        // Track status check
+        await analytics.trackApiCall({
+            customerId: req.customer.customerId,
+            apiKey: req.apiKey,
+            endpoint: `/api/tryon/${id}`,
+            method: 'GET',
+            status: 'success',
+            duration
+        });
+        
+        // If completed, track result generation
+        if (data.status === 'completed') {
+            await analytics.trackEvent('result_generated', {
+                customerId: req.customer.customerId
+            });
+            
+            await analytics.trackEvent('result_viewed', {
+                customerId: req.customer.customerId
+            });
+        }
+        
+        res.json(data);
+        
+    } catch (error) {
+        const duration = Date.now() - startTime;
+        
+        await analytics.trackApiCall({
+            customerId: req.customer.customerId,
+            apiKey: req.apiKey,
+            endpoint: `/api/tryon/${id}`,
+            method: 'GET',
+            status: 'error',
+            duration,
+            error: error.message
+        });
+        
+        console.error('❌ Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get Usage Stats
+app.get('/api/usage', verifyVmizeKey, (req, res) => {
+    const customer = req.customer;
+    
+    res.json({
+        customerId: customer.customerId,
+        plan: customer.plan,
+        limit: customer.limit,
+        used: customer.used,
+        remaining: customer.limit - customer.used,
+        percentageUsed: ((customer.used / customer.limit) * 100).toFixed(2) + '%'
+    });
+});
+
+// Reset Analytics (for testing)
+app.post('/api/analytics/reset', async (req, res) => {
+    try {
+        await analytics.reset();
+        
+        // Reset demo customer usage
+        Object.keys(demoKeys).forEach(key => {
+            demoKeys[key].used = 0;
+        });
+        
+        res.json({ 
+            success: true,
+            message: 'Analytics reset successfully'
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Start Server
+app.listen(PORT, () => {
+    console.log(`
+╔═══════════════════════════════════════════════════════╗
+║                                                       ║
+║   🚀 Vmize Backend Server with Analytics             ║
+║                                                       ║
+║   Server running on: http://localhost:${PORT}         ║
+║   Analytics enabled: ✅                               ║
+║   Fashn API configured: ${FASHN_API_KEY ? '✅' : '❌'}                      ║
+║                                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+📊 Analytics Endpoints:
+   GET  /api/analytics         - Get full analytics summary
+   GET  /api/analytics/funnel  - Get conversion funnel data
+   POST /api/track             - Track custom event
+   POST /api/analytics/reset   - Reset all analytics (testing)
+
+🎨 Try-On Endpoints:
+   POST /api/tryon             - Create virtual try-on
+   GET  /api/tryon/:id         - Get try-on status
+   GET  /api/usage             - Get usage statistics
+
+💡 Every API call is now being tracked in real-time!
+    `);
+});
+
+module.exports = app;

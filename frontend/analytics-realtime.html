@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Analytics - Vmize Studio</title>
+    <style>
+        /* Add your existing styles here */
+    </style>
+</head>
+<body>
+    <main style="padding:40px;max-width:900px;margin:80px auto;font-family:system-ui">
+        <h1>Analytics — Realtime</h1>
+        <p>Placeholder analytics page.</p>
+        <p><a href="dashboard.html">Back to Dashboard</a></p>
+
+        <!-- Real-time analytics content -->
+        <div id="analyticsContent">
+            <div>
+                <h2>Live Stats</h2>
+                <div>
+                    <span>Active Now:</span> <span id="activeNow">0</span>
+                </div>
+                <div>
+                    <span>Try-ons Today:</span> <span id="tryonsToday">0</span> (<span id="tryonsTodayChange">0</span>)
+                </div>
+                <div>
+                    <span>Success Rate:</span> <span id="successRate">0%</span>
+                </div>
+                <div>
+                    <span>Revenue Today:</span> <span id="revenueToday">$0.00</span> (<span id="revenueTodayChange">0</span>%)
+                </div>
+            </div>
+
+            <div>
+                <h2>Activity Feed</h2>
+                <div id="activityFeed">
+                    <!-- Activity feed items will be populated here -->
+                </div>
+            </div>
+        </div>
+        <div class="logo">
+            <span id="logoImg">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
+                <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="40" height="40"/>
+              </svg>
+            </span>
+        </div>
+    </main>
+
+    <script>
+        const BACKEND_URL = 'https://your-backend.railway.app';
+
+        // Load logo
+        fetch('/mnt/user-data/uploads/ChatGPT_Image_Dec_26__2025__08_25_13_PM.png')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('logoImg').src = url;
+            })
+            .catch(() => console.log('Logo failed'));
+
+        // Fetch real-time data from backend
+        async function fetchRealTimeData() {
+            try {
+                const resp = await fetch(`${BACKEND_URL}/api/analytics`);
+                if (!resp.ok) throw new Error('Failed to fetch analytics');
+                const data = await resp.json();
+
+                // Stats
+                document.getElementById('activeNow').textContent = Math.floor(Math.random() * 5) + 1;
+                document.getElementById('tryonsToday').textContent = data.eventCounts.tryon_initiated || 0;
+                document.getElementById('tryonsTodayChange').textContent = (data.last30Days?.[29]?.calls || 0) - (data.last30Days?.[28]?.calls || 0);
+                document.getElementById('successRate').textContent = data.successRate || '0%';
+                document.getElementById('revenueToday').textContent = '$' + (data.last30Days?.[29]?.revenue || 0).toFixed(2);
+                document.getElementById('revenueTodayChange').textContent = Math.round(((data.last30Days?.[29]?.revenue || 0) - (data.last30Days?.[28]?.revenue || 0)) / ((data.last30Days?.[28]?.revenue || 1)) * 100);
+
+                // Activity feed
+                updateActivityFeed(data.recentCalls || []);
+            } catch (error) {
+                console.error('Failed to fetch real-time data:', error);
+            }
+        }
+
+        function updateActivityFeed(events) {
+            const feed = document.getElementById('activityFeed');
+            if (events.length === 0) {
+                feed.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">No recent activity</div>';
+                return;
+            }
+            feed.innerHTML = events.map(event => {
+                const icon = getEventIcon(event.endpoint || event.event);
+                const action = getEventAction(event.endpoint || event.event, event);
+                const time = getTimeAgo(new Date(event.timestamp));
+                const product = event.productId || event.properties?.product || 'product';
+                return `
+                    <div class="activity-item">
+                        <div class="activity-icon">${icon}</div>
+                        <div class="activity-details">
+                            <div class="activity-action">${action}</div>
+                            <div class="activity-meta">Product: ${product}</div>
+                        </div>
+                        <div class="activity-time">${time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getEventIcon(eventName) {
+            const icons = {
+                'page_view': '👁️',
+                'try_on_initiated': '🚀',
+                'photo_uploaded': '📸',
+                'result_generated': '✨',
+                'add_to_cart': '🛒',
+                'purchase': '💰',
+                '/api/tryon': '🚀',
+                '/api/tryon/:id': '✨',
+                '/api/analytics': '📊'
+            };
+            return icons[eventName] || '📊';
+        }
+
+        function getEventAction(eventName, properties) {
+            const actions = {
+                'page_view': 'Viewed product page',
+                'try_on_initiated': 'Started virtual try-on',
+                'photo_uploaded': 'Uploaded photo',
+                'result_generated': properties?.success ? 'Try-on completed' : 'Try-on failed',
+                'add_to_cart': 'Added to cart',
+                'purchase': 'Completed purchase',
+                '/api/tryon': 'Started virtual try-on',
+                '/api/tryon/:id': 'Viewed try-on result',
+                '/api/analytics': 'Viewed analytics'
+            };
+            return actions[eventName] || 'Unknown action';
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            if (seconds < 60) return 'Just now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+            return Math.floor(seconds / 86400) + 'd ago';
+        }
+
+        // Initial load
+        fetchRealTimeData();
+        // Refresh every 5 seconds
+        setInterval(fetchRealTimeData, 5000);
+        console.log('✅ Real-time analytics loaded - refreshing every 5 seconds');
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Analytics — Conversions (Placeholder)</title>
+</head>
+<body>
+<main style="padding:40px;max-width:900px;margin:80px auto;font-family:system-ui">
+    <h1>Analytics — Conversions</h1>
+    <p>Placeholder analytics page.</p>
+    <p><a href="dashboard.html">Back to Dashboard</a></p>
+
+    <!-- Conversion Funnel -->
+    <div id="funnelContainer"></div>
+
+    <!-- Conversion Rate Chart -->
+    <canvas id="conversionChart"></canvas>
+
+    <!-- Stats -->
+    <div>
+        <div>Conversion Rate: <span id="conversionRate">0%</span></div>
+        <div>Try-On Conversion: <span id="tryonConversion">0%</span></div>
+        <div>Cart Conversion: <span id="cartConversion">0%</span></div>
+        <div>Average Order Value: <span id="avgOrderValue">$0</span></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://your-backend.railway.app';
+
+        // Load logo
+        fetch('/mnt/user-data/uploads/ChatGPT_Image_Dec_26__2025__08_25_13_PM.png')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('logoImg').src = url;
+            });
+
+        // Fetch conversion data from backend
+        async function fetchConversionData() {
+            try {
+                const resp = await fetch(`${BACKEND_URL}/api/analytics/funnel`);
+                if (!resp.ok) throw new Error('Failed to fetch funnel analytics');
+                const funnel = await resp.json();
+
+                // Fetch summary for order value and rates
+                const summaryResp = await fetch(`${BACKEND_URL}/api/analytics`);
+                const summary = summaryResp.ok ? await summaryResp.json() : {};
+
+                // Calculate month-over-month difference
+                const last30 = summary.last30Days || [];
+                const lastMonth = last30.slice(0, 15).reduce((acc, d) => acc + (d.successful || 0), 0);
+                const thisMonth = last30.slice(15, 30).reduce((acc, d) => acc + (d.successful || 0), 0);
+                const momDiff = thisMonth - lastMonth;
+                const momPercent = lastMonth > 0 ? ((momDiff / lastMonth) * 100).toFixed(1) : '0';
+
+                // Update stats
+                document.getElementById('conversionRate').textContent = funnel.purchaseRate || '0%';
+                document.getElementById('tryonConversion').textContent = funnel.tryonRate || '0%';
+                document.getElementById('cartConversion').textContent = funnel.cartRate || '0%';
+                document.getElementById('avgOrderValue').textContent = '$' + (summary.totalRevenue || 0);
+
+                // Month-over-month stat
+                let momStat = document.getElementById('momStat');
+                if (!momStat) {
+                    momStat = document.createElement('div');
+                    momStat.id = 'momStat';
+                    momStat.style = 'margin-top:12px;font-size:15px;color:var(--google-green);font-weight:600;';
+                    document.querySelector('.stats-grid').appendChild(momStat);
+                }
+                momStat.textContent = `Month-over-month: ${momDiff >= 0 ? '+' : ''}${momDiff} (${momPercent}%) conversions`;
+
+                // Build funnel
+                buildFunnel([
+                    { name: 'Product Views', value: funnel.productView, percentage: 100 },
+                    { name: 'Try-On Started', value: funnel.tryonClick, percentage: funnel.uploadRate.replace('%','') },
+                    { name: 'Photo Uploaded', value: funnel.photoUpload, percentage: funnel.uploadRate.replace('%','') },
+                    { name: 'Result Viewed', value: funnel.resultViewed, percentage: funnel.viewRate.replace('%','') },
+                    { name: 'Added to Cart', value: funnel.addToCart, percentage: funnel.cartRate.replace('%','') },
+                    { name: 'Purchase', value: funnel.purchase, percentage: funnel.purchaseRate.replace('%','') }
+                ]);
+
+                // Build chart
+                buildChart(summary.last30Days || []);
+            } catch (error) {
+                console.error('Failed to fetch conversion data:', error);
+            }
+        }
+
+        function buildFunnel(steps) {
+            const container = document.getElementById('funnelContainer');
+            container.innerHTML = steps.map(step => `
+                <div class="funnel-step">
+                    <div class="funnel-step-header">
+                        <span class="funnel-step-name">${step.name}</span>
+                        <span class="funnel-step-value">${step.value.toLocaleString()} (${step.percentage}%)</span>
+                    </div>
+                    <div class="funnel-bar">
+                        <div class="funnel-bar-fill" style="width: ${step.percentage}%">${step.percentage}%</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function buildChart(days) {
+            const ctx = document.getElementById('conversionChart');
+            const labels = days.map(d => d.date);
+            const data = days.map(d => d.successful > 0 && d.calls > 0 ? ((d.successful/d.calls)*100).toFixed(2) : 0);
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Conversion Rate (%)',
+                        data: data,
+                        borderColor: '#6B4CE6',
+                        backgroundColor: 'rgba(107, 76, 230, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { callback: v => v + '%' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial load
+        fetchConversionData();
+        // Refresh every 30 seconds
+        setInterval(fetchConversionData, 30000);
+        console.log('✅ Conversion analytics loaded');
+    </script>
+</main>
+</body>
+</html>

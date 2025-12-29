@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Vmize Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--vmize-purple);
+        }
+
+        .btn-dashboard {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .btn-dashboard:hover {
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            padding: 80px 32px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 24px;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 32px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 80px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--vmize-purple), var(--vmize-blue));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -62px;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 4px solid var(--vmize-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(107, 76, 230, 0.1);
+        }
+
+        .timeline-year {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--vmize-purple);
+            margin-bottom: 8px;
+        }
+
+        .timeline-phase {
+            font-size: 16px;
+            color: var(--vmize-blue);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .timeline-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .timeline-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            max-width: 700px;
+        }
+
+        /* Why This Matters Section */
+        .matters-section {
+            background: #f8f9fa;
+            padding: 80px 32px;
+        }
+
+        .matters-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .matters-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .matters-card {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .matters-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .matters-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            padding: 80px 32px;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 16px 48px;
+            background: white;
+            color: var(--vmize-purple);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 48px 32px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo img {
+            height: 50px;
+            margin-bottom: 16px;
+        }
+
+        .footer-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-legal a {
+            color: #999;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .timeline { padding-left: 60px; }
+            .matters-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Vmize Studio" id="logoImg">
+            </a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html" class="active">About</a>
+                <a href="demo-public.html">Demo</a>
+                <a href="integration.html">Integration</a>
+                <a href="login.html" class="btn-dashboard">Dashboard</a>
+            </nav>
+            <button class="back-btn" onclick="goBack()">
+                <span>←</span> Back
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Our Journey</h1>
+        <p>A long-term vision executed at the right moment</p>
+    </section>
+
+    <section class="timeline-section">
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2012</div>
+                <div class="timeline-phase">Insight Phase</div>
+                <h3 class="timeline-title">The Problem Emerges</h3>
+                <p class="timeline-content">
+                    As online shopping accelerated, a critical gap became clear: customers had no reliable way to see how clothing would look on them before purchasing. Confidence was missing from the buying experience.
+                    <br><br>
+                    This early insight shaped the foundation of Vmize Studio.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2013–2020</div>
+                <div class="timeline-phase">Context Phase</div>
+                <h3 class="timeline-title">Technology Matures</h3>
+                <p class="timeline-content">
+                    AI and computer vision advanced rapidly during this period, but the technology lacked the accuracy, realism, and consistency required to deliver a trustworthy virtual try-on experience.
+                    <br><br>
+                    The opportunity was clear — the tools were not yet ready.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2021–2024</div>
+                <div class="timeline-phase">Readiness Phase</div>
+                <h3 class="timeline-title">Foundations Align</h3>
+                <p class="timeline-content">
+                    Breakthroughs in AI models, compute power, and image processing began to converge. For the first time, realistic virtual try-on at scale became technically viable.
+                    <br><br>
+                    This marked the inflection point where the vision could be executed properly.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2025</div>
+                <div class="timeline-phase">Action Phase</div>
+                <h3 class="timeline-title">Vmize Studio Is Created</h3>
+                <p class="timeline-content">
+                    With the technology finally ready, Vmize Studio was created to solve the problem the right way — prioritizing accuracy, performance, and real-world usability over demos or hype.
+                    <br><br>
+                    This was the decisive moment.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">2026</div>
+                <div class="timeline-phase">Execution Phase</div>
+                <h3 class="timeline-title">Platform Launch</h3>
+                <p class="timeline-content">
+                    Vmize Studio officially launched its platform, bringing virtual try-on technology to e-commerce stores and enabling shoppers to make more confident purchase decisions.
+                    <br><br>
+                    The vision moved from concept to production.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-year">Today</div>
+                <div class="timeline-phase">Proof Phase</div>
+                <h3 class="timeline-title">Delivering Measurable Impact</h3>
+                <p class="timeline-content">
+                    Based in San Jose, California, Vmize Studio helps e-commerce brands increase conversion rates, reduce return rates, and give shoppers confidence when buying online.
+                    <br><br>
+                    The focus remains on outcomes — not promises.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="matters-section">
+        <div class="matters-content">
+            <!-- Mission -->
+            <div style="text-align: center; max-width: 900px; margin: 0 auto 60px;">
+                <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 20px;">Our Mission</h2>
+                <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.8;">
+                    Vmize Studio's mission is to create innovative software and applications that empower creativity, deliver exceptional experiences, and push technology forward.
+                </p>
+            </div>
+
+            <!-- Vision -->
+            <div style="text-align: center; max-width: 900px; margin: 0 auto 60px;">
+                <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 20px;">Our Vision</h2>
+                <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.8;">
+                    Vmize Studio aims to become a unified creative and development platform where applications and intelligent software are designed, built, tested, and experienced—powered by advanced technology and human creativity working together.
+                </p>
+            </div>
+
+            <!-- Philosophy -->
+            <div style="text-align: center; max-width: 900px; margin: 0 auto 60px;">
+                <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 20px;">Our Philosophy</h2>
+                <p style="font-size: 18px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+                    We focus on solving real problems and delivering measurable value. Success is defined by engagement, performance, and results — not hype.
+                </p>
+                <p style="font-size: 20px; font-weight: 600; color: var(--vmize-purple);">
+                    If it doesn't improve outcomes, we don't ship it.
+                </p>
+            </div>
+
+            <!-- Values -->
+            <h2 class="section-title" style="margin-bottom: 16px;">Our Values</h2>
+            <p style="text-align: center; font-size: 18px; color: var(--text-secondary); margin-bottom: 48px;">
+                The principles that guide everything we do
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; max-width: 1000px; margin: 0 auto;">
+                <div class="matters-card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🎯</div>
+                    <h3>Customer Success</h3>
+                    <p>Our customers' success is our success. We're obsessed with helping stores grow their revenue and delight their customers.</p>
+                </div>
+                <div class="matters-card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">💡</div>
+                    <h3>Innovation</h3>
+                    <p>We're constantly pushing the boundaries of what's possible with AI and computer vision to deliver the best virtual try-on experience.</p>
+                </div>
+                <div class="matters-card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🤝</div>
+                    <h3>Transparency</h3>
+                    <p>We believe in honest communication, clear pricing, and building trust with every interaction.</p>
+                </div>
+                <div class="matters-card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">⚡</div>
+                    <h3>Speed</h3>
+                    <p>Fast integration, fast try-ons, fast support. We respect your time and move quickly to deliver results.</p>
+                </div>
+                <div class="matters-card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🔒</div>
+                    <h3>Security</h3>
+                    <p>We take data privacy seriously. Enterprise-grade security protects your customers' information.</p>
+                </div>
+                <div class="matters-card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🌟</div>
+                    <h3>Excellence</h3>
+                    <p>We're not satisfied with "good enough." We strive for excellence in every product, feature, and interaction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to Transform Your E-Commerce?</h2>
+        <p>See how Vmize Studio can help you increase conversions and reduce returns</p>
+        <a href="demo-public.html" class="btn-cta">Get Started Today</a>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Vmize Studio" class="footer-logo-img">
+                    </div>
+                    <p class="footer-desc">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="demo-public.html">Demo</a>
+                    <a href="integration.html">Integration</a>
+                    <a href="dashboard-complete.html">Dashboard</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Vmize Studio. All rights reserved. Based in San Jose, California.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        fetch('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('logoImg').src = url;
+                document.querySelector('.footer-logo-img').src = url;
+            });
+
+        function goBack() {
+            if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

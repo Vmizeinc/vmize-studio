@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Vmize Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-purple-hover: #5a3dd5;
+            --vmize-blue: #4CC9F0;
+            --vmize-red: #dc3545;
+            --vmize-green: #28a745;
+            --vmize-yellow: #f9ab00;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .auth-subtitle {
+            font-size: 15px;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--vmize-purple);
+            box-shadow: 0 0 0 4px rgba(107, 76, 230, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--vmize-red);
+        }
+
+        .error-message {
+            color: var(--vmize-red);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid var(--vmize-green);
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: var(--vmize-green);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .strength-weak { 
+            background: var(--vmize-red); 
+            width: 33%; 
+        }
+        
+        .strength-medium { 
+            background: var(--vmize-yellow); 
+            width: 66%; 
+        }
+        
+        .strength-strong { 
+            background: var(--vmize-green); 
+            width: 100%; 
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 76, 230, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .toggle-auth {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-auth a {
+            color: var(--vmize-purple);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .toggle-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-primary.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .plan-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .plan-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .plan-card:hover {
+            border-color: var(--vmize-purple);
+            background: #f5f3ff;
+        }
+
+        .plan-card.selected {
+            border-color: var(--vmize-purple);
+            background: linear-gradient(135deg, rgba(107, 76, 230, 0.1), rgba(76, 201, 240, 0.1));
+        }
+
+        .plan-name {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .plan-price {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .plan-features {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 32px 24px;
+            }
+            
+            .plan-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <div class="logo-icon">V</div>
+            <div class="logo-text">Vmize Studio</div>
+        </div>
+
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Start increasing conversions and reducing returns</p>
+
+        <div id="registerSuccess" class="success-message"></div>
+        <div id="registerError" class="error-message"></div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label class="form-label" for="registerName">Full Name</label>
+                <input type="text" id="registerName" class="form-input" required autocomplete="name" placeholder="John Doe">
+                <div class="error-message" id="registerNameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="registerCompany">Company Name</label>
+                <input type="text" id="registerCompany" class="form-input" required autocomplete="organization" placeholder="Your Store">
+                <div class="error-message" id="registerCompanyError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="registerEmail">Email Address</label>
+                <input type="email" id="registerEmail" class="form-input" required autocomplete="email" placeholder="you@yourstore.com">
+                <div class="error-message" id="registerEmailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" class="form-input" required autocomplete="new-password" placeholder="At least 8 characters">
+                <div class="password-strength" id="passwordStrength" style="display: none;">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <span id="strengthText"></span>
+                </div>
+                <div class="error-message" id="registerPasswordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="registerConfirmPassword">Confirm Password</label>
+                <input type="password" id="registerConfirmPassword" class="form-input" required autocomplete="new-password" placeholder="Re-enter your password">
+                <div class="error-message" id="registerConfirmPasswordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Choose Your Plan</label>
+                <div class="plan-selector">
+                    <div class="plan-card selected" data-plan="starter">
+                        <div class="plan-name">Starter</div>
+                        <div class="plan-price">$29</div>
+                        <div class="plan-features">100 try-ons/mo</div>
+                    </div>
+                    <div class="plan-card" data-plan="professional">
+                        <div class="plan-name">Professional</div>
+                        <div class="plan-price">$79</div>
+                        <div class="plan-features">500 try-ons/mo</div>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedPlan" value="starter">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <div class="toggle-auth">
+            Already have an account? <a href="login.html">Sign in</a>
+        </div>
+    </div>
+
+    <script>
+        // Plan Selection
+        document.querySelectorAll('.plan-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('selectedPlan').value = this.dataset.plan;
+            });
+        });
+
+        // Form Validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            return strength;
+        }
+
+        // Password strength indicator
+        document.getElementById('registerPassword').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthContainer = document.getElementById('passwordStrength');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
+            if (password.length === 0) {
+                strengthContainer.style.display = 'none';
+                return;
+            }
+
+            strengthContainer.style.display = 'block';
+            const strength = checkPasswordStrength(password);
+
+            strengthFill.className = 'strength-fill';
+            if (strength <= 2) {
+                strengthFill.classList.add('strength-weak');
+                strengthText.textContent = 'Weak password';
+                strengthText.style.color = 'var(--vmize-red)';
+            } else if (strength <= 3) {
+                strengthFill.classList.add('strength-medium');
+                strengthText.textContent = 'Medium password';
+                strengthText.style.color = 'var(--vmize-yellow)';
+            } else {
+                strengthFill.classList.add('strength-strong');
+                strengthText.textContent = 'Strong password';
+                strengthText.style.color = 'var(--vmize-green)';
+            }
+        });
+
+        // Register Form
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const company = document.getElementById('registerCompany').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const plan = document.getElementById('selectedPlan').value;
+
+            // Clear previous errors
+            document.getElementById('registerError').classList.remove('show');
+            document.getElementById('registerSuccess').classList.remove('show');
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+
+            // Validate
+            let hasError = false;
+
+            if (!name || name.length < 2) {
+                document.getElementById('registerNameError').textContent = 'Please enter your full name';
+                document.getElementById('registerNameError').classList.add('show');
+                document.getElementById('registerName').classList.add('error');
+                hasError = true;
+            }
+
+            if (!company || company.length < 2) {
+                document.getElementById('registerCompanyError').textContent = 'Please enter your company name';
+                document.getElementById('registerCompanyError').classList.add('show');
+                document.getElementById('registerCompany').classList.add('error');
+                hasError = true;
+            }
+
+            if (!validateEmail(email)) {
+                document.getElementById('registerEmailError').textContent = 'Please enter a valid email';
+                document.getElementById('registerEmailError').classList.add('show');
+                document.getElementById('registerEmail').classList.add('error');
+                hasError = true;
+            }
+
+            if (!validatePassword(password)) {
+                document.getElementById('registerPasswordError').textContent = 'Password must be at least 8 characters';
+                document.getElementById('registerPasswordError').classList.add('show');
+                document.getElementById('registerPassword').classList.add('error');
+                hasError = true;
+            }
+
+            if (password !== confirmPassword) {
+                document.getElementById('registerConfirmPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('registerConfirmPasswordError').classList.add('show');
+                document.getElementById('registerConfirmPassword').classList.add('error');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Show loading
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.innerHTML = '<span class="spinner"></span>Creating account...';
+            submitBtn.classList.add('loading');
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            try {
+                // Store user data (in production, this would call your backend)
+                const userData = {
+                    name,
+                    company,
+                    email,
+                    plan,
+                    registrationDate: new Date().toISOString()
+                };
+                
+                localStorage.setItem('vmize_user', JSON.stringify(userData));
+                
+                // Show success message
+                document.getElementById('registerSuccess').textContent = 'Account created successfully! Redirecting to dashboard...';
+                document.getElementById('registerSuccess').classList.add('show');
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+                
+            } catch (error) {
+                document.getElementById('registerError').textContent = error.message || 'Registration failed. Please try again.';
+                document.getElementById('registerError').classList.add('show');
+                submitBtn.textContent = originalText;
+                submitBtn.classList.remove('loading');
+            }
+        });
+
+        // Clear errors on input
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                const errorId = this.id + 'Error';
+                const errorEl = document.getElementById(errorId);
+                if (errorEl) {
+                    errorEl.classList.remove('show');
+                }
+            });
+        });
+
+        // Check if already logged in
+        if (localStorage.getItem('vmize_user')) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

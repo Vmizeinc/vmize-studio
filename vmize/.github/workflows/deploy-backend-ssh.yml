@@ -1,0 +1,76 @@
+name: Deploy Backend to VPS (SSH)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ${{ secrets.GHCR_IMAGE || format('ghcr.io/{0}/vmize-backend:latest', github.repository_owner) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.5
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || '22' }}
+          source: 'vmize/backend'
+          target: '/home/${{ secrets.VPS_USER }}/vmize-backend'
+
+      - name: SSH and deploy (pull GHCR image or restart services)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_SSH_PORT || '22' }}
+          script: |
+            set -e
+            cd /home/${{ secrets.VPS_USER }}/vmize-backend
+
+            # If GHCR image is provided, prefer pulling and running image
+            IMAGE=${IMAGE}
+            if [ -n "$IMAGE" ]; then
+              echo "Using GHCR image: $IMAGE"
+              docker pull $IMAGE || true
+              docker stop vmize-backend || true
+              docker rm vmize-backend || true
+              docker run -d --restart unless-stopped --name vmize-backend -p 5000:5000 \
+                --env-file /home/${{ secrets.VPS_USER }}/vmize-backend/.env.production \
+                $IMAGE
+            elif [ -f docker-compose.yml ]; then
+              echo "docker-compose.yml found — using docker compose"
+              docker compose pull || true
+              docker compose up -d --build
+            else
+              echo "No GHCR image or docker-compose.yml — installing and restarting via pm2"
+              npm ci --production
+              pm2 restart vmize-backend || pm2 start server.js --name vmize-backend
+            fi
+
+            # Post-deploy health check (fail if unhealthy)
+            HEALTH_URL=${{ secrets.DEPLOY_HEALTH_URL || 'http://127.0.0.1:5000/health' }}
+            echo "Checking health endpoint: $HEALTH_URL"
+            RETRIES=10
+            SLEEP=5
+            i=0
+            until [ $i -ge $RETRIES ]
+            do
+              STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$HEALTH_URL" || echo "000")
+              echo "Attempt $((i+1)) - status=$STATUS"
+              if [ "$STATUS" = "200" ]; then
+                echo "Health check passed"
+                exit 0
+              fi
+              i=$((i+1))
+              sleep $SLEEP
+            done
+            echo "Health check failed after $RETRIES attempts"
+            exit 1

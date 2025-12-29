@@ -1,0 +1,2196 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Try-On Studio (Placeholder)</title></head><body><main style="padding:40px;max-width:900px;margin:80px auto;font-family:system-ui"><h1>Try-On Studio</h1><p>Placeholder for interactive try-on studio.</p><p><a href="integration.html">Integration</a></p></main></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try-On Studio - Vmize Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --google-green: #1e8e3e;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --hover-bg: #f5f3ff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Sidebar - Same as analytics */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            padding: 24px 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+        }
+
+        .user-info {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .user-plan {
+            font-size: 13px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .nav-section {
+            margin-bottom: 20px;
+        }
+
+        .nav-title {
+            padding: 8px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--vmize-purple);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(107, 76, 230, 0.1), rgba(76, 201, 240, 0.1));
+            color: var(--vmize-purple);
+            border-left: 3px solid var(--vmize-purple);
+            padding-left: 21px;
+            font-weight: 600;
+        }
+
+        .icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* Grid Layout */
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* Upload Box */
+        .upload-card {
+            border: 3px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-card:hover {
+            border-color: var(--vmize-purple);
+            background: var(--hover-bg);
+        }
+
+        .upload-card.has-image {
+            padding: 12px;
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .preview-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 48px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--vmize-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Messages */
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .message-success {
+            background: #e6f4ea;
+            border: 2px solid var(--google-green);
+            color: #137333;
+        }
+
+        .message-error {
+            background: #fee;
+            border: 2px solid #d93025;
+            color: #c5221f;
+        }
+
+        @media (max-width: 968px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Floral Midi Dress Specific Styles */
+        .product-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .product-image-section {
+            position: relative;
+        }
+
+        .product-main-image {
+            width: 100%;
+            height: 0;
+            padding-bottom: 150%;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-main-image img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+        }
+
+        .badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .rating {
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: #ffcc00;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .current-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--vmize-purple);
+            margin-right: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-add-bag {
+            background: var(--vmize-purple);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-add-bag:hover {
+            background: var(--vmize-blue);
+        }
+
+        .btn-tryon {
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-tryon:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .upload-section {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .upload-section:hover {
+            border-color: var(--vmize-purple);
+            background: var(--hover-bg);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 48px;
+            display: none;
+        }
+
+        .result-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* Footer Styles */
+        .footer-content {
+            background: #f8f9fa;
+            padding: 32px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            margin-bottom: 16px;
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-links h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+                        <span id="logoImg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 512 512">
+                                <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="45" height="45"/>
+                            </svg>
+                        </span>
+        </div>
+
+        <div class="user-info">
+            <div class="user-name">Demo Account</div>
+            <div class="user-plan">Professional Plan</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Reports</div>
+            <a href="analytics-engagement.html" class="nav-item">
+                <span class="icon">📊</span>
+                <span>Analytics</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Tools</div>
+            <a href="widget-customizer.html" class="nav-item">
+                <span class="icon">🎨</span>
+                <span>Widget Customizer</span>
+            </a>
+            <a href="tryon-studio.html" class="nav-item active">
+                <span class="icon">👕</span>
+                <span>Try-On Studio</span>
+            </a>
+            <a href="integration.html" class="nav-item">
+                <span class="icon">📝</span>
+                <span>Integration Guide</span>
+            </a>
+            <a href="shop.html" class="nav-item">
+                <span class="icon">🛍️</span>
+                <span>Demo Store</span>
+            </a>
+            <div class="nav-title" style="margin-top:20px;">Products</div>
+            <a href="product-dress.html" class="nav-item">
+                <span class="icon">👗</span>
+                <span>Floral Midi Dress</span>
+            </a>
+            <a href="product-jacket.html" class="nav-item">
+                <span class="icon">🧥</span>
+                <span>Sherpa Hooded Jacket</span>
+            </a>
+            <a href="product-mens-shirt.html" class="nav-item">
+                <span class="icon">👔</span>
+                <span>Men's Shirt</span>
+            </a>
+            <a href="product-mens-pants.html" class="nav-item">
+                <span class="icon">👖</span>
+                <span>Men's Pants</span>
+            </a>
+            <a href="product-mens-sweater.html" class="nav-item">
+                <span class="icon">🧶</span>
+                <span>Men's Sweater</span>
+            </a>
+            <a href="product-womens-shirt.html" class="nav-item">
+                <span class="icon">👚</span>
+                <span>Women's Shirt</span>
+            </a>
+            <a href="product-womens-pants.html" class="nav-item">
+                <span class="icon">👖</span>
+                <span>Women's Pants</span>
+            </a>
+            <a href="product-womens-sweater.html" class="nav-item">
+                <span class="icon">🧥</span>
+                <span>Women's Sweater</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Account</div>
+            <a href="index.html" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Virtual Try-On Studio</h1>
+            <p class="page-subtitle">Test the AI-powered virtual try-on with your own images</p>
+        </div>
+
+        <!-- Upload Grid -->
+        <div class="upload-grid">
+            <div class="card">
+                <div class="card-title">Model Image</div>
+                <div class="upload-card" id="modelUpload">
+                    <div class="upload-icon">👤</div>
+                    <div class="upload-text">Upload Model Photo</div>
+                    <div class="upload-hint">Click to upload or drag and drop</div>
+                </div>
+                <input type="file" id="modelFile" accept="image/*">
+            </div>
+
+            <div class="card">
+                <div class="card-title">Garment Image</div>
+                <div class="upload-card" id="garmentUpload">
+                    <div class="upload-icon">👕</div>
+                    <div class="upload-text">Upload Garment Photo</div>
+                    <div class="upload-hint">Click to upload or drag and drop</div>
+                </div>
+                <input type="file" id="garmentFile" accept="image/*">
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <button class="btn btn-primary btn-full" id="generateBtn" disabled>
+            ✨ Generate Virtual Try-On
+        </button>
+
+        <!-- Backend hint & manual override -->
+        <div id="backendHint" style="margin-top:12px;font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;">
+            <span id="backendStatus">Detecting backend…</span>
+            <button id="changeBackendBtn" class="btn btn-secondary" style="padding:6px 10px;font-size:12px;">Change</button>
+        </div>
+        <div id="backendInputWrap" style="display:none;margin-top:8px;">
+            <input id="backendInput" type="text" placeholder="http://localhost:49918" style="width:320px;padding:8px;border:1px solid var(--border-color);border-radius:6px" />
+            <button id="backendSaveBtn" class="btn btn-primary" style="padding:8px 12px;margin-left:8px;font-size:13px">Save</button>
+            <button id="backendCancelBtn" class="btn" style="padding:8px 12px;margin-left:8px;font-size:13px">Cancel</button>
+        </div>
+
+        <div id="messages"></div>
+
+        <!-- Result Card -->
+        <div id="resultCard" style="display: none;">
+            <div class="card">
+                <div class="card-title">Try-On Result</div>
+                <div id="resultContent"></div>
+                <div class="btn-group" style="margin-top: 24px;">
+                    <button id="viewStoreBtn" class="btn btn-secondary">
+                        View Demo Store
+                    </button>
+                    <button id="viewAnalyticsBtn" class="btn btn-secondary">
+                        View Analytics
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floral Midi Dress Product Page -->
+    <div class="product-container">
+        <div class="product-grid">
+            <div class="product-image-section">
+                <div class="product-main-image">
+                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=900&fit=crop&q=80" alt="Floral Midi Dress" id="productImage">
+                </div>
+                <div class="badge">TRENDING</div>
+            </div>
+
+            <div class="product-info">
+                <div class="brand">Premium Womenswear</div>
+                <div class="product-name">Floral Midi Dress - Flowing silhouette, feminine print</div>
+                <div class="rating">
+                    <span class="stars">★★★★☆</span>
+                    <span style="color: #666; font-size: 14px;">4.3 (213 reviews)</span>
+                </div>
+                <div class="price-section">
+                    <span class="current-price">$119.99</span>
+                    <span style="color: #c41e3a; font-size: 14px; margin-left: 8px;">(50% off)</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-add-bag">Add To Bag</button>
+                    <button class="btn btn-tryon" onclick="openTryOnModal()">
+                        <span>👗</span>
+                        <span>Virtual Try-On</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="tryonModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Virtual Try-On</div>
+                <button class="close-btn" onclick="closeTryOnModal()">×</button>
+            </div>
+            <div class="upload-section" id="uploadSection" onclick="document.getElementById('photoUpload').click()">
+                <div class="upload-icon">📸</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Your Photo</div>
+                <div style="font-size: 14px; color: #666;">Click to upload or drag and drop</div>
+                <input type="file" id="photoUpload" accept="image/*" onchange="handleUpload(event)" style="display: none;">
+            </div>
+            <div class="loading" id="loadingSection">
+                <div class="spinner"></div>
+                <p style="color: #666;">Processing your try-on... This may take 10-30 seconds</p>
+            </div>
+            <div class="result-section" id="resultSection">
+                <img src="" alt="Try-on result" class="result-image" id="resultImage">
+                <button class="btn btn-add-bag" style="width: 100%;">Add To Bag</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
+                                                    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="40" height="40"/>
+                                                </svg>
+                    </div>
+                    <p class="footer-desc">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="demo-public.html">Demo</a>
+                    <a href="integration.html">Integration</a>
+                    <a href="dashboard-complete.html">Dashboard</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Documentation</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Vmize Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Load logo (local placeholder)
+        fetch('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('logoImg').src = url;
+            });
+
+window.vmizeModelImageData = null;
+window.vmizeGarmentImageData = null;
+
+        function handleUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const uploadCard = document.getElementById(type + 'Upload');
+                uploadCard.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                uploadCard.appendChild(img);
+                uploadCard.classList.add('has-image');
+
+                if (type === 'model') {
+                    window.vmizeModelImageData = e.target.result;
+                } else {
+                    window.vmizeGarmentImageData = e.target.result;
+                }
+
+                checkReadyToGenerate();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function checkReadyToGenerate() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = !(window.vmizeModelImageData && window.vmizeGarmentImageData);
+        }
+
+        // E2E helpers: allow tests to set image data directly (useful for headless tests)
+        window.__vmizeE2E = window.__vmizeE2E || {};
+        window.__vmizeE2E.setModelImageDataFromBase64 = function(b64) {
+            window.vmizeModelImageData = b64;
+            const uploadCard = document.getElementById('modelUpload');
+            uploadCard.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = b64;
+            img.className = 'preview-image';
+            uploadCard.appendChild(img);
+            uploadCard.classList.add('has-image');
+            checkReadyToGenerate();
+        };
+        window.__vmizeE2E.setGarmentImageDataFromBase64 = function(b64) {
+            window.vmizeGarmentImageData = b64;
+            const uploadCard = document.getElementById('garmentUpload');
+            uploadCard.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = b64;
+            img.className = 'preview-image';
+            uploadCard.appendChild(img);
+            uploadCard.classList.add('has-image');
+            checkReadyToGenerate();
+        };
+
+        let backendBase = localStorage.getItem('vmize_api_base') || '';
+
+        async function generateTryOn() {
+            const messages = document.getElementById('messages');
+            const resultCard = document.getElementById('resultCard');
+            const resultContent = document.getElementById('resultContent');
+            const generateBtn = document.getElementById('generateBtn');
+
+            messages.innerHTML = '';
+            resultCard.style.display = 'none';
+            generateBtn.disabled = true;
+
+            messages.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p style="color: var(--text-secondary);">Generating virtual try-on… This may take 10–30 seconds</p>
+                </div>
+            `;
+
+            try {
+                // Ensure backend detected (try auto-detect if not set)
+                if (!backendBase) {
+                    await detectBackend();
+                }
+
+                const base = backendBase || localStorage.getItem('vmize_api_base') || `${location.protocol}//${location.hostname}:49918`;
+                if (!base) throw new Error('No backend configured — set the backend URL above.');
+
+                // 1️⃣ Start try-on
+                const startRes = await fetch(`${base}/api/tryon/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model_image: window.vmizeModelImageData,
+                        garment_image: window.vmizeGarmentImageData
+                    })
+                });
+
+                if (!startRes.ok) {
+                    const errBody = await startRes.text();
+                    throw new Error(`Start request failed: ${startRes.status} ${errBody}`);
+                }
+
+                const startJson = await startRes.json();
+                const prediction_id = startJson.prediction_id || startJson.id || startJson.data?.id;
+
+                if (!prediction_id) throw new Error('No prediction ID returned from server');
+
+                // 2️⃣ Poll for result
+                let attempts = 0;
+                const maxAttempts = 30;
+
+                while (attempts < maxAttempts) {
+                    attempts++;
+
+                    await new Promise(r => setTimeout(r, 2000));
+
+                    const statusRes = await fetch(`${base}/api/tryon/${prediction_id}`);
+                    if (!statusRes.ok) {
+                        const errBody = await statusRes.text();
+                        throw new Error(`Status request failed: ${statusRes.status} ${errBody}`);
+                    }
+
+                    const status = await statusRes.json();
+                    const s = status.status || status.data?.status || status.data?.state || status.state;
+
+                    if (s === 'completed') {
+                        const outputUrl = (status.output && status.output[0]) || status.output_url || status.data?.imageUrl || status.data?.output?.[0] || status.imageUrl;
+
+                        messages.innerHTML = '';
+                        resultCard.style.display = 'block';
+                        resultContent.innerHTML = `
+                            <img src="${outputUrl}" class="preview-image" />
+                        `;
+
+                        messages.innerHTML = `
+                            <div class="message message-success">
+                                // --- Unified Backend/API Key Detection and Try-On Logic ---
+                                let backendBase = localStorage.getItem('vmize_api_base') || '';
+                                const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
+                                window.vmizeModelImageData = null;
+                                window.vmizeGarmentImageData = null;
+                                window.vmizeModalImageData = null;
+
+                                async function tryUrl(url, timeout = 1500) {
+                                    try {
+                                        const controller = new AbortController();
+                                        const id = setTimeout(() => controller.abort(), timeout);
+                                        const res = await fetch(`${url.replace(/\/$/, '')}/health`, { signal: controller.signal });
+                                        clearTimeout(id);
+                                        return res.ok;
+                                    } catch (e) {
+                                        return false;
+                                    }
+                                }
+
+                                async function detectBackend() {
+                                    const stored = localStorage.getItem('vmize_api_base');
+                                    const candidates = [];
+                                    if (stored) candidates.push(stored);
+                                    const ports = [49918, 49906, 5001, 5000, 5200, 3000];
+                                    ports.forEach(p => candidates.push(`${location.protocol}//${location.hostname}:${p}`));
+                                    candidates.push(`${location.protocol}//${location.host}`);
+                                    for (const c of candidates) {
+                                        const ok = await tryUrl(c);
+                                        if (ok) {
+                                            backendBase = c;
+                                            updateBackendUI(true, backendBase);
+                                            return;
+                                        }
+                                    }
+                                    backendBase = stored || `${location.protocol}//${location.hostname}:49918`;
+                                    updateBackendUI(false, backendBase);
+                                }
+
+                                function updateBackendUI(success, url) {
+                                    const el = document.getElementById('backendStatus');
+                                    if (el) {
+                                        if (success) {
+                                            el.textContent = `Backend: ${url}`;
+                                            el.style.color = 'var(--text-primary)';
+                                        } else {
+                                            el.textContent = `Backend not found — using ${url}`;
+                                            el.style.color = 'var(--text-secondary)';
+                                        }
+                                    }
+                                }
+
+                                function toggleBackendInput(forceHide) {
+                                    const wrap = document.getElementById('backendInputWrap');
+                                    if (!wrap) return;
+                                    if (forceHide) {
+                                        wrap.style.display = 'none';
+                                        return;
+                                    }
+                                    wrap.style.display = (wrap.style.display === 'none' || wrap.style.display === '') ? 'block' : 'none';
+                                    document.getElementById('backendInput').value = backendBase || localStorage.getItem('vmize_api_base') || '';
+                                }
+
+                                function saveBackend() {
+                                    const val = document.getElementById('backendInput').value.trim();
+                                    if (!val) return toggleBackendInput(true);
+                                    backendBase = val.replace(/\/$/, '');
+                                    localStorage.setItem('vmize_api_base', backendBase);
+                                    updateBackendUI(true, backendBase);
+                                    toggleBackendInput(true);
+                                }
+
+                                // --- Shared Try-On API Logic ---
+                                async function startTryOn({modelImage, garmentImage, onResult, onError, onProgress}) {
+                                    try {
+                                        if (!backendBase) await detectBackend();
+                                        const base = backendBase || localStorage.getItem('vmize_api_base') || `${location.protocol}//${location.hostname}:49918`;
+                                        if (!base) throw new Error('No backend configured — set the backend URL above.');
+                                        if (onProgress) onProgress('starting');
+                                        const startRes = await fetch(`${base}/api/tryon/generate`, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                model_image: modelImage,
+                                                garment_image: garmentImage
+                                            })
+                                        });
+                                        if (!startRes.ok) {
+                                            const errBody = await startRes.text();
+                                            throw new Error(`Start request failed: ${startRes.status} ${errBody}`);
+                                        }
+                                        const startJson = await startRes.json();
+                                        const prediction_id = startJson.prediction_id || startJson.id || startJson.data?.id;
+                                        if (!prediction_id) throw new Error('No prediction ID returned from server');
+                                        let attempts = 0;
+                                        const maxAttempts = 30;
+                                        while (attempts < maxAttempts) {
+                                            attempts++;
+                                            await new Promise(r => setTimeout(r, 2000));
+                                            if (onProgress) onProgress('polling');
+                                            const statusRes = await fetch(`${base}/api/tryon/${prediction_id}`);
+                                            if (!statusRes.ok) {
+                                                const errBody = await statusRes.text();
+                                                throw new Error(`Status request failed: ${statusRes.status} ${errBody}`);
+                                            }
+                                            const status = await statusRes.json();
+                                            const s = status.status || status.data?.status || status.data?.state || status.state;
+                                            if (s === 'completed') {
+                                                const outputUrl = (status.output && status.output[0]) || status.output_url || status.data?.imageUrl || status.data?.output?.[0] || status.imageUrl;
+                                                if (onResult) onResult(outputUrl);
+                                                return;
+                                            }
+                                            if (s === 'failed') {
+                                                throw new Error(status.error?.message || 'Try-on failed');
+                                            }
+                                        }
+                                        throw new Error('Timed out waiting for result');
+                                    } catch (err) {
+                                        if (onError) onError(err);
+                                    }
+                                }
+
+                                // --- Shared Upload Handler ---
+                                function handleUpload(event, type) {
+                                    const file = event.target.files[0];
+                                    if (!file) return;
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        if (type === 'model' || type === 'garment') {
+                                            const uploadCard = document.getElementById(type + 'Upload');
+                                            uploadCard.innerHTML = '';
+                                            const img = document.createElement('img');
+                                            img.src = e.target.result;
+                                            img.className = 'preview-image';
+                                            uploadCard.appendChild(img);
+                                            uploadCard.classList.add('has-image');
+                                            if (type === 'model') {
+                                                window.vmizeModelImageData = e.target.result;
+                                            } else {
+                                                window.vmizeGarmentImageData = e.target.result;
+                                            }
+                                            checkReadyToGenerate();
+                                        } else if (type === 'modal') {
+                                            window.vmizeModalImageData = e.target.result;
+                                            // Show preview in modal
+                                            const uploadSection = document.getElementById('uploadSection');
+                                            uploadSection.innerHTML = '';
+                                            const img = document.createElement('img');
+                                            img.src = e.target.result;
+                                            img.className = 'preview-image';
+                                            uploadSection.appendChild(img);
+                                            // Start modal try-on
+                                            startModalTryOn();
+                                        }
+                                    };
+                                    reader.readAsDataURL(file);
+                                }
+
+                                function checkReadyToGenerate() {
+                                    const btn = document.getElementById('generateBtn');
+                                    if (btn) btn.disabled = !(window.vmizeModelImageData && window.vmizeGarmentImageData);
+                                }
+
+                                // E2E helpers: allow tests to set image data directly (useful for headless tests)
+                                window.__vmizeE2E = window.__vmizeE2E || {};
+                                window.__vmizeE2E.setModelImageDataFromBase64 = function(b64) {
+                                    window.vmizeModelImageData = b64;
+                                    const uploadCard = document.getElementById('modelUpload');
+                                    uploadCard.innerHTML = '';
+                                    const img = document.createElement('img');
+                                    img.src = b64;
+                                    img.className = 'preview-image';
+                                    uploadCard.appendChild(img);
+                                    uploadCard.classList.add('has-image');
+                                    checkReadyToGenerate();
+                                };
+                                window.__vmizeE2E.setGarmentImageDataFromBase64 = function(b64) {
+                                    window.vmizeGarmentImageData = b64;
+                                    const uploadCard = document.getElementById('garmentUpload');
+                                    uploadCard.innerHTML = '';
+                                    const img = document.createElement('img');
+                                    img.src = b64;
+                                    img.className = 'preview-image';
+                                    uploadCard.appendChild(img);
+                                    uploadCard.classList.add('has-image');
+                                    checkReadyToGenerate();
+                                };
+
+        // Modal open/close now use unified logic
+        function openTryOnModal() {
+            document.getElementById('tryonModal').classList.add('active');
+            trackEvent('try_on_initiated', { price: 119.99 });
+        }
+
+        function closeTryOnModal() {
+            document.getElementById('tryonModal').classList.remove('active');
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('uploadSection').innerHTML = `
+                <div class="upload-icon">📸</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Your Photo</div>
+                <div style="font-size: 14px; color: #666;">Click to upload or drag and drop</div>
+                <input type="file" id="photoUpload" accept="image/*" onchange="handleUpload(event, 'modal')" style="display: none;">
+            `;
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('resultSection').classList.remove('active');
+        }
+
+        function startModalTryOn() {
+            document.getElementById('uploadSection').style.display = 'none';
+            const loadingSection = document.getElementById('loadingSection');
+            const resultSection = document.getElementById('resultSection');
+            loadingSection.classList.add('active');
+            resultSection.classList.remove('active');
+            startTryOn({
+                modelImage: window.vmizeModalImageData,
+                garmentImage: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=900&fit=crop&q=80',
+                onResult: (outputUrl) => {
+                    loadingSection.classList.remove('active');
+                    resultSection.classList.add('active');
+                    document.getElementById('resultImage').src = outputUrl;
+                },
+                onError: (err) => {
+                    loadingSection.classList.remove('active');
+                    resultSection.classList.remove('active');
+                    document.getElementById('uploadSection').style.display = 'block';
+                    document.getElementById('uploadSection').innerHTML = `<div class=\"message message-error\"><strong>❌ Error:</strong> ${err.message}</div>`;
+                }
+            });
+        }
+
+        function trackEvent(eventName, properties) {
+            fetch(`${BACKEND_URL}/api/analytics/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event: eventName,
+                    properties: properties,
+                    timestamp: new Date().toISOString(),
+                    session_id: getSessionId()
+                })
+            }).catch(err => console.log('Analytics tracking failed:', err));
+
+            const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
+            events.push({ event: eventName, properties, timestamp: new Date().toISOString() });
+            if (events.length > 100) events.shift();
+            localStorage.setItem('vmize_events', JSON.stringify(events));
+        }
+
+        function getSessionId() {
+            let sessionId = sessionStorage.getItem('vmize_session_id');
+            if (!sessionId) {
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('vmize_session_id', sessionId);
+            }
+            return sessionId;
+        }
+
+        trackEvent('page_view', {
+            page: 'product-dress',
+            product: 'Floral Midi Dress'
+        });
+    </script>
+</body>
+</html>
+<!-- Sherpa Hooded Jacket Product Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sherpa Hooded Jacket - Vmize Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --google-green: #1e8e3e;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --hover-bg: #f5f3ff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Sidebar - Same as analytics */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+            padding: 24px 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 24px 24px;
+        }
+
+        .logo-img {
+            height: 45px;
+            width: auto;
+        }
+
+        .user-info {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .user-plan {
+            font-size: 13px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .nav-section {
+            margin-bottom: 20px;
+        }
+
+        .nav-title {
+            padding: 8px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--vmize-purple);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(107, 76, 230, 0.1), rgba(76, 201, 240, 0.1));
+            color: var(--vmize-purple);
+            border-left: 3px solid var(--vmize-purple);
+            padding-left: 21px;
+            font-weight: 600;
+        }
+
+        .icon {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* Grid Layout */
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* Upload Box */
+        .upload-card {
+            border: 3px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-card:hover {
+            border-color: var(--vmize-purple);
+            background: var(--hover-bg);
+        }
+
+        .upload-card.has-image {
+            padding: 12px;
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .preview-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-bg);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 48px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--vmize-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Messages */
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .message-success {
+            background: #e6f4ea;
+            border: 2px solid var(--google-green);
+            color: #137333;
+        }
+
+        .message-error {
+            background: #fee;
+            border: 2px solid #d93025;
+            color: #c5221f;
+        }
+
+        @media (max-width: 968px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sherpa Hooded Jacket Specific Styles */
+        .product-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .product-image-section {
+            position: relative;
+        }
+
+        .product-main-image {
+            width: 100%;
+            height: 0;
+            padding-bottom: 150%;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-main-image img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+        }
+
+        .badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .rating {
+            margin-bottom: 12px;
+        }
+
+        .stars {
+            color: #ffcc00;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .current-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--vmize-purple);
+            margin-right: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-add-bag {
+            background: var(--vmize-purple);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .btn-add-bag:hover {
+            background: var(--vmize-blue);
+        }
+
+        .btn-tryon {
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-tryon:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .upload-section {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .upload-section:hover {
+            border-color: var(--vmize-purple);
+            background: var(--hover-bg);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 48px;
+            display: none;
+        }
+
+        .result-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        /* Footer Styles */
+        .footer-content {
+            background: #f8f9fa;
+            padding: 32px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            margin-bottom: 16px;
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-links h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" 
+                 alt="Vmize Studio" class="logo-img" id="logoImg">
+        </div>
+
+        <div class="user-info">
+            <div class="user-name">Demo Account</div>
+            <div class="user-plan">Professional Plan</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Reports</div>
+            <a href="analytics-engagement.html" class="nav-item">
+                <span class="icon">📊</span>
+                <span>Analytics</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Tools</div>
+            <a href="widget-customizer.html" class="nav-item">
+                <span class="icon">🎨</span>
+                <span>Widget Customizer</span>
+            </a>
+            <a href="tryon-studio.html" class="nav-item active">
+                <span class="icon">👕</span>
+                <span>Try-On Studio</span>
+            </a>
+            <a href="integration.html" class="nav-item">
+                <span class="icon">📝</span>
+                <span>Integration Guide</span>
+            </a>
+            <a href="shop.html" class="nav-item">
+                <span class="icon">🛍️</span>
+                <span>Demo Store</span>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-title">Account</div>
+            <a href="index.html" class="nav-item">
+                <span class="icon">🏠</span>
+                <span>Home</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Virtual Try-On Studio</h1>
+            <p class="page-subtitle">Test the AI-powered virtual try-on with your own images</p>
+        </div>
+
+        <!-- Upload Grid -->
+        <div class="upload-grid">
+            <div class="card">
+                <div class="card-title">Model Image</div>
+                <div class="upload-card" id="modelUpload">
+                    <div class="upload-icon">👤</div>
+                    <div class="upload-text">Upload Model Photo</div>
+                    <div class="upload-hint">Click to upload or drag and drop</div>
+                </div>
+                <input type="file" id="modelFile" accept="image/*">
+            </div>
+
+            <div class="card">
+                <div class="card-title">Garment Image</div>
+                <div class="upload-card" id="garmentUpload">
+                    <div class="upload-icon">👕</div>
+                    <div class="upload-text">Upload Garment Photo</div>
+                    <div class="upload-hint">Click to upload or drag and drop</div>
+                </div>
+                <input type="file" id="garmentFile" accept="image/*">
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <button class="btn btn-primary btn-full" id="generateBtn" disabled>
+            ✨ Generate Virtual Try-On
+        </button>
+
+        <!-- Backend hint & manual override -->
+        <div id="backendHint" style="margin-top:12px;font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;">
+            <span id="backendStatus">Detecting backend…</span>
+            <button id="changeBackendBtn" class="btn btn-secondary" style="padding:6px 10px;font-size:12px;">Change</button>
+        </div>
+        <div id="backendInputWrap" style="display:none;margin-top:8px;">
+            <input id="backendInput" type="text" placeholder="http://localhost:49918" style="width:320px;padding:8px;border:1px solid var(--border-color);border-radius:6px" />
+            <button id="backendSaveBtn" class="btn btn-primary" style="padding:8px 12px;margin-left:8px;font-size:13px">Save</button>
+            <button id="backendCancelBtn" class="btn" style="padding:8px 12px;margin-left:8px;font-size:13px">Cancel</button>
+        </div>
+
+        <div id="messages"></div>
+
+        <!-- Result Card -->
+        <div id="resultCard" style="display: none;">
+            <div class="card">
+                <div class="card-title">Try-On Result</div>
+                <div id="resultContent"></div>
+                <div class="btn-group" style="margin-top: 24px;">
+                    <button id="viewStoreBtn" class="btn btn-secondary">
+                        View Demo Store
+                    </button>
+                    <button id="viewAnalyticsBtn" class="btn btn-secondary">
+                        View Analytics
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sherpa Hooded Jacket Product Page -->
+    <div class="product-container">
+        <div class="product-grid">
+            <div class="product-image-section">
+                <div class="product-main-image">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=900&fit=crop&q=80" alt="Sherpa Hooded Jacket" id="productImage">
+                </div>
+                <div class="badge">BEST SELLER</div>
+            </div>
+
+            <div class="product-info">
+                <div class="brand">Premium Outerwear</div>
+                <div class="product-name">Sherpa Hooded Jacket - Cozy fleece, athletic fit</div>
+                <div class="rating">
+                    <span class="stars">★★★★☆</span>
+                    <span style="color: #666; font-size: 14px;">4.3 (213 reviews)</span>
+                </div>
+                <div class="price-section">
+                    <span class="current-price">$149.99</span>
+                    <span style="color: #c41e3a; font-size: 14px; margin-left: 8px;">(50% off)</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-add-bag">Add To Bag</button>
+                    <button class="btn btn-tryon" onclick="openTryOnModal()">
+                        <span>👗</span>
+                        <span>Virtual Try-On</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="tryonModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Virtual Try-On</div>
+                <button class="close-btn" onclick="closeTryOnModal()">×</button>
+            </div>
+            <div class="upload-section" id="uploadSection" onclick="document.getElementById('photoUpload').click()">
+                <div class="upload-icon">📸</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Your Photo</div>
+                <div style="font-size: 14px; color: #666;">Click to upload or drag and drop</div>
+                <input type="file" id="photoUpload" accept="image/*" onchange="handleUpload(event)" style="display: none;">
+            </div>
+            <div class="loading" id="loadingSection">
+                <div class="spinner"></div>
+                <p style="color: #666;">Processing your try-on... This may take 10-30 seconds</p>
+            </div>
+            <div class="result-section" id="resultSection">
+                <img src="" alt="Try-on result" class="result-image" id="resultImage">
+                <button class="btn btn-add-bag" style="width: 100%;">Add To Bag</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Vmize Studio">
+                    </div>
+                    <p class="footer-desc">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="demo-public.html">Demo</a>
+                    <a href="integration.html">Integration</a>
+                    <a href="dashboard-complete.html">Dashboard</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Documentation</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Vmize Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const BACKEND_URL = 'https://your-backend.railway.app';
+        const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
+        const PRODUCT_CATEGORY = 'outerwear';
+        const PRODUCT_SLUG = 'jacket';
+
+        fetch('/mnt/user-data/uploads/ChatGPT_Image_Dec_26__2025__08_25_13_PM.png')
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                document.getElementById('logoImg').src = url;
+            })
+            .catch(() => console.log('Logo loading failed'));
+
+        function goBack() {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            if (sessionHistory.length > 1) {
+                sessionHistory.pop();
+                const previousPage = sessionHistory[sessionHistory.length - 1];
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                window.location.href = previousPage;
+            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'demo-public.html';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) sessionHistory.shift();
+            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+        });
+
+        function openTryOnModal() {
+            document.getElementById('tryonModal').classList.add('active');
+            trackEvent('try_on_initiated', {
+                product: PRODUCT_SLUG,
+                product_name: 'Sherpa Hooded Jacket',
+                price: 149.99
+            });
+        }
+
+        function closeTryOnModal() {
+            document.getElementById('tryonModal').classList.remove('active');
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('loadingSection').classList.remove('active');
+            document.getElementById('resultSection').classList.remove('active');
+        }
+
+        async function handleUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            trackEvent('photo_uploaded', {
+                product: PRODUCT_SLUG,
+                file_size: file.size
+            });
+
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('loadingSection').classList.add('active');
+
+            const garmentImageUrl = document.getElementById('productImage').src;
+            const modelImageBase64 = await fileToBase64(file);
+
+            try {
+                const result = await callVmizeAPI(modelImageBase64, garmentImageUrl);
+
+                document.getElementById('loadingSection').classList.remove('active');
+                document.getElementById('resultSection').classList.add('active');
+                document.getElementById('resultImage').src = result.output_url || result.output?.image_url || '';
+
+                trackEvent('result_generated', {
+                    product: PRODUCT_SLUG,
+                    success: true
+                });
+
+            } catch (error) {
+                console.error('Try-on failed:', error);
+                document.getElementById('loadingSection').classList.remove('active');
+                document.getElementById('uploadSection').style.display = 'block';
+                alert(`Try-on failed: ${error.message}`);
+
+                trackEvent('result_generated', {
+                    product: PRODUCT_SLUG,
+                    success: false,
+                    error: error.message
+                });
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function callVmizeAPI(modelImageBase64, garmentImageUrl) {
+            console.log('🚀 Starting try-on request...');
+            
+            const startResp = await fetch(`${BACKEND_URL}/api/tryon/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': DEMO_API_KEY
+                },
+                body: JSON.stringify({
+                    model_image: modelImageBase64,
+                    garment_image: garmentImageUrl,
+                    category: PRODUCT_CATEGORY
+                })
+            });
+
+            console.log('📡 Start response status:', startResp.status);
+
+            if (!startResp.ok) {
+                const err = await startResp.json().catch(() => ({ error: 'Request failed' }));
+                console.error('❌ Start failed:', err);
+                throw new Error(err.error || `API request failed (${startResp.status})`);
+            }
+
+            const startData = await startResp.json();
+            console.log('✅ Start successful:', startData);
+
+            const predictionId = startData.prediction_id || startData.id || startData.predictionId;
+            if (!predictionId) {
+                throw new Error('No prediction ID returned from API');
+            }
+
+            console.log('🔄 Polling for result, ID:', predictionId);
+
+            const timeout = 60000;
+            const interval = 2000;
+            const deadline = Date.now() + timeout;
+
+            while (Date.now() < deadline) {
+                await new Promise(r => setTimeout(r, interval));
+
+                const statusResp = await fetch(`${BACKEND_URL}/api/tryon/${predictionId}`, {
+                    headers: { 'x-api-key': DEMO_API_KEY }
+                });
+
+                if (!statusResp.ok) {
+                    console.warn('⚠️ Status check failed:', statusResp.status);
+                    continue;
+                }
+
+                const statusData = await statusResp.json();
+                console.log('📊 Status:', statusData.status);
+
+                if (statusData.status === 'completed' || statusData.status === 'succeeded') {
+                    const outputUrl = statusData.output?.image_url || statusData.output_url || statusData.result?.image_url;
+                    console.log('🎉 Success! Output URL:', outputUrl);
+                    return { output_url: outputUrl, output: statusData.output };
+                }
+
+                if (statusData.status === 'failed' || statusData.status === 'error') {
+                    throw new Error(statusData.error || 'Try-on processing failed');
+                }
+            }
+
+            throw new Error('Timeout waiting for try-on result (60s)');
+        }
+
+        function trackEvent(eventName, properties) {
+            fetch(`${BACKEND_URL}/api/analytics/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event: eventName,
+                    properties: properties,
+                    timestamp: new Date().toISOString(),
