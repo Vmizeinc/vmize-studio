@@ -478,13 +478,36 @@
             <nav>
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
-                <a href="demo-public.html">Demo</a>
-                <a href="integration-hub-complete.html" class="active">Integration</a>
-                <a href="pricing.html">Pricing</a>
+                <a href="demo-public-updated.html">Demo</a>
+                <a href="integration-hub-updated.html" class="active">Integration</a>
+                <a href="pricing-complete.html">Pricing</a>
                 <a href="login.html">Login</a>
             </nav>
             <button class="back-btn" onclick="window.location.href='index.html'">
                 <span>←</span> Back
+            </button>
+            <script>
+            function goBack() {
+                const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+                if (sessionHistory.length > 1) {
+                    sessionHistory.pop();
+                    const previousPage = sessionHistory[sessionHistory.length - 1];
+                    sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                    window.location.href = previousPage;
+                } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+            // Track session history
+            window.addEventListener('load', () => {
+                const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+                sessionHistory.push(window.location.pathname);
+                if (sessionHistory.length > 10) sessionHistory.shift();
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+            });
+            </script>
             </button>
         </div>
     </header>
@@ -1130,13 +1153,13 @@ function VmizeTryOn({ productImage }) {
                 <div class="footer-links">
                     <h4>Product</h4>
                     <a href="index.html#features">Features</a>
-                    <a href="demo-public.html">Try Demo</a>
-                    <a href="register-final-pricing.html">Pricing</a>
-                    <a href="integration-hub-complete.html">Integration</a>
+                    <a href="demo-public-updated.html">Try Demo</a>
+                    <a href="pricing-complete.html">Pricing</a>
+                    <a href="integration-hub-updated.html">Integration</a>
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="mailto:support@vmizestudio.com">Contact</a>
+                    <a href="#">Careers</a>
                     <a href="#">Contact</a>
                 </div>
                 <div class="footer-links">
@@ -1147,8 +1170,8 @@ function VmizeTryOn({ productImage }) {
                 </div>
                 <div class="footer-links">
                     <h4>Legal</h4>
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
                     <a href="cookie-policy.html">Cookie Policy</a>
                 </div>
             </div>
@@ -1206,17 +1229,4 @@ function VmizeTryOn({ productImage }) {
         document.addEventListener('click', function(e) {
             if (e.target.matches('.sidebar-links a')) {
                 e.preventDefault();
-                // Remove active from all sidebar links
-                document.querySelectorAll('.sidebar-links a').forEach(link => link.classList.remove('active'));
-                // Add active to clicked link
-                e.target.classList.add('active');
-                // Scroll to the section
-                const href = e.target.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    const section = document.querySelector(href);
-                    if (section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }
-            }
-        });
+                document.querySelectorAll('.sidebar-l
