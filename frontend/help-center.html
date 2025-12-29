@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - VMIZE Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --border-color: #e0e0e0;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            background: var(--bg-light);
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            padding: 80px 32px 60px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 24px 18px 56px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: var(--text-secondary);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: -40px auto 80px;
+            padding: 0 32px;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+
+        .quick-link-card {
+            background: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .quick-link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .quick-link-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .quick-link-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .quick-link-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Categories */
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .category-icon {
+            font-size: 36px;
+        }
+
+        .category-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .faq-list {
+            list-style: none;
+        }
+
+        .faq-item {
+            margin-bottom: 16px;
+        }
+
+        .faq-question {
+            background: var(--bg-light);
+            padding: 16px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: #e8e6ff;
+        }
+
+        .faq-question.active {
+            background: #e8e6ff;
+            color: var(--vmize-purple);
+        }
+
+        .faq-arrow {
+            transition: transform 0.3s;
+        }
+
+        .faq-question.active .faq-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+            padding: 16px 20px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .contact-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .contact-section p {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .contact-card {
+            padding: 24px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .contact-card:hover {
+            border-color: var(--vmize-purple);
+            background: #f5f3ff;
+        }
+
+        .contact-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .contact-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .contact-info {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 48px 32px;
+            margin-top: 80px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo img {
+            height: 50px;
+            margin-bottom: 16px;
+        }
+
+        .footer-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 36px;
+            }
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                  <defs>
+                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(30, 40)">
+                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  </g>
+                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                </svg>
+            </a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="demo-public.html">Demo</a>
+                <a href="integration.html">Integration</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="login.html">Login</a>
+            </nav>
+            <button class="back-btn" onclick="goBack()">
+                <span>←</span> Back
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Help Center</h1>
+        <p>Find answers to your questions and get the most out of VMIZE Studio</p>
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Search for help..." id="searchInput" onkeyup="searchFAQs()">
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <a href="#getting-started" class="quick-link-card">
+                <div class="quick-link-icon">🚀</div>
+                <div class="quick-link-title">Getting Started</div>
+                <div class="quick-link-desc">Setup and onboarding</div>
+            </a>
+            <a href="#integration" class="quick-link-card">
+                <div class="quick-link-icon">🔧</div>
+                <div class="quick-link-title">Integration</div>
+                <div class="quick-link-desc">Connect to your platform</div>
+            </a>
+            <a href="#pricing-billing" class="quick-link-card">
+                <div class="quick-link-icon">💳</div>
+                <div class="quick-link-title">Pricing & Billing</div>
+                <div class="quick-link-desc">Plans and payments</div>
+            </a>
+            <a href="#troubleshooting" class="quick-link-card">
+                <div class="quick-link-icon">🔍</div>
+                <div class="quick-link-title">Troubleshooting</div>
+                <div class="quick-link-desc">Common issues</div>
+            </a>
+        </div>
+
+        <!-- FAQ Categories -->
+        <h2 class="section-title">Frequently Asked Questions</h2>
+
+        <div class="categories-grid">
+            <!-- Getting Started -->
+            <div class="category-card" id="getting-started">
+                <div class="category-header">
+                    <div class="category-icon">🚀</div>
+                    <h3 class="category-title">Getting Started</h3>
+                </div>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I create an account?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Click the "Get Started" button on our homepage or go to the <a href="register-final-pricing.html" style="color: var(--vmize-purple);">pricing page</a>. Choose your plan (Starter, Professional, or Enterprise), fill in your details including company name and website, and you'll receive your API key immediately after registration.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What is a virtual try-on?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Virtual try-on uses AI technology to show how clothing items look on a person. Customers upload a photo of themselves, and our AI generates a realistic image of them wearing your products. This helps customers make confident purchase decisions and reduces returns.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How long does setup take?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Setup takes approximately 5 minutes. After creating your account, you'll receive your API key and integration code. Simply copy and paste the code into your website, and you're ready to go. For Shopify users, we offer a one-click installation.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Do I need technical knowledge?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            No technical knowledge is required. Our integration is designed to be simple copy-paste. If you can add a script to your website (like Google Analytics), you can integrate VMIZE. For custom implementations, our documentation and support team are available to help.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Integration -->
+            <div class="category-card" id="integration">
+                <div class="category-header">
+                    <div class="category-icon">🔧</div>
+                    <h3 class="category-title">Integration</h3>
+                </div>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Which platforms are supported?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            VMIZE works with Shopify, WordPress, WooCommerce, and custom websites. We provide platform-specific integration guides and support for each. Our JavaScript widget works on any website that allows custom scripts.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Where do I find my API key?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Your API key is available in your <a href="dashboard-complete.html" style="color: var(--vmize-purple);">dashboard</a> under Settings → API Keys. It starts with "vmize_pk_live_" for production or "vmize_pk_test_" for testing. Never share your API key publicly.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I customize the try-on button?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes! You can customize the button text, color, position, and styling through the widget configuration. See our <a href="integration.html" style="color: var(--vmize-purple);">integration guide</a> for customization options.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I test before going live?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Every account includes a test API key (vmize_pk_test_). Use this key on your staging site to test the integration before deploying to production. Test keys have the same features but don't count toward your credit usage.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Pricing & Billing -->
+            <div class="category-card" id="pricing-billing">
+                <div class="category-header">
+                    <div class="category-icon">💳</div>
+                    <h3 class="category-title">Pricing & Billing</h3>
+                </div>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How does the credit system work?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            1 credit = 1 virtual try-on. Each plan includes monthly credits plus daily bonus credits that reset every 24 hours. Starter gets 300/month, Professional gets 1,000/month + 100 daily, Enterprise gets 3,000/month + 300 daily. Unused monthly credits don't roll over.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I upgrade or downgrade my plan?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes! You can upgrade or downgrade at any time from your dashboard. Upgrades take effect immediately with prorated billing. Downgrades take effect at the start of your next billing cycle.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What happens if I run out of credits?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            You can purchase top-up credits ($25 per 100 try-ons) or upgrade to a higher plan. We recommend upgrading as it offers better value. You'll receive notifications when you reach 80% and 90% of your monthly credits.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Do you offer annual plans?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes! Annual plans save you 2 months (equivalent to ~17% discount). Starter: $490/year, Professional: $1,290/year, Enterprise: $2,990/year. Pay annually and save!
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="category-card" id="troubleshooting">
+                <div class="category-header">
+                    <div class="category-icon">🔍</div>
+                    <h3 class="category-title">Troubleshooting</h3>
+                </div>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>The try-on button isn't showing</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Check that: (1) The widget script is loaded on your page, (2) Your API key is correct, (3) The product ID is set correctly, (4) There are no JavaScript errors in the browser console. If issues persist, contact support with your website URL.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Try-on results are slow</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Virtual try-on generation typically takes 5-15 seconds. Factors affecting speed include image size, server load, and network connection. For best results, ensure images are under 5MB and in JPG or PNG format.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Getting API authentication errors</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Verify your API key is correct and starts with "vmize_pk_live_" (or "vmize_pk_test_" for testing). Check that your account is active and has available credits. API keys are case-sensitive.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Images not uploading</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Ensure images are: (1) Under 5MB in size, (2) In JPG, PNG, or WEBP format, (3) Clear and well-lit photos of people wearing clothes. Images must show a full torso view for best results.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- API & Technical -->
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon">⚙️</div>
+                    <h3 class="category-title">API & Technical</h3>
+                </div>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What are the API rate limits?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Rate limits depend on your plan: Starter (10 req/min), Professional (30 req/min), Enterprise (100 req/min). If you need higher limits, contact our sales team for a custom plan.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How long are images stored?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Customer photos are automatically deleted after 72 hours for privacy and GDPR compliance. Generated try-on results are stored for 30 days for analytics purposes. You can request immediate deletion at any time.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is there a webhook system?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes! Professional and Enterprise plans include webhook support. Configure webhooks in your dashboard to receive real-time notifications for try-on completions, errors, and usage milestones.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I use VMIZE on mobile apps?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes! Our REST API works with iOS, Android, and React Native apps. Mobile SDKs are available for Professional and Enterprise plans. Contact support for SDK documentation and examples.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Account & Security -->
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon">🔒</div>
+                    <h3 class="category-title">Account & Security</h3>
+                </div>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I reset my password?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Click "Forgot Password" on the login page. Enter your email address and we'll send a password reset link. For security, the link expires after 1 hour.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is my data secure?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Yes. We use industry-standard encryption (TLS 1.3), secure API keys, and follow GDPR/CCPA compliance. Customer photos are encrypted at rest and in transit, and deleted after 72 hours. We never sell your data.
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I have multiple team members?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Professional and Enterprise plans support team collaboration. Add team members from your dashboard with customizable permissions (Admin, Developer, or Viewer roles).
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I cancel my account?</span>
+                            <span class="faq-arrow">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            You can cancel anytime from your dashboard under Settings → Billing. Your service continues until the end of your current billing period. No refunds for partial months, but you keep access until the period ends.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <h2>Still Need Help?</h2>
+            <p>Our support team is here to assist you with any questions or issues.</p>
+
+            <div class="contact-methods">
+                <div class="contact-card">
+                    <div class="contact-icon">✉️</div>
+                    <div class="contact-title">Email Support</div>
+                    <div class="contact-info">support@vmizestudio.com<br>Response within 24 hours</div>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">📚</div>
+                    <div class="contact-title">Documentation</div>
+                    <div class="contact-info">Full API reference<br>and integration guides</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 32px;">
+                <a href="mailto:support@vmizestudio.com" class="btn-primary">Contact Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                          <defs>
+                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <g transform="translate(30, 40)">
+                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
+                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
+                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                          </g>
+                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                        </svg>
+                    </div>
+                    <p class="footer-desc">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="index.html#features">Features</a>
+                    <a href="demo-public.html">Try Demo</a>
+                    <a href="register-final-pricing.html">Pricing</a>
+                    <a href="integration.html">Integration</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="mailto:support@vmizestudio.com">Email Us</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Track navigation
+        window.addEventListener('load', () => {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) sessionHistory.shift();
+            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+        });
+
+        // Smart back button
+        function goBack() {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            if (sessionHistory.length > 1) {
+                sessionHistory.pop();
+                const previousPage = sessionHistory[sessionHistory.length - 1];
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                window.location.href = previousPage;
+            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Toggle FAQ
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const isActive = element.classList.contains('active');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('active'));
+            
+            // Open clicked FAQ if it wasn't active
+            if (!isActive) {
+                element.classList.add('active');
+                answer.classList.add('active');
+            }
+        }
+
+        // Search FAQs
+        function searchFAQs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    if (searchTerm.length > 2) {
+                        item.querySelector('.faq-question').classList.add('active');
+                        item.querySelector('.faq-answer').classList.add('active');
+                    }
+                } else {
+                    item.style.display = searchTerm ? 'none' : 'block';
+                }
+            });
+        }
+
+        // Smooth scroll to anchor
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

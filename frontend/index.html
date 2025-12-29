@@ -3,16 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vmize Studio - AI-Powered Virtual Try-On for E-commerce</title>
-    <link rel="icon" href="favicon.svg">
-    <link rel="icon" href="favicon-light.svg" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="favicon-dark.svg" media="(prefers-color-scheme: dark)">
-        <script src="/config.js"></script>
-        <script>
-            const BACKEND_URL = window.VMIZE_CONFIG.BACKEND_URL;
-            const DEMO_API_KEY = window.VMIZE_CONFIG.API_KEY;
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>VMIZE Studio - AI-Powered Virtual Try-On for E-commerce</title>
     <style>
         * {
             margin: 0;
@@ -64,19 +55,6 @@
             text-decoration: none;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 20px;
-        }
-
         .logo-text {
             font-size: 20px;
             font-weight: 700;
@@ -98,19 +76,24 @@
             transition: color 0.3s;
         }
 
+        .nav-links a.nav-active {
+            color: var(--vmize-blue);
+            font-weight: 700;
+        }
+
         .nav-links a:hover {
             color: var(--vmize-purple);
         }
 
         .btn {
-            padding: 10px 24px;
+            padding: 12px 24px;
             border-radius: 8px;
-            font-weight: 600;
             text-decoration: none;
+            font-weight: 600;
             transition: all 0.3s;
             display: inline-block;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
             font-size: 15px;
         }
 
@@ -121,59 +104,51 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 76, 230, 0.4);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
         }
 
         .btn-secondary {
-            background: transparent;
-            border: 2px solid var(--vmize-purple);
+            background: white;
             color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
         }
 
         .btn-secondary:hover {
-            background: var(--vmize-purple);
-            color: white;
+            background: var(--bg-light);
         }
 
         /* Hero Section */
         .hero {
-            margin-top: 80px;
-            padding: 100px 24px;
-            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            padding: 140px 24px 80px;
             text-align: center;
+            background: linear-gradient(180deg, #f8f9fa 0%, white 100%);
         }
 
         .hero h1 {
             font-size: 56px;
             font-weight: 700;
             margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             line-height: 1.2;
         }
 
         .hero p {
             font-size: 20px;
             color: var(--text-secondary);
-            margin-bottom: 32px;
             max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto 40px;
         }
 
         .hero-cta {
             display: flex;
             gap: 16px;
             justify-content: center;
-            flex-wrap: wrap;
+            margin-bottom: 48px;
         }
 
         .stats {
             display: flex;
-            gap: 48px;
             justify-content: center;
-            margin-top: 48px;
+            gap: 64px;
             flex-wrap: wrap;
         }
 
@@ -182,7 +157,7 @@
         }
 
         .stat-number {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: 700;
             background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
             -webkit-background-clip: text;
@@ -194,110 +169,84 @@
             font-size: 14px;
         }
 
-        /* Section Styles */
+        /* Section */
         .section {
+            padding: 80px 24px;
             max-width: 1200px;
-            margin: 80px auto;
-            padding: 0 24px;
+            margin: 0 auto;
         }
 
         .section-title {
-            text-align: center;
             font-size: 42px;
             font-weight: 700;
+            text-align: center;
             margin-bottom: 16px;
         }
 
         .section-subtitle {
             text-align: center;
-            font-size: 18px;
             color: var(--text-secondary);
+            font-size: 18px;
             margin-bottom: 64px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
-        /* Try-On Demo Section */
-        .tryon-demo {
-            background: white;
-            border-radius: 16px;
-            padding: 48px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        .tryon-grid {
+        /* Features Grid */
+        .features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
         }
 
-        .upload-zone {
-            border: 3px dashed #e0e0e0;
-            border-radius: 12px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
+        .feature-card {
+            padding: 32px;
+            border-radius: 16px;
+            border: 2px solid #e0e0e0;
             transition: all 0.3s;
-            position: relative;
         }
 
-        .upload-zone:hover {
+        .feature-card:hover {
             border-color: var(--vmize-purple);
-            background: #f5f3ff;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .upload-zone.active {
-            border-color: var(--vmize-purple);
-            background: linear-gradient(135deg, rgba(107, 76, 230, 0.05), rgba(76, 201, 240, 0.05));
-        }
-
-        .upload-icon {
+        .feature-icon {
             font-size: 48px;
             margin-bottom: 16px;
         }
 
-        .upload-text {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
         }
 
-        .upload-hint {
-            font-size: 13px;
+        .feature-card p {
             color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        .preview-image {
-            width: 100%;
-            border-radius: 12px;
-            margin-top: 16px;
-            max-height: 300px;
-            object-fit: cover;
+        /* Demo Section */
+        .tryon-demo {
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .tryon-count {
+            background: #f0f9ff;
+            padding: 16px 24px;
+            border-radius: 12px;
             text-align: center;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 8px;
             margin-bottom: 24px;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .tryon-count strong {
-            color: var(--vmize-purple);
-            font-size: 18px;
+            border: 2px solid var(--vmize-blue);
         }
 
         .email-form {
-            display: none;
-            background: linear-gradient(135deg, rgba(107, 76, 230, 0.1), rgba(76, 201, 240, 0.1));
-            padding: 24px;
-            border-radius: 12px;
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            border: 2px solid var(--vmize-purple);
             margin-bottom: 24px;
+            display: none;
         }
 
         .email-form.show {
@@ -306,8 +255,7 @@
 
         .email-input {
             display: flex;
-            gap: 12px;
-            margin-top: 12px;
+            gap: 16px;
         }
 
         .email-input input {
@@ -323,229 +271,59 @@
             border-color: var(--vmize-purple);
         }
 
-        /* Features Grid */
-        .features-grid {
+        .tryon-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 32px;
-            border-radius: 12px;
-            background: white;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--vmize-purple);
-            box-shadow: 0 10px 30px rgba(107, 76, 230, 0.2);
-        }
-
-        .feature-icon {
-            font-size: 56px;
-            margin-bottom: 16px;
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-        }
-
-        /* Integration Showcase */
-        .integration-showcase {
-            background: #1a1a1a;
-            color: white;
-            border-radius: 16px;
-            padding: 48px;
-        }
-
-        .platforms-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
             gap: 24px;
-            margin-top: 32px;
-        }
-
-        .platform-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 32px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .platform-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--vmize-purple);
-        }
-
-        .platform-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .platform-card h3 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .platform-card p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-        }
-
-        .code-example {
-            background: #0d1117;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 32px;
-            overflow-x: auto;
-        }
-
-        .code-example pre {
-            color: #58a6ff;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .code-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-        }
-
-        .copy-code-btn {
-            background: var(--vmize-purple);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        /* Pricing */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-
-        .pricing-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        .pricing-card.featured {
-            border-color: var(--vmize-purple);
-            background: linear-gradient(135deg, rgba(107, 76, 230, 0.05), rgba(76, 201, 240, 0.05));
-            transform: scale(1.05);
-        }
-
-        .plan-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .plan-price {
-            font-size: 48px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
-
-        .plan-period {
-            color: var(--text-secondary);
             margin-bottom: 24px;
         }
 
-        .plan-features {
-            list-style: none;
-            margin-bottom: 32px;
-            text-align: left;
+        .upload-zone {
+            border: 3px dashed #e0e0e0;
+            border-radius: 16px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .plan-features li {
-            padding: 12px 0;
-            border-bottom: 1px solid #e0e0e0;
+        .upload-zone:hover {
+            border-color: var(--vmize-purple);
+            background: #f8f9fa;
         }
 
-        .plan-features li:before {
-            content: "✓";
-            color: var(--vmize-purple);
-            font-weight: bold;
-            margin-right: 12px;
+        .upload-zone.active {
+            border-color: var(--vmize-purple);
+            background: #f5f3ff;
         }
 
-        /* Footer */
-        footer {
-            background: #1a1a1a;
-            color: white;
-            padding: 60px 24px 24px;
-            margin-top: 100px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 48px;
-            margin-bottom: 48px;
-        }
-
-        .footer-section h4 {
+        .upload-icon {
+            font-size: 64px;
             margin-bottom: 16px;
         }
 
-        .footer-section a {
-            display: block;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            margin-bottom: 12px;
-            transition: color 0.3s;
+        .upload-text {
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
-        .footer-section a:hover {
-            color: white;
+        .upload-hint {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
-        .footer-bottom {
-            text-align: center;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            margin-top: 16px;
         }
 
-        /* Loading & Success States */
         .loading {
             display: none;
             text-align: center;
@@ -557,11 +335,11 @@
         }
 
         .spinner {
-            width: 48px;
-            height: 48px;
             border: 4px solid #f3f3f3;
             border-top: 4px solid var(--vmize-purple);
             border-radius: 50%;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
         }
@@ -580,33 +358,233 @@
             display: block;
         }
 
+        /* Integration Showcase */
+        .integration-showcase {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            padding: 80px 48px;
+            border-radius: 24px;
+            color: white;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .platform-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 32px 24px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .platform-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .platform-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .platform-card p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            font-family: monospace;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .code-label {
+            font-weight: 600;
+        }
+
+        .copy-code-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .copy-code-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        pre {
+            color: #e0e0e0;
+            overflow-x: auto;
+        }
+
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 40px 32px;
+            transition: all 0.3s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--vmize-purple);
+            border-width: 3px;
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(107, 76, 230, 0.2);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-4px);
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .plan-period {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-light);
+            padding: 64px 24px 32px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-secondary);
+            padding-top: 32px;
+            border-top: 1px solid #e0e0e0;
+        }
+
         /* Responsive */
-        @media (max-width: 968px) {
+        @media (max-width: 900px) {
             .hero h1 {
-                font-size: 42px;
+                font-size: 40px;
+            }
+
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
             }
 
             .tryon-grid {
                 grid-template-columns: 1fr;
             }
 
-            .features-grid,
-            .pricing-grid,
             .platforms-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .footer-content {
                 grid-template-columns: repeat(2, 1fr);
             }
 
             .nav-links {
                 display: none;
             }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 600px) {
             .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .email-input {
+                flex-direction: column;
+            }
+
+            .footer-content {
                 grid-template-columns: 1fr;
             }
         }
@@ -619,41 +597,59 @@
 <body>
     <!-- Navigation -->
     <nav>
-                <div class="nav-container">
-                        <a href="index.html" class="logo" style="gap: 12px; align-items: center; display: flex;">
-                                <span style="display: flex; align-items: center;">
-                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect width="40" height="40" rx="10" fill="url(#paint0_linear_1_2)"/>
-                                        <path d="M12 28L20 12L28 28H25.5L20 17.5L14.5 28H12Z" fill="white"/>
-                                        <defs>
-                                            <linearGradient id="paint0_linear_1_2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                                                <stop stop-color="#6B4CE6"/>
-                                                <stop offset="1" stop-color="#4CC9F0"/>
-                                            </linearGradient>
-                                        </defs>
-                                    </svg>
-                                </span>
-                                <span class="logo-text">Vmize Studio</span>
-                        </a>
+        <div class="nav-container">
+            <a href="index.html" class="logo" style="gap: 12px; align-items: center; display: flex;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="120" height="54">
+                  <defs>
+                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(30, 40)">
+                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  </g>
+                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                </svg>
+            </a>
             <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#demo">Try Demo</a>
+                <a href="index.html">Home</a>
+                <a href="demo-public.html">Try Demo</a>
                 <a href="#pricing">Pricing</a>
                 <a href="integration.html">Integration</a>
-                <a href="dashboard.html">Dashboard</a>
+                <a href="dashboard-complete.html">Dashboard</a>
                 <a href="login.html">Login</a>
-                <a href="register.html" class="btn btn-primary">Get Started</a>
+                <a href="checkout.html" class="btn btn-primary">Get Started</a>
             </div>
         </div>
     </nav>
+        <script>
+            // Highlight active nav link
+            document.addEventListener('DOMContentLoaded', function() {
+                const links = document.querySelectorAll('.nav-links a');
+                const path = window.location.pathname.split('/').pop();
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && href !== '#' && href !== '' && (href === path || (href !== '#' && path === '' && href === 'index.html'))) {
+                        link.classList.add('nav-active');
+                    }
+                });
+            });
+        </script>
 
     <!-- Hero Section -->
     <section class="hero">
         <h1>AI-Powered Virtual Try-On<br>for E-commerce</h1>
         <p>Let your customers see how products look on them before they buy. Seamless integration with Shopify, WooCommerce, and custom sites.</p>
         <div class="hero-cta">
-            <a href="register.html" class="btn btn-primary">Start Free Trial</a>
-            <a href="#demo" class="btn btn-secondary">Try Demo Now</a>
+            <a href="register-final-pricing.html" class="btn btn-primary">Start Free Trial</a>
+            <a href="demo-public.html" class="btn btn-secondary">Try Demo Now</a>
         </div>
         <div class="stats">
             <div class="stat-item">
@@ -661,19 +657,19 @@
                 <div class="stat-label">Setup Time</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">$29</div>
+                <div class="stat-number">$49</div>
                 <div class="stat-label">Starting Price</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Platforms Supported</div>
+                <div class="stat-number">1 credit</div>
+                <div class="stat-label">= 1 Try-On</div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="section" id="features">
-        <h2 class="section-title">Why Choose Vmize Studio?</h2>
+        <h2 class="section-title">Why Choose VMIZE Studio?</h2>
         <p class="section-subtitle">Everything you need to bring virtual try-on to your store</p>
         
         <div class="features-grid">
@@ -704,8 +700,8 @@
             </div>
             <div class="feature-card">
                 <div class="feature-icon">💰</div>
-                <h3>Pay As You Grow</h3>
-                <p>Flexible pricing starting at $29/month. No hidden fees</p>
+                <h3>Simple Pricing</h3>
+                <p>1 credit = 1 try-on. No confusing math. Starting at $49/month</p>
             </div>
         </div>
     </section>
@@ -752,7 +748,7 @@
                 </div>
 
                 <div>
-                    <div class="upload-zone" id="resultZone" style="min-height: 200px;">
+                    <div class="upload-zone" id="resultZone" style="min-height: 300px;">
                         <div class="upload-icon">✨</div>
                         <div class="upload-text">Result</div>
                         <div class="upload-hint">Virtual try-on result will appear here</div>
@@ -774,7 +770,7 @@
             </button>
 
             <p style="text-align: center; margin-top: 16px; color: var(--text-secondary); font-size: 14px;">
-                ⚠️ Demo uses sample API. <a href="register.html" style="color: var(--vmize-purple);">Sign up</a> to get your own API key.
+                Powered by VMIZE AI • <a href="register-final-pricing.html" style="color: var(--vmize-purple);">Sign up</a> to get your own API key
             </p>
         </div>
     </section>
@@ -815,7 +811,7 @@
                     <span class="code-label">Add to any product page:</span>
                     <button class="copy-code-btn" onclick="copyCode()">Copy Code</button>
                 </div>
-                <pre id="codeSnippet">&lt;!-- Vmize Virtual Try-On Widget --&gt;
+                <pre id="codeSnippet">&lt;!-- VMIZE Virtual Try-On Widget --&gt;
 &lt;script src="https://cdn.vmizestudio.com/widget.js"&gt;&lt;/script&gt;
 &lt;script&gt;
   VmizeWidget.init({
@@ -836,49 +832,52 @@
     <!-- Pricing Section -->
     <section class="section" id="pricing">
         <h2 class="section-title">Simple, Transparent Pricing</h2>
-        <p class="section-subtitle">Start free, scale as you grow. No hidden fees.</p>
+        <p class="section-subtitle">1 credit = 1 try-on. No confusing math. Scale as you grow.</p>
         
         <div class="pricing-grid">
             <div class="pricing-card">
                 <div class="plan-name">Starter</div>
-                <div class="plan-price">$29</div>
+                <div class="plan-price">$49</div>
                 <div class="plan-period">per month</div>
                 <ul class="plan-features">
-                    <li>100 try-ons/month</li>
-                    <li>Basic analytics</li>
-                    <li>Email support</li>
-                    <li>All integrations</li>
-                    <li>$0.25 per extra try-on</li>
+                    <li>300 monthly try-ons</li>
+                    <li>Full API access</li>
+                    <li>Real-time analytics</li>
+                    <li>White-label solution</li>
+                    <li>1 website / domain</li>
+                    <li>Standard support</li>
                 </ul>
-                <a href="register.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+                <a href="checkout.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
             </div>
 
             <div class="pricing-card featured">
                 <div class="plan-name">Professional</div>
-                <div class="plan-price">$79</div>
+                <div class="plan-price">$129</div>
                 <div class="plan-period">per month</div>
                 <ul class="plan-features">
-                    <li>500 try-ons/month</li>
-                    <li>Advanced analytics</li>
+                    <li>1,000 monthly try-ons</li>
+                    <li>100 daily bonus try-ons</li>
                     <li>Priority support</li>
-                    <li>All integrations</li>
-                    <li>$0.20 per extra try-on</li>
+                    <li>Real-time analytics</li>
+                    <li>Up to 3 websites</li>
+                    <li>$0.129/try-on effective rate</li>
                 </ul>
-                <a href="register.html" class="btn btn-primary" style="width: 100%;">Get Started</a>
+                <a href="checkout.html" class="btn btn-primary" style="width: 100%;">Get Started</a>
             </div>
 
             <div class="pricing-card">
-                <div class="plan-name">Business</div>
-                <div class="plan-price">$199</div>
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-price">$299</div>
                 <div class="plan-period">per month</div>
                 <ul class="plan-features">
-                    <li>2,000 try-ons/month</li>
-                    <li>Enterprise analytics</li>
-                    <li>24/7 phone support</li>
-                    <li>Custom integration</li>
-                    <li>$0.15 per extra try-on</li>
+                    <li>3,000 monthly try-ons</li>
+                    <li>300 daily bonus try-ons</li>
+                    <li>Dedicated support</li>
+                    <li>Priority features</li>
+                    <li>Up to 5 websites</li>
+                    <li>$0.099/try-on effective rate</li>
                 </ul>
-                <a href="register.html" class="btn btn-secondary" style="width: 100%;">Get Started</a>
+                <a href="checkout.html" class="btn btn-secondary" style="width: 100%;">Start Now</a>
             </div>
         </div>
     </section>
@@ -889,62 +888,56 @@
             <div class="footer-section">
                 <h4>Product</h4>
                 <a href="#features">Features</a>
-                <a href="#demo">Try Demo</a>
+                <a href="demo-public.html">Try Demo</a>
                 <a href="#pricing">Pricing</a>
                 <a href="integration.html">Integration</a>
             </div>
             <div class="footer-section">
                 <h4>Company</h4>
-                <a href="about.html">About</a>
-                <a href="terms.html">Terms</a>
-                <a href="privacy.html">Privacy</a>
-                <a href="/cdn-cgi/l/email-protection#74171b1a0015170001073402191d0e115a171b19">Contact</a>
+                <a href="mailto:support@vmizestudio.com">Contact</a>
+                <a href="#">Contact</a>
             </div>
             <div class="footer-section">
                 <h4>Resources</h4>
-                <a href="integration.html">Documentation</a>
-                <a href="dashboard.html">Dashboard</a>
+                <a href="documentation.html">Documentation</a>
+                <a href="api-reference.html">API Reference</a>
+                <a href="help-center.html">Help Center</a>
             </div>
             <div class="footer-section">
-                <h4>Connect</h4>
-                <a href="/cdn-cgi/l/email-protection#5e3d31302a3f3d2a2b2d1e283337243b703d3133"><span class="__cf_email__" data-cfemail="bfdcd0d1cbdedccbcaccffc9d2d6c5da91dcd0d2">[email&#160;protected]</span></a>
-                <a href="#">San Jose, California</a>
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+                <a href="cookie-policy.html">Cookie Policy</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Vmize Studio. All rights reserved.</p>
+            <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Demo state
-        let triesRemaining = 1;
+    <script>
+        const BACKEND_URL = 'http://localhost:50277'; // Change to your production URL
+        const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
+
+        let triesRemaining = parseInt(localStorage.getItem('vmize_demo_tries') || '1');
+        let emailSubmitted = localStorage.getItem('vmize_demo_email') !== null;
         let modelImage = null;
         let garmentImage = null;
-        let emailSubmitted = false;
-
-        // Check for existing email in localStorage
-        if (localStorage.getItem('vmize_demo_email')) {
-            emailSubmitted = true;
-            triesRemaining = parseInt(localStorage.getItem('vmize_demo_tries') || 5);
-            document.getElementById('emailPrompt').style.display = 'none';
-        }
 
         // Update tries display
         function updateTriesDisplay() {
             document.getElementById('triesRemaining').textContent = triesRemaining;
-            
             if (triesRemaining === 0 && !emailSubmitted) {
-                document.getElementById('emailForm').classList.add('show');
                 document.getElementById('generateBtn').disabled = true;
                 document.getElementById('generateBtn').textContent = 'Submit Email for More Tries';
             }
         }
 
+        updateTriesDisplay();
+
         // Submit email
         function submitEmail() {
-            const email = document.getElementById('userEmail').value.trim();
-            
+            const email = document.getElementById('userEmail').value;
             if (!email || !email.includes('@')) {
                 alert('Please enter a valid email address');
                 return;
@@ -961,7 +954,6 @@
             document.getElementById('generateBtn').textContent = 'Generate Virtual Try-On';
             updateTriesDisplay();
 
-            // In production, send email to your backend
             console.log('Email submitted:', email);
         }
 
@@ -1005,7 +997,7 @@
             }
         }
 
-        // Generate try-on
+        // Generate try-on with REAL API
         async function generateTryOn() {
             if (!modelImage || !garmentImage) {
                 alert('Please upload both model and garment images');
@@ -1022,38 +1014,77 @@
             document.getElementById('resultContainer').classList.remove('show');
 
             try {
-                // Simulate API call (replace with actual Fashn.AI API call in production)
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                // Call REAL VMIZE API
+                const response = await fetch(`${BACKEND_URL}/api/tryon/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': DEMO_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model_image: modelImage,
+                        garment_image: garmentImage,
+                        category: 'tops' // You can make this dynamic
+                    })
+                });
 
-                // Demo: just show the model image as result
-                // In production, this would be the actual AI-generated result
-                document.getElementById('resultImage').src = modelImage;
-                document.getElementById('resultContainer').classList.add('show');
-                const resultZone = document.getElementById('resultZone');
-                resultZone.innerHTML = '';
-                const resImg = document.createElement('img');
-                resImg.src = modelImage;
-                resImg.className = 'preview-image';
-                resImg.alt = 'Result';
-                resImg.style.margin = '0';
-                resultZone.appendChild(resImg);
+                const data = await response.json();
 
-                // Decrease tries
-                triesRemaining--;
-                localStorage.setItem('vmize_demo_tries', triesRemaining.toString());
-                updateTriesDisplay();
-
-                // Show email form if out of tries
-                if (triesRemaining === 0 && !emailSubmitted) {
-                    setTimeout(() => {
-                        document.getElementById('emailForm').classList.add('show');
-                    }, 1000);
+                if (!response.ok) {
+                    throw new Error(data.error || 'API request failed');
                 }
+
+                const predictionId = data.prediction_id;
+
+                // Poll for result
+                const pollInterval = setInterval(async () => {
+                    const statusResponse = await fetch(`${BACKEND_URL}/api/tryon/${predictionId}`, {
+                        headers: {
+                            'x-api-key': DEMO_API_KEY
+                        }
+                    });
+
+                    const statusData = await statusResponse.json();
+
+                    if (statusData.status === 'completed') {
+                        clearInterval(pollInterval);
+                        
+                        // Show result
+                        const resultImageUrl = statusData.output.image_url || statusData.output_url;
+                        document.getElementById('resultImage').src = resultImageUrl;
+                        document.getElementById('resultContainer').classList.add('show');
+                        const resultZone = document.getElementById('resultZone');
+                        resultZone.innerHTML = '';
+                        const resImg = document.createElement('img');
+                        resImg.src = resultImageUrl;
+                        resImg.className = 'preview-image';
+                        resImg.alt = 'Result';
+                        resImg.style.margin = '0';
+                        resultZone.appendChild(resImg);
+
+                        // Decrease tries
+                        triesRemaining--;
+                        localStorage.setItem('vmize_demo_tries', triesRemaining.toString());
+                        updateTriesDisplay();
+
+                        // Hide loading
+                        document.getElementById('loading').classList.remove('show');
+
+                        // Show email form if out of tries
+                        if (triesRemaining === 0 && !emailSubmitted) {
+                            setTimeout(() => {
+                                document.getElementById('emailForm').classList.add('show');
+                            }, 1000);
+                        }
+                    } else if (statusData.status === 'failed') {
+                        clearInterval(pollInterval);
+                        throw new Error('Try-on generation failed');
+                    }
+                }, 2000); // Poll every 2 seconds
 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Failed to generate try-on. Please try again.');
-            } finally {
+                alert('Failed to generate try-on: ' + error.message);
                 document.getElementById('loading').classList.remove('show');
             }
         }
@@ -1074,4 +1105,12 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = documen
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

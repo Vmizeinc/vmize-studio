@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - VMIZE Studio</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --border-color: #e0e0e0;
+            --bg-light: #f8f9fa;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .checkout-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 32px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        /* Payment Form Section */
+        .payment-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        /* Payment Method Tabs */
+        .payment-methods {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .payment-method-tab {
+            padding: 16px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .payment-method-tab:hover {
+            color: var(--vmize-purple);
+        }
+
+        .payment-method-tab.active {
+            color: var(--vmize-purple);
+            border-bottom-color: var(--vmize-purple);
+        }
+
+        .payment-method-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--vmize-purple);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Stripe Elements */
+        #card-element {
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+        }
+
+        #card-element.StripeElement--focus {
+            border-color: var(--vmize-purple);
+        }
+
+        #card-errors {
+            color: var(--danger);
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        /* Payment Request Button (Apple Pay / Google Pay) */
+        #payment-request-button {
+            margin-bottom: 24px;
+        }
+
+        .or-divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .or-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .or-divider span {
+            background: white;
+            padding: 0 16px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .submit-btn-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .price-breakdown {
+            margin-bottom: 24px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 14px;
+        }
+
+        .price-row.total {
+            border-top: 2px solid var(--border-color);
+            padding-top: 16px;
+            margin-top: 8px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .price-row .price {
+            font-weight: 600;
+        }
+
+        .total .price {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Trust Signals */
+        .trust-signals {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 24px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .trust-icon {
+            color: var(--success);
+            font-size: 18px;
+        }
+
+        /* Payment Method Content */
+        .payment-content {
+            display: none;
+        }
+
+        .payment-content.active {
+            display: block;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: white;
+            font-size: 40px;
+        }
+
+        .success-message h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .success-message p {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+                order: -1;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                display: none;
+            }
+
+            footer > div > div {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="140" height="60">
+                  <defs>
+                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(30, 40)">
+                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  </g>
+                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                </svg>
+            </a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="demo-public-updated.html">Demo</a>
+                <a href="integration-hub-complete.html">Integration</a>
+                <a href="pricing-complete.html">Pricing</a>
+                <a href="login.html">Login</a>
+            </nav>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="secure-badge">
+                    <span>🔒</span>
+                    <span>Secure Checkout</span>
+                </div>
+                <button class="back-btn" onclick="goBack()">
+                    <span>←</span> Back
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checkout Container -->
+    <div class="checkout-container">
+        <!-- Payment Section -->
+        <div class="payment-section" id="paymentForm">
+            <h1 class="section-title">Payment Information</h1>
+            <p class="section-subtitle">Complete your subscription to VMIZE Studio</p>
+
+            <!-- Payment Method Tabs -->
+            <div class="payment-methods">
+                <button class="payment-method-tab active" onclick="switchPaymentMethod('card')">
+                    <svg class="payment-method-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                    </svg>
+                    Credit Card
+                </button>
+                <button class="payment-method-tab" onclick="switchPaymentMethod('wallet')">
+                    <svg class="payment-method-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                    </svg>
+                    Digital Wallet
+                </button>
+            </div>
+
+            <!-- Card Payment Content -->
+            <div class="payment-content active" id="cardPayment">
+                <form id="payment-form">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" id="email" placeholder="your@email.com" required>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label class="form-label">Cardholder Name</label>
+                        <input type="text" class="form-input" id="cardName" placeholder="John Doe" required>
+                    </div>
+
+                    <!-- Card Element -->
+                    <div class="form-group">
+                        <label class="form-label">Card Information</label>
+                        <div id="card-element"></div>
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+
+                    <!-- Billing Address -->
+                    <div class="form-group">
+                        <label class="form-label">Billing Address</label>
+                        <input type="text" class="form-input" id="address" placeholder="123 Main St" required style="margin-bottom: 12px;">
+                        <div class="form-row">
+                            <input type="text" class="form-input" id="city" placeholder="City" required>
+                            <input type="text" class="form-input" id="state" placeholder="State" required>
+                        </div>
+                        <div class="form-row" style="margin-top: 12px;">
+                            <input type="text" class="form-input" id="zip" placeholder="ZIP Code" required>
+                            <input type="text" class="form-input" id="country" placeholder="Country" value="United States" required>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        <span class="submit-btn-text">
+                            <span id="button-text">Subscribe Now</span>
+                            <div class="spinner" id="spinner"></div>
+                        </span>
+                    </button>
+
+                    <p style="text-align: center; color: var(--text-secondary); font-size: 12px; margin-top: 16px;">
+                        By subscribing, you agree to our <a href="terms-of-service.html" style="color: var(--vmize-purple);">Terms of Service</a> and <a href="privacy-policy.html" style="color: var(--vmize-purple);">Privacy Policy</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Digital Wallet Payment Content -->
+            <div class="payment-content" id="walletPayment">
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">
+                    Pay quickly and securely with Apple Pay or Google Pay
+                </p>
+
+                <!-- Payment Request Button (Apple Pay / Google Pay) -->
+                <div id="payment-request-button"></div>
+
+                <div class="or-divider">
+                    <span>or use credit card</span>
+                </div>
+
+                <button class="submit-btn" onclick="switchPaymentMethod('card')" style="background: white; color: var(--vmize-purple); border: 2px solid var(--vmize-purple);">
+                    Enter Card Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Message (Hidden Initially) -->
+        <div class="payment-section success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h2>Payment Successful!</h2>
+            <p>Your subscription to VMIZE Studio has been activated.</p>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">
+                A confirmation email has been sent to <strong id="confirmEmail"></strong>
+            </p>
+            <a href="admin-dashboard.html" class="submit-btn" style="text-decoration: none; display: block;">
+                Go to Dashboard
+            </a>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2 class="summary-title">Order Summary</h2>
+            
+            <div class="plan-badge" id="planBadge">PROFESSIONAL</div>
+            <div class="plan-name" id="planName">Professional Plan</div>
+            <p class="plan-description" id="planDescription">Perfect for growing businesses</p>
+
+            <ul class="plan-features" id="planFeatures">
+                <li>1,000 monthly try-ons</li>
+                <li>100 daily bonus try-ons</li>
+                <li>Priority support</li>
+                <li>Real-time analytics</li>
+                <li>Up to 3 websites</li>
+                <li>Full API access</li>
+                <li>White-label solution</li>
+            </ul>
+
+            <div class="price-breakdown">
+                <div class="price-row">
+                    <span>Subtotal</span>
+                    <span class="price" id="subtotal">$129.00</span>
+                </div>
+                <div class="price-row">
+                    <span>Tax (estimated)</span>
+                    <span class="price" id="tax">$0.00</span>
+                </div>
+                <div class="price-row total">
+                    <span>Total due today</span>
+                    <span class="price" id="total">$129.00</span>
+                </div>
+            </div>
+
+            <div class="trust-signals">
+                <div class="trust-item">
+                    <span class="trust-icon">🔒</span>
+                    <span>Secure SSL encrypted payment</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">↻</span>
+                    <span>Cancel anytime, no questions asked</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">✓</span>
+                    <span>30-day money-back guarantee</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">💳</span>
+                    <span>PCI DSS compliant</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: white; padding: 48px 32px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); margin-top: 80px;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 40px;">
+                <div>
+                    <div style="margin-bottom: 16px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                          <defs>
+                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <g transform="translate(30, 40)">
+                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
+                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
+                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                          </g>
+                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                        </svg>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6; max-width: 300px;">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 16px; font-weight: 700; color: #000000;">Product</h4>
+                    <a href="index.html#features" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Features</a>
+                    <a href="demo-public-updated.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Try Demo</a>
+                    <a href="pricing-complete.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Pricing</a>
+                    <a href="integration-hub-complete.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Integration</a>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 16px; font-weight: 700; color: #000000;">Company</h4>
+                    <a href="#" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Careers</a>
+                    <a href="#" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Contact</a>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 16px; font-weight: 700; color: #000000;">Resources</h4>
+                    <a href="documentation.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Documentation</a>
+                    <a href="#" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">API Reference</a>
+                    <a href="help-center.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Help Center</a>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 16px; font-weight: 700; color: #000000;">Legal</h4>
+                    <a href="privacy-policy.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Privacy Policy</a>
+                    <a href="terms-of-service.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Terms of Service</a>
+                    <a href="cookie-policy.html" style="display: block; color: var(--text-secondary); text-decoration: none; margin-bottom: 12px; transition: color 0.3s;">Cookie Policy</a>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 24px; text-align: center; color: #999; font-size: 14px;">
+                <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Get plan from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedPlan = urlParams.get('plan') || 'professional';
+
+        // Plan configurations
+        const plans = {
+            starter: {
+                name: 'Starter Plan',
+                badge: 'STARTER',
+                description: 'Perfect for small businesses getting started',
+                price: 49.00,
+                features: [
+                    '300 monthly try-ons',
+                    'Full API access',
+                    'Real-time analytics',
+                    'White-label solution',
+                    '1 website / domain',
+                    'Standard support',
+                    'Custom integrations'
+                ]
+            },
+            professional: {
+                name: 'Professional Plan',
+                badge: 'PROFESSIONAL',
+                description: 'Perfect for growing businesses',
+                price: 129.00,
+                features: [
+                    '1,000 monthly try-ons',
+                    '100 daily bonus try-ons',
+                    'Priority support',
+                    'Real-time analytics',
+                    'Up to 3 websites',
+                    'Full API access',
+                    'White-label solution'
+                ]
+            },
+            enterprise: {
+                name: 'Enterprise Plan',
+                badge: 'ENTERPRISE',
+                description: 'For large businesses with high volume needs',
+                price: 299.00,
+                features: [
+                    '3,000 monthly try-ons',
+                    '300 daily bonus try-ons',
+                    'Dedicated support',
+                    'Priority features',
+                    'Up to 5 websites',
+                    'Full API access',
+                    'White-label solution',
+                    '99.99% SLA guarantee'
+                ]
+            }
+        };
+
+        // Update order summary based on selected plan
+        function updateOrderSummary() {
+            const plan = plans[selectedPlan];
+            if (!plan) return;
+
+            document.getElementById('planBadge').textContent = plan.badge;
+            document.getElementById('planName').textContent = plan.name;
+            document.getElementById('planDescription').textContent = plan.description;
+            
+            // Update features
+            const featuresHTML = plan.features.map(feature => `<li>${feature}</li>`).join('');
+            document.getElementById('planFeatures').innerHTML = featuresHTML;
+
+            // Update pricing
+            const subtotal = plan.price;
+            const tax = 0; // Calculate based on location
+            const total = subtotal + tax;
+
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Initialize Stripe
+        const stripe = Stripe('pk_test_51234567890'); // Replace with your Stripe publishable key
+        const elements = stripe.elements();
+
+        // Create card element
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#1a1a1a',
+                    '::placeholder': {
+                        color: '#aab7c4',
+                    },
+                },
+                invalid: {
+                    color: '#dc3545',
+                },
+            },
+        });
+
+        cardElement.mount('#card-element');
+
+        // Handle card errors
+        cardElement.on('change', (event) => {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Payment Request Button (Apple Pay / Google Pay)
+        const paymentRequest = stripe.paymentRequest({
+            country: 'US',
+            currency: 'usd',
+            total: {
+                label: plans[selectedPlan].name,
+                amount: Math.round(plans[selectedPlan].price * 100),
+            },
+            requestPayerName: true,
+            requestPayerEmail: true,
+        });
+
+        const prButton = elements.create('paymentRequestButton', {
+            paymentRequest: paymentRequest,
+        });
+
+        // Check if Payment Request is available
+        (async () => {
+            const result = await paymentRequest.canMakePayment();
+            if (result) {
+                prButton.mount('#payment-request-button');
+            } else {
+                document.getElementById('payment-request-button').style.display = 'none';
+                document.querySelector('.or-divider').style.display = 'none';
+            }
+        })();
+
+        // Handle Payment Request (Apple Pay / Google Pay)
+        paymentRequest.on('paymentmethod', async (ev) => {
+            // Send payment method to your server
+            const response = await fetch('/create-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    payment_method: ev.paymentMethod.id,
+                    plan: selectedPlan,
+                    email: ev.payerEmail,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                ev.complete('fail');
+            } else {
+                ev.complete('success');
+                showSuccess(ev.payerEmail);
+            }
+        });
+
+        // Handle form submission
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const submitButton = document.getElementById('submit-btn');
+            const buttonText = document.getElementById('button-text');
+            const spinner = document.getElementById('spinner');
+
+            // Disable button and show spinner
+            submitButton.disabled = true;
+            buttonText.textContent = 'Processing...';
+            spinner.style.display = 'block';
+
+            const email = document.getElementById('email').value;
+            const name = document.getElementById('cardName').value;
+
+            // Create payment method
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
+                    name: name,
+                    email: email,
+                    address: {
+                        line1: document.getElementById('address').value,
+                        city: document.getElementById('city').value,
+                        state: document.getElementById('state').value,
+                        postal_code: document.getElementById('zip').value,
+                        country: 'US',
+                    },
+                },
+            });
+
+            if (error) {
+                // Show error
+                document.getElementById('card-errors').textContent = error.message;
+                submitButton.disabled = false;
+                buttonText.textContent = 'Subscribe Now';
+                spinner.style.display = 'none';
+            } else {
+                // Send to your server
+                const response = await fetch('/create-subscription', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        payment_method: paymentMethod.id,
+                        plan: selectedPlan,
+                        email: email,
+                        name: name,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById('card-errors').textContent = data.error;
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'Subscribe Now';
+                    spinner.style.display = 'none';
+                } else {
+                    // Success!
+                    showSuccess(email);
+                }
+            }
+        });
+
+        // Switch payment method
+        function switchPaymentMethod(method) {
+            // Update tabs
+            document.querySelectorAll('.payment-method-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.closest('.payment-method-tab').classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.payment-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            if (method === 'card') {
+                document.getElementById('cardPayment').classList.add('active');
+            } else {
+                document.getElementById('walletPayment').classList.add('active');
+            }
+        }
+
+        // Show success message
+        function showSuccess(email) {
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('successMessage').classList.add('active');
+            document.getElementById('confirmEmail').textContent = email;
+
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 3000);
+        }
+
+        // Initialize on page load
+        updateOrderSummary();
+
+        // Smart back button
+        function goBack() {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            if (sessionHistory.length > 1) {
+                sessionHistory.pop();
+                const previousPage = sessionHistory[sessionHistory.length - 1];
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                window.location.href = previousPage;
+            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'pricing-complete.html';
+            }
+        }
+
+        // Track page view
+        window.addEventListener('load', () => {
+            // Track session history
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) sessionHistory.shift();
+            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+
+            // Track event
+            const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
+            events.push({
+                event: 'checkout_started',
+                properties: { 
+                    plan: selectedPlan,
+                    amount: plans[selectedPlan].price
+                },
+                timestamp: new Date().toISOString(),
+                visitor_id: localStorage.getItem('vmize_visitor_id') || 'visitor_' + Date.now()
+            });
+            if (events.length > 100) events.shift();
+            localStorage.setItem('vmize_events', JSON.stringify(events));
+        });
+    </script>
+</body>
+</html>

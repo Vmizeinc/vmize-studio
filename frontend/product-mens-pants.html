@@ -162,7 +162,6 @@
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="about.html">About</a>
                     <a href="#">Contact</a>
                 </div>
                 <div class="footer-links">
@@ -178,6 +177,17 @@
     </footer>
 
     <script>
+                // Highlight active nav link
+                document.addEventListener('DOMContentLoaded', function() {
+                    const links = document.querySelectorAll('nav a');
+                    const path = window.location.pathname.split('/').pop();
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href && href !== '#' && href !== '' && (href === path || (href !== '#' && path === '' && href === 'index.html'))) {
+                            link.classList.add('active');
+                        }
+                    });
+                });
         const BACKEND_URL = 'https://your-backend.railway.app';
         const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
         const PRODUCT_CATEGORY = 'tops';

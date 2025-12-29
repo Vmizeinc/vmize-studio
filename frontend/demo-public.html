@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Try-On Demo - Vmize Studio</title>
+    <title>Virtual Try-On Demo - VMIZE Studio</title>
     <style>
         * {
             margin: 0;
@@ -16,12 +16,14 @@
             --vmize-blue: #4CC9F0;
             --text-primary: #1a1a1a;
             --text-secondary: #666;
+            --border-color: #e0e0e0;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--text-primary);
             line-height: 1.6;
+            background: #f8f9fa;
         }
 
         /* Header */
@@ -42,8 +44,10 @@
             align-items: center;
         }
 
-        .logo img {
-            height: 50px;
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
         }
 
         nav {
@@ -63,20 +67,6 @@
             color: var(--vmize-purple);
         }
 
-        .btn-dashboard {
-            padding: 10px 24px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            color: white !important;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.3s;
-        }
-
-        .btn-dashboard:hover {
-            transform: translateY(-2px);
-        }
-
         .back-btn {
             padding: 10px 20px;
             background: white;
@@ -85,10 +75,11 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s;
+            border: none;
         }
 
         .back-btn:hover {
@@ -98,64 +89,52 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
             padding: 80px 32px;
             text-align: center;
         }
 
         .hero h1 {
-            font-size: 56px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 24px;
-            color: var(--text-secondary);
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 12px 24px;
-            background: white;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            font-weight: 600;
-            color: var(--vmize-purple);
-        }
-
-        /* Products Section */
-        .products-section {
-            max-width: 1400px;
-            margin: 80px auto;
-            padding: 0 32px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .section-title {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 700;
             margin-bottom: 16px;
         }
 
-        .section-subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 32px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+
+        /* Products Grid */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 32px;
+            margin-bottom: 60px;
         }
 
         .product-card {
@@ -166,30 +145,55 @@
             transition: all 0.3s;
             cursor: pointer;
             text-decoration: none;
-            color: inherit;
-            display: block;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
         }
 
         .product-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
 
         .product-image {
             width: 100%;
-            aspect-ratio: 3/4;
-            background: #f0f0f0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
+            aspect-ratio: 2/3;
             object-fit: cover;
+            background: #f0f0f0;
         }
 
-        .product-badge {
+        .product-info {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-brand {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: auto;
+        }
+
+        .badge {
             position: absolute;
             top: 12px;
             left: 12px;
@@ -198,63 +202,23 @@
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 12px;
-            font-weight: 700;
-        }
-
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-category {
-            font-size: 12px;
-            color: var(--vmize-blue);
             font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .product-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .product-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-
-        .product-price {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--vmize-purple);
-        }
-
-        .try-on-badge {
-            margin-top: 12px;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            color: white;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
         }
 
         /* CTA Section */
         .cta-section {
             background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
             padding: 80px 32px;
             text-align: center;
-            color: white;
-            margin-top: 80px;
+            border-radius: 24px;
+            margin: 60px 0;
         }
 
         .cta-section h2 {
             font-size: 42px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .cta-section p {
@@ -265,19 +229,19 @@
 
         .btn-cta {
             display: inline-block;
-            padding: 16px 48px;
+            padding: 18px 48px;
             background: white;
             color: var(--vmize-purple);
             text-decoration: none;
             border-radius: 8px;
             font-weight: 700;
             font-size: 18px;
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
         .btn-cta:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         /* Footer */
@@ -294,7 +258,7 @@
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
             gap: 48px;
             margin-bottom: 40px;
         }
@@ -313,6 +277,7 @@
         .footer-links h4 {
             margin-bottom: 16px;
             font-weight: 700;
+            color: #000000;
         }
 
         .footer-links a {
@@ -328,29 +293,14 @@
         }
 
         .footer-bottom {
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid var(--border-color);
             padding-top: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-bottom p {
+            text-align: center;
             color: #999;
             font-size: 14px;
         }
 
-        .footer-legal {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-legal a {
-            color: #999;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
+        /* Responsive */
         @media (max-width: 1200px) {
             .products-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -358,23 +308,23 @@
         }
 
         @media (max-width: 900px) {
+            nav {
+                display: none;
+            }
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-            .products-grid {
-                grid-template-columns: 1fr;
             }
             .footer-grid {
                 grid-template-columns: 1fr;
             }
-            nav {
-                display: none;
+            .hero h1 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .products-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -383,20 +333,34 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <a href="index.html" class="logo">
-                                <span id="logoImg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
-                                        <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="40" height="40"/>
-                                    </svg>
-                                </span>
-            </a>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="demo-public.html" class="active">Demo</a>
-                <a href="integration.html">Integration</a>
-                <a href="login.html" class="btn-dashboard">Dashboard</a>
-            </nav>
+                        <a href="index.html" class="logo">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                                    <defs>
+                                        <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                                            <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <g transform="translate(30, 40)">
+                                        <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                                        <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                                        <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                                    </g>
+                                    <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                                    <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                                </svg>
+                        </a>
+                        <nav>
+                                <a href="index.html">Home</a>
+                                <a href="about.html">About</a>
+                                <a href="demo-public-updated.html" class="active">Demo</a>
+                                <a href="integration-hub-complete.html">Integration</a>
+                                <a href="pricing.html">Pricing</a>
+                                <a href="login.html">Login</a>
+                        </nav>
             <button class="back-btn" onclick="goBack()">
                 <span>←</span> Back
             </button>
@@ -406,144 +370,84 @@
     <!-- Hero Section -->
     <section class="hero">
         <h1>Virtual Try-On Demo</h1>
-        <p>Experience AI-powered virtual try-on technology. Click any item to see how it looks on you.</p>
-        <div class="hero-badge">✨ Powered by Advanced AI</div>
+        <p>Experience AI-powered virtual try-on with our demo products. Click any item to see it in action.</p>
     </section>
 
-    <!-- Products Section -->
-    <section class="products-section">
-        <div class="section-header">
-            <h2 class="section-title">Try On Our Collection</h2>
-            <p class="section-subtitle">Click any item to experience virtual try-on</p>
-        </div>
+    <!-- Main Content -->
+    <div class="main-container">
+        <h2 class="section-title">Try Virtual Try-On</h2>
+        <p class="section-subtitle">Select a product to experience our AI-powered virtual try-on technology</p>
 
         <div class="products-grid">
-            <!-- Men's Shirt -->
+            <!-- Product 1: Men's Shirt -->
             <a href="product-mens-shirt.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400&h=600&fit=crop&q=80" alt="Classic Men's Shirt">
-                    <div class="product-badge">NEW</div>
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400&h=600&fit=crop" 
+                         alt="Classic Oxford Shirt" class="product-image">
+                    <span class="badge">NEW</span>
                 </div>
                 <div class="product-info">
-                    <div class="product-category">Men's Tops</div>
+                    <div class="product-brand">Premium Basics</div>
                     <div class="product-name">Classic Oxford Shirt</div>
-                    <div class="product-description">Premium cotton blend, tailored fit</div>
                     <div class="product-price">$79.99</div>
-                    <div class="try-on-badge">👔 Try On Virtually</div>
                 </div>
+
             </a>
 
-            <!-- Women's Shirt -->
-            <a href="product-womens-shirt.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=400&h=600&fit=crop&q=80" alt="Women's Blouse">
-                    <div class="product-badge">TRENDING</div>
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Women's Tops</div>
-                    <div class="product-name">Silk Blend Blouse</div>
-                    <div class="product-description">Elegant design, versatile styling</div>
-                    <div class="product-price">$89.99</div>
-                    <div class="try-on-badge">👗 Try On Virtually</div>
-                </div>
-            </a>
-
-            <!-- Men's Pants -->
-            <a href="product-mens-pants.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=400&h=600&fit=crop&q=80" alt="Men's Chinos">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Men's Bottoms</div>
-                    <div class="product-name">Slim Fit Chinos</div>
-                    <div class="product-description">Comfortable stretch fabric, modern cut</div>
-                    <div class="product-price">$69.99</div>
-                    <div class="try-on-badge">👖 Try On Virtually</div>
-                </div>
-            </a>
-
-            <!-- Women's Pants -->
-            <a href="product-womens-pants.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=400&h=600&fit=crop&q=80" alt="Women's Trousers">
-                    <div class="product-badge">BEST SELLER</div>
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Women's Bottoms</div>
-                    <div class="product-name">High-Waist Trousers</div>
-                    <div class="product-description">Tailored fit, professional style</div>
-                    <div class="product-price">$85.99</div>
-                    <div class="try-on-badge">👖 Try On Virtually</div>
-                </div>
-            </a>
-
-            <!-- Men's Sweater -->
-            <a href="product-mens-sweater.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=600&fit=crop&q=80" alt="Men's Sweater">
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Men's Knitwear</div>
-                    <div class="product-name">Merino Wool Sweater</div>
-                    <div class="product-description">Soft knit, classic crew neck</div>
-                    <div class="product-price">$99.99</div>
-                    <div class="try-on-badge">🧥 Try On Virtually</div>
-                </div>
-            </a>
-
-            <!-- Women's Sweater -->
-            <a href="product-womens-sweater.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=600&fit=crop&q=80" alt="Women's Cardigan">
-                    <div class="product-badge">NEW</div>
-                </div>
-                <div class="product-info">
-                    <div class="product-category">Women's Knitwear</div>
-                    <div class="product-name">Cashmere Cardigan</div>
-                    <div class="product-description">Luxurious feel, button-front design</div>
-                    <div class="product-price">$129.99</div>
-                    <div class="try-on-badge">🧥 Try On Virtually</div>
-                </div>
-            </a>
-
-            <!-- Dress -->
+            <!-- Product 2: Floral Midi Dress -->
             <a href="product-dress.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=600&fit=crop&q=80" alt="Summer Dress">
-                    <div class="product-badge">TRENDING</div>
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&h=600&fit=crop" 
+                         alt="Floral Midi Dress" class="product-image">
+                    <span class="badge" style="background: #4CC9F0;">TRENDING</span>
                 </div>
                 <div class="product-info">
-                    <div class="product-category">Women's Dresses</div>
+                    <div class="product-brand">Summer Collection</div>
                     <div class="product-name">Floral Midi Dress</div>
-                    <div class="product-description">Flowing silhouette, feminine print</div>
                     <div class="product-price">$119.99</div>
-                    <div class="try-on-badge">👗 Try On Virtually</div>
                 </div>
+
             </a>
 
-            <!-- Jacket -->
-            <a href="product-jacket.html" class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=600&fit=crop&q=80" alt="Performance Jacket">
-                    <div class="product-badge">BEST SELLER</div>
+            <!-- Product 3: Men's Sweater -->
+            <a href="product-mens-sweater.html" class="product-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=400&h=600&fit=crop" 
+                         alt="Merino Wool Sweater" class="product-image">
+                    <span class="badge" style="background: #28a745;">BEST SELLER</span>
                 </div>
                 <div class="product-info">
-                    <div class="product-category">Outerwear</div>
+                    <div class="product-brand">Premium Knits</div>
+                    <div class="product-name">Merino Wool Sweater</div>
+                    <div class="product-price">$99.99</div>
+                </div>
+
+            </a>
+
+            <!-- Product 4: Sherpa Jacket -->
+            <a href="product-jacket.html" class="product-card">
+                <div style="position: relative;">
+                    <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&h=600&fit=crop" 
+                         alt="Sherpa Hooded Jacket" class="product-image">
+                    <span class="badge">NEW</span>
+                </div>
+                <div class="product-info">
+                    <div class="product-brand">Outdoor</div>
                     <div class="product-name">Sherpa Hooded Jacket</div>
-                    <div class="product-description">Cozy fleece, athletic fit</div>
                     <div class="product-price">$149.99</div>
-                    <div class="try-on-badge">🧥 Try On Virtually</div>
                 </div>
             </a>
         </div>
-    </section>
+    </div>
 
     <!-- CTA Section -->
-    <section class="cta-section">
-        <h2>Ready to Add Virtual Try-On to Your Store?</h2>
-        <p>Increase conversions and reduce returns with AI-powered virtual try-on</p>
-        <a href="login.html" class="btn-cta">Get Started Free</a>
-    </section>
+    <div class="main-container">
+        <section class="cta-section">
+            <h2>Ready to Add Virtual Try-On to Your Store?</h2>
+            <p>Increase conversions and reduce returns with AI-powered virtual try-on</p>
+            <a href="checkout.html" class="btn-cta">Get Started</a>
+        </section>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -551,9 +455,24 @@
             <div class="footer-grid">
                 <div>
                     <div class="footer-logo">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
-                                                    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="40" height="40"/>
-                                                </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                          <defs>
+                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <g transform="translate(30, 40)">
+                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
+                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
+                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                          </g>
+                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                        </svg>
                     </div>
                     <p class="footer-desc">
                         AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
@@ -561,50 +480,69 @@
                 </div>
                 <div class="footer-links">
                     <h4>Product</h4>
-                    <a href="demo-public.html">Demo</a>
-                    <a href="integration.html">Integration</a>
-                    <a href="dashboard-complete.html">Dashboard</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="demo-public-updated.html">Try Demo</a>
+                    <a href="register-final-pricing.html">Pricing</a>
+                    <a href="integration-hub-complete.html">Integration</a>
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="about.html">About</a>
-                    <a href="#">Careers</a>
+                    <a href="mailto:support@vmizestudio.com">Contact</a>
                     <a href="#">Contact</a>
                 </div>
                 <div class="footer-links">
-                    <h4>Support</h4>
-                    <a href="#">Help Center</a>
-                    <a href="#">Documentation</a>
-                    <a href="#">API Reference</a>
+                    <h4>Resources</h4>
+                    <a href="documentation.html">Documentation</a>
+                    <a href="api-reference.html">API Reference</a>
+                    <a href="help-center.html">Help Center</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 Vmize Studio. All rights reserved. Based in San Jose, California.</p>
-                <div class="footer-legal">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
+                <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Load logo
-        fetch('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
-            .then(response => response.blob())
-            .then(blob => {
-                const url = URL.createObjectURL(blob);
-                document.getElementById('logoImg').src = url;
-                document.querySelector('.footer-logo-img').src = url;
-            });
+        // Track navigation
+        window.addEventListener('load', () => {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) sessionHistory.shift();
+            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+        });
 
+        // Smart back button
         function goBack() {
-            if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            if (sessionHistory.length > 1) {
+                sessionHistory.pop();
+                const previousPage = sessionHistory[sessionHistory.length - 1];
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                window.location.href = previousPage;
+            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
                 window.history.back();
             } else {
                 window.location.href = 'index.html';
             }
         }
+
+        // Track page view
+        const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
+        events.push({
+            event: 'page_view',
+            properties: { page: 'demo-public' },
+            timestamp: new Date().toISOString(),
+            visitor_id: localStorage.getItem('vmize_visitor_id') || 'visitor_' + Date.now()
+        });
+        if (events.length > 100) events.shift();
+        localStorage.setItem('vmize_events', JSON.stringify(events));
     </script>
 </body>
 </html>

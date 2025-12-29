@@ -5,6 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Vmize Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+        <script>
+                    // Highlight active nav link
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const links = document.querySelectorAll('nav a');
+                        const path = window.location.pathname.split('/').pop();
+                        links.forEach(link => {
+                            const href = link.getAttribute('href');
+                            if (href && href !== '#' && href !== '' && (href === path || (href !== '#' && path === '' && href === 'index.html'))) {
+                                link.classList.add('active');
+                            }
+                        });
+                    });
+            // Dummy login for dashboard (for testing)
+            function setDummyLogin() {
+                localStorage.setItem('vmize_user', JSON.stringify({
+                    name: 'Demo User',
+                    email: 'demo@vmize.com',
+                    loginTime: new Date().toISOString()
+                }));
+                localStorage.setItem('vmize_last_activity', Date.now().toString());
+            }
+
+            // Auto-login if ?demo=1 in URL
+            if (window.location.search.includes('demo=1')) {
+                setDummyLogin();
+            }
+        <script>
+            // Customer dashboard session management with inactivity notification
+            let inactivityWarningShown = false;
+            let inactivityTimeout;
+            function signOut() {
+                localStorage.removeItem('vmize_user');
+                localStorage.removeItem('vmize_last_activity');
+                window.location.href = 'login.html';
+            }
+
+            function updateActivity() {
+                localStorage.setItem('vmize_last_activity', Date.now().toString());
+                if (inactivityWarningShown) {
+                    hideInactivityPopup();
+                    inactivityWarningShown = false;
+                }
+                clearTimeout(inactivityTimeout);
+                inactivityTimeout = setTimeout(showInactivityPopup, 18 * 60 * 1000); // 18 min warning
+            }
+
+            function checkSession() {
+                const user = JSON.parse(localStorage.getItem('vmize_user') || 'null');
+                const lastActivity = parseInt(localStorage.getItem('vmize_last_activity') || '0');
+                const now = Date.now();
+                const maxIdle = 20 * 60 * 1000; // 20 minutes
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                if (now - lastActivity > maxIdle) {
+                    hideInactivityPopup();
+                    alert('Session expired due to inactivity. Please log in again.');
+                    signOut();
+                    return;
+                }
+                document.getElementById('userName').textContent = user.name || 'Demo Account';
+            }
+
+            function showInactivityPopup() {
+                inactivityWarningShown = true;
+                let popup = document.getElementById('customerInactivityPopup');
+                if (!popup) {
+                    popup = document.createElement('div');
+                    popup.id = 'customerInactivityPopup';
+                    popup.style.position = 'fixed';
+                    popup.style.left = '50%';
+                    popup.style.top = '30px';
+                    popup.style.transform = 'translateX(-50%)';
+                    popup.style.background = '#dc3545';
+                    popup.style.color = '#fff';
+                    popup.style.padding = '18px 32px';
+                    popup.style.borderRadius = '8px';
+                    popup.style.fontSize = '18px';
+                    popup.style.zIndex = '99999';
+                    popup.style.boxShadow = '0 2px 16px rgba(0,0,0,0.15)';
+                    popup.textContent = 'You have been inactive for a while. Please move your mouse, click, or type to stay logged in.';
+                    document.body.appendChild(popup);
+                } else {
+                    popup.style.display = 'block';
+                }
+            }
+
+            function hideInactivityPopup() {
+                let popup = document.getElementById('customerInactivityPopup');
+                if (popup) popup.style.display = 'none';
+            }
+
+            ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+                window.addEventListener(evt, updateActivity);
+            });
+
+            window.addEventListener('load', () => {
+                updateActivity();
+                checkSession();
+                setInterval(checkSession, 60 * 1000);
+            });
+
+            window.addEventListener('beforeunload', () => {
+                signOut();
+            });
+        </script>
     <style>
         * {
             margin: 0;
@@ -748,11 +855,50 @@
             })
             .catch(() => console.log('Logo loading failed'));
 
-        // Check for user
-        const user = JSON.parse(localStorage.getItem('vmize_user') || 'null');
-        if (user) {
+        // Session management
+        function signOut() {
+            localStorage.removeItem('vmize_user');
+            localStorage.removeItem('vmize_last_activity');
+            window.location.href = 'login.html';
+        }
+
+        function updateActivity() {
+            localStorage.setItem('vmize_last_activity', Date.now().toString());
+        }
+
+        function checkSession() {
+            const user = JSON.parse(localStorage.getItem('vmize_user') || 'null');
+            const lastActivity = parseInt(localStorage.getItem('vmize_last_activity') || '0');
+            const now = Date.now();
+            const maxIdle = 20 * 60 * 1000; // 20 minutes
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            if (now - lastActivity > maxIdle) {
+                alert('Session expired due to inactivity. Please log in again.');
+                signOut();
+                return;
+            }
             document.getElementById('userName').textContent = user.name || 'Demo Account';
         }
+
+        // Update activity on user events
+        ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, updateActivity);
+        });
+
+        // Check session on load and every minute
+        window.addEventListener('load', () => {
+            updateActivity();
+            checkSession();
+            setInterval(checkSession, 60 * 1000);
+        });
+
+        // Remove session on browser close
+        window.addEventListener('beforeunload', () => {
+            signOut();
+        });
 
         // Copy API Key
         function copyApiKey() {
@@ -768,12 +914,7 @@
         }
 
         // Sign Out
-        function signOut() {
-            if (confirm('Are you sure you want to sign out?')) {
-                localStorage.removeItem('vmize_user');
-                window.location.href = 'login.html';
-            }
-        }
+        // signOut function is now defined above for session management
 
         // Initialize Chart
         const ctx = document.getElementById('eventChart').getContext('2d');

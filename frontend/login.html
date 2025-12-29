@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Vmize Studio</title>
+    <title>Login - VMIZE Studio</title>
     <style>
         * {
             margin: 0;
@@ -26,12 +26,78 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #f5f3ff 0%, #e6f7ff 100%);
-            min-height: 100vh;
+            background: #f8f9fa;
+            color: var(--text-primary);
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        /* Main Content */
+        .main-container {
+            min-height: calc(100vh - 200px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 60px 24px;
         }
 
         .auth-container {
@@ -39,51 +105,25 @@
             border-radius: 16px;
             padding: 48px 40px;
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
 
-        .logo {
+        .auth-header {
             text-align: center;
             margin-bottom: 32px;
         }
 
-        .logo-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 20px rgba(107, 76, 230, 0.3);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .auth-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            text-align: center;
             margin-bottom: 8px;
             color: var(--text-primary);
         }
 
         .auth-subtitle {
-            font-size: 15px;
-            text-align: center;
+            font-size: 16px;
             color: var(--text-secondary);
-            margin-bottom: 32px;
         }
 
         .form-group {
@@ -129,13 +169,37 @@
             display: block;
         }
 
+        .alert {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-error {
+            background: #ffe6e6;
+            border: 1px solid var(--vmize-red);
+            color: var(--vmize-red);
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid var(--vmize-green);
+            color: var(--vmize-green);
+        }
+
         .btn {
             width: 100%;
-            padding: 14px 24px;
+            padding: 16px 24px;
             border: none;
             border-radius: 8px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
@@ -144,16 +208,17 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
             color: white;
-            margin-bottom: 16px;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 76, 230, 0.4);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .checkbox-group {
@@ -193,21 +258,6 @@
             text-decoration: underline;
         }
 
-        .success-message {
-            background: #d4edda;
-            border: 1px solid var(--vmize-green);
-            border-radius: 8px;
-            padding: 14px 16px;
-            color: var(--vmize-green);
-            font-size: 14px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
         .spinner {
             width: 20px;
             height: 20px;
@@ -223,12 +273,68 @@
             to { transform: rotate(360deg); }
         }
 
-        .btn-primary.loading {
-            pointer-events: none;
-            opacity: 0.7;
+        /* Footer */
+        footer {
+            background: white;
+            padding: 48px 32px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
 
-        @media (max-width: 768px) {
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo img {
+            height: 50px;
+            margin-bottom: 16px;
+        }
+
+        .footer-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            nav {
+                display: none;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
             .auth-container {
                 padding: 32px 24px;
             }
@@ -236,45 +342,181 @@
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="logo">
-            <div class="logo-icon">V</div>
-            <div class="logo-text">Vmize Studio</div>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                  <defs>
+                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(30, 40)">
+                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  </g>
+                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                </svg>
+            </a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="demo-public.html">Demo</a>
+                <a href="integration.html">Integration</a>
+                <a href="pricing.html">Pricing</a>
+            </nav>
+            <button class="back-btn" onclick="goBack()">
+                <span>←</span> Back
+            </button>
         </div>
+    </header>
 
-        <h1 class="auth-title">Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to access your dashboard</p>
-
-        <div id="loginError" class="error-message"></div>
-        <div id="loginSuccess" class="success-message"></div>
-
-        <form id="loginForm">
-            <div class="form-group">
-                <label class="form-label" for="loginEmail">Email Address</label>
-                <input type="email" id="loginEmail" class="form-input" required autocomplete="email" placeholder="you@example.com">
-                <div class="error-message" id="loginEmailError"></div>
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to access your dashboard</p>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" class="form-input" required autocomplete="current-password" placeholder="Enter your password">
-                <div class="error-message" id="loginPasswordError"></div>
+            <!-- Google OAuth Login Button -->
+            <div style="text-align:center; margin-bottom: 24px;">
+                <a href="http://localhost:50277/api/auth/google" id="googleLoginBtn" style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 12px;
+                    background: #fff;
+                    color: #444;
+                    border: 1.5px solid #e0e0e0;
+                    border-radius: 8px;
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    text-decoration: none;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                    transition: box-shadow 0.2s, border 0.2s;
+                " onmouseover="this.style.boxShadow='0 4px 16px rgba(76,201,240,0.10)';this.style.borderColor='#6B4CE6'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)';this.style.borderColor='#e0e0e0'">
+                    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="width:24px;height:24px;"> Sign in with Google
+                </a>
+            </div>
+            <div style="text-align:center; margin-bottom: 24px; color:#aaa; font-size:14px;">or</div>
+            <div>
             </div>
 
-            <div class="checkbox-group">
-                <input type="checkbox" id="rememberMe">
-                <label for="rememberMe">Remember me</label>
+            <div id="loginError" class="alert alert-error"></div>
+            <div id="loginSuccess" class="alert alert-success"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-input" required autocomplete="email" placeholder="you@example.com">
+                    <div class="error-message" id="loginEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-input" required autocomplete="current-password" placeholder="Enter your password">
+                    <div class="error-message" id="loginPasswordError"></div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">Sign In</button>
+            </form>
+
+            <div class="toggle-auth">
+                Don't have an account? <a href="register-final-pricing.html">Create account</a>
             </div>
-
-            <button type="submit" class="btn btn-primary">Sign In</button>
-        </form>
-
-        <div class="toggle-auth">
-            Don't have an account? <a href="register.html">Create account</a>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                          <defs>
+                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <g transform="translate(30, 40)">
+                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
+                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
+                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                          </g>
+                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                        </svg>
+                    </div>
+                    <p class="footer-desc">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="demo-public.html">Demo</a>
+                    <a href="integration.html">Integration</a>
+                    <a href="dashboard-complete.html">Dashboard</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Documentation</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
+        const BACKEND_URL = 'http://localhost:50277';
+
+        // Track navigation
+        window.addEventListener('load', () => {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) sessionHistory.shift();
+            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+        });
+
+        // Back button
+        function goBack() {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            if (sessionHistory.length > 1) {
+                sessionHistory.pop();
+                const previousPage = sessionHistory[sessionHistory.length - 1];
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                window.location.href = previousPage;
+            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
         // Form Validation
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -284,7 +526,6 @@
         // Login Form
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
@@ -296,56 +537,69 @@
 
             // Validate
             let hasError = false;
-
             if (!validateEmail(email)) {
                 document.getElementById('loginEmailError').textContent = 'Please enter a valid email';
                 document.getElementById('loginEmailError').classList.add('show');
                 document.getElementById('loginEmail').classList.add('error');
                 hasError = true;
             }
-
             if (!password) {
                 document.getElementById('loginPasswordError').textContent = 'Password is required';
                 document.getElementById('loginPasswordError').classList.add('show');
                 document.getElementById('loginPassword').classList.add('error');
                 hasError = true;
             }
-
             if (hasError) return;
 
             // Show loading
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.textContent;
             submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
-            submitBtn.classList.add('loading');
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            submitBtn.disabled = true;
 
             try {
-                // For demo: accept any login
-                localStorage.setItem('vmize_user', JSON.stringify({ 
-                    email, 
-                    name: email.split('@')[0],
-                    loginTime: new Date().toISOString()
+                // Authenticate with backend
+                const response = await fetch(`${BACKEND_URL}/api/v1/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Invalid credentials');
+                }
+
+                // Store JWT and user info
+                localStorage.setItem('vmize_user', JSON.stringify({
+                    email: data.data?.user?.email || email,
+                    name: data.data?.user?.name || data.name,
+                    token: data.data?.tokens?.accessToken || data.token,
+                    loginTime: new Date().toISOString(),
+                    plan: data.data?.user?.plan || 'starter'
                 }));
-                
+
+                if (data.data?.tokens?.refreshToken) {
+                    localStorage.setItem('vmize_refresh_token', data.data.tokens.refreshToken);
+                }
+
                 if (rememberMe) {
                     localStorage.setItem('vmize_remember', 'true');
                 }
-                
+
                 document.getElementById('loginSuccess').textContent = 'Login successful! Redirecting...';
                 document.getElementById('loginSuccess').classList.add('show');
-                
+
                 setTimeout(() => {
                     window.location.href = 'dashboard-complete.html';
                 }, 1000);
-                
+
             } catch (error) {
-                document.getElementById('loginError').textContent = error.message || 'Login failed. Please try again.';
+                document.getElementById('loginError').textContent = error.message || 'Login failed. Please check your credentials and try again.';
                 document.getElementById('loginError').classList.add('show');
                 submitBtn.textContent = originalText;
-                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
             }
         });
 
@@ -362,9 +616,46 @@
         });
 
         // Check if already logged in
-        if (localStorage.getItem('vmize_user')) {
-            window.location.href = 'dashboard-complete.html';
+        const userData = localStorage.getItem('vmize_user');
+        if (userData) {
+            try {
+                const user = JSON.parse(userData);
+                if (user.token) {
+                    window.location.href = 'dashboard-complete.html';
+                }
+            } catch (e) {
+                // Invalid stored data, clear it
+                localStorage.removeItem('vmize_user');
+            }
         }
+        // Google OAuth callback handler
+        (function handleGoogleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('google_oauth')) {
+                // Backend should redirect with ?google_oauth=1&token=...&name=...&email=...
+                const token = urlParams.get('token');
+                const name = urlParams.get('name');
+                const email = urlParams.get('email');
+                if (token && email) {
+                    localStorage.setItem('vmize_user', JSON.stringify({
+                        email,
+                        name,
+                        token,
+                        loginTime: new Date().toISOString(),
+                        plan: 'starter',
+                        provider: 'google'
+                    }));
+                    document.getElementById('loginSuccess').textContent = 'Google login successful! Redirecting...';
+                    document.getElementById('loginSuccess').classList.add('show');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard-complete.html';
+                    }, 1000);
+                } else {
+                    document.getElementById('loginError').textContent = 'Google login failed. Please try again.';
+                    document.getElementById('loginError').classList.add('show');
+                }
+            }
+        })();
     </script>
 </body>
 </html>

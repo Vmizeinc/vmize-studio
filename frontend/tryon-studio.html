@@ -6,6 +6,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Try-On Studio - Vmize Studio</title>
+        <script>
+            // Highlight active nav link
+            document.addEventListener('DOMContentLoaded', function() {
+                const links = document.querySelectorAll('nav a');
+                const path = window.location.pathname.split('/').pop();
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && href !== '#' && href !== '' && (href === path || (href !== '#' && path === '' && href === 'index.html'))) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // Session management for Try-On Studio
+            function signOut() {
+                localStorage.removeItem('vmize_user');
+                localStorage.removeItem('vmize_last_activity');
+                window.location.href = 'login.html';
+            }
+
+            function updateActivity() {
+                localStorage.setItem('vmize_last_activity', Date.now().toString());
+            }
+
+            function checkSession() {
+                const user = JSON.parse(localStorage.getItem('vmize_user') || 'null');
+                const lastActivity = parseInt(localStorage.getItem('vmize_last_activity') || '0');
+                const now = Date.now();
+                const maxIdle = 20 * 60 * 1000; // 20 minutes
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                if (now - lastActivity > maxIdle) {
+                    alert('Session expired due to inactivity. Please log in again.');
+                    signOut();
+                    return;
+                }
+            }
+
+            // Update activity on user events
+            ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+                window.addEventListener(evt, updateActivity);
+            });
+
+            // Check session on load and every minute
+            window.addEventListener('load', () => {
+                updateActivity();
+                checkSession();
+                setInterval(checkSession, 60 * 1000);
+            });
+
+            // Remove session on browser close
+            window.addEventListener('beforeunload', () => {
+                signOut();
+            });
+        </script>
     <style>
         * {
             margin: 0;
@@ -624,39 +681,6 @@
                 <span class="icon">🛍️</span>
                 <span>Demo Store</span>
             </a>
-            <div class="nav-title" style="margin-top:20px;">Products</div>
-            <a href="product-dress.html" class="nav-item">
-                <span class="icon">👗</span>
-                <span>Floral Midi Dress</span>
-            </a>
-            <a href="product-jacket.html" class="nav-item">
-                <span class="icon">🧥</span>
-                <span>Sherpa Hooded Jacket</span>
-            </a>
-            <a href="product-mens-shirt.html" class="nav-item">
-                <span class="icon">👔</span>
-                <span>Men's Shirt</span>
-            </a>
-            <a href="product-mens-pants.html" class="nav-item">
-                <span class="icon">👖</span>
-                <span>Men's Pants</span>
-            </a>
-            <a href="product-mens-sweater.html" class="nav-item">
-                <span class="icon">🧶</span>
-                <span>Men's Sweater</span>
-            </a>
-            <a href="product-womens-shirt.html" class="nav-item">
-                <span class="icon">👚</span>
-                <span>Women's Shirt</span>
-            </a>
-            <a href="product-womens-pants.html" class="nav-item">
-                <span class="icon">👖</span>
-                <span>Women's Pants</span>
-            </a>
-            <a href="product-womens-sweater.html" class="nav-item">
-                <span class="icon">🧥</span>
-                <span>Women's Sweater</span>
-            </a>
         </div>
 
         <div class="nav-section">
@@ -809,7 +833,6 @@
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="about.html">About</a>
                     <a href="#">Contact</a>
                 </div>
                 <div class="footer-links">
@@ -825,6 +848,18 @@
     </footer>
 
     <script>
+        // Highlight active nav link
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('nav a');
+            const path = window.location.pathname.split('/').pop();
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && href !== '' && (href === path || (href !== '#' && path === '' && href === 'index.html'))) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
         // Load logo (local placeholder)
         fetch('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
             .then(response => response.blob())
@@ -2148,6 +2183,7 @@ window.vmizeGarmentImageData = null;
 
             const predictionId = startData.prediction_id || startData.id || startData.predictionId;
             if (!predictionId) {
+               
                 throw new Error('No prediction ID returned from API');
             }
 
@@ -2194,3 +2230,29 @@ window.vmizeGarmentImageData = null;
                     event: eventName,
                     properties: properties,
                     timestamp: new Date().toISOString(),
+                    session_id: getSessionId()
+                })
+            }).catch(err => console.log('Analytics tracking failed:', err));
+
+            const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
+            events.push({ event: eventName, properties, timestamp: new Date().toISOString() });
+            if (events.length > 100) events.shift();
+            localStorage.setItem('vmize_events', JSON.stringify(events));
+        }
+
+        function getSessionId() {
+            let sessionId = sessionStorage.getItem('vmize_session_id');
+            if (!sessionId) {
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('vmize_session_id', sessionId);
+            }
+            return sessionId;
+        }
+
+        trackEvent('page_view', {
+            page: 'product-jacket',
+            product: 'Sherpa Hooded Jacket'
+        });
+    </script>
+</body>
+</html>

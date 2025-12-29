@@ -3,28 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classic Oxford Shirt - Vmize Studio</title>
+    <title>Classic Oxford Shirt - VMIZE Studio</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --vmize-purple: #6B4CE6;
             --vmize-blue: #4CC9F0;
             --text-primary: #1a1a1a;
             --text-secondary: #666;
+            --border-color: #e0e0e0;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: var(--text-primary);
-            background: #fafafa;
+            line-height: 1.6;
+            background: #f8f9fa;
         }
-
-        /* Header */
         header {
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -33,7 +27,6 @@
             top: 0;
             z-index: 1000;
         }
-
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -41,37 +34,15 @@
             justify-content: space-between;
             align-items: center;
         }
-
-        .logo img {
-            height: 50px;
-        }
-
-        nav {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
+        .logo { display: flex; align-items: center; text-decoration: none; }
+        nav { display: flex; gap: 32px; align-items: center; }
         nav a {
             text-decoration: none;
             color: var(--text-primary);
             font-weight: 600;
             transition: color 0.3s;
         }
-
-        nav a:hover {
-            color: var(--vmize-purple);
-        }
-
-        .btn-dashboard {
-            padding: 10px 24px;
-            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
-            color: white !important;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
+        nav a:hover { color: var(--vmize-purple); }
         .back-btn {
             padding: 10px 20px;
             background: white;
@@ -86,138 +57,133 @@
             transition: all 0.3s;
             border: none;
         }
-
         .back-btn:hover {
             background: #f5f3ff;
             transform: translateX(-4px);
         }
-
-        /* Product Page */
         .product-container {
             max-width: 1200px;
             margin: 40px auto;
-            padding: 0 32px;
-        }
-
-        .product-grid {
+            padding: 60px;
             display: grid;
-            grid-template-columns: 500px 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 60px;
             background: white;
-            padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
-        .product-image-section {
-            position: relative;
-        }
-
-        .product-main-image {
+        .product-images { display: flex; flex-direction: column; gap: 20px; }
+        .main-image {
             width: 100%;
-            aspect-ratio: 2/3;
             border-radius: 12px;
             overflow: hidden;
-            background: #f0f0f0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #f8f9fa;
         }
-
-        .product-main-image img {
+        .main-image img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            display: block;
         }
-
-        .badge {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background: black;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* Product Info */
-        .product-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand {
-            font-size: 18px;
-            font-weight: 700;
+        .product-info { display: flex; flex-direction: column; }
+        .product-brand {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 8px;
         }
-
-        .product-name {
-            font-size: 16px;
-            color: #555;
+        .product-title {
+            font-size: 36px;
+            font-weight: 700;
             margin-bottom: 16px;
-            line-height: 1.4;
         }
-
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .stars {
-            color: #ffa500;
-            font-size: 16px;
-        }
-
-        .price-section {
-            margin-bottom: 24px;
-        }
-
-        .current-price {
+        .product-price {
             font-size: 32px;
             font-weight: 700;
-            color: #c41e3a;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
         }
-
-        /* Action Buttons */
-        .action-buttons {
+        .product-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.8;
+        }
+        .product-features {
+            margin-bottom: 32px;
+        }
+        .product-features h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        .product-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        .product-features li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+        }
+        .product-features li:before {
+            content: "✓ ";
+            color: var(--vmize-purple);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .size-selector {
+            margin-bottom: 32px;
+        }
+        .size-selector h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        .size-options {
             display: flex;
-            flex-direction: column;
             gap: 12px;
         }
-
-        .btn {
-            padding: 16px;
-            border: none;
+        .size-option {
+            padding: 12px 20px;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
-            font-weight: 700;
-            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
         }
-
-        .btn-add-bag {
-            background: #c41e3a;
-            color: white;
+        .size-option:hover { border-color: var(--vmize-purple); }
+        .size-option.selected {
+            border-color: var(--vmize-purple);
+            background: #f5f3ff;
         }
-
-        .btn-tryon {
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .btn-primary {
             background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
-
-        .btn-tryon:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
         }
-
-        /* Modal */
+        .btn-secondary {
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+        }
+        .btn-secondary:hover { background: #f5f3ff; }
         .modal {
             display: none;
             position: fixed;
@@ -226,140 +192,114 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.8);
-            z-index: 10000;
+            z-index: 2000;
             align-items: center;
             justify-content: center;
         }
-
-        .modal.active {
-            display: flex;
-        }
-
+        .modal.active { display: flex; }
         .modal-content {
             background: white;
             border-radius: 16px;
-            padding: 32px;
-            max-width: 600px;
+            padding: 40px;
+            max-width: 800px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
         }
-
         .modal-title {
             font-size: 24px;
             font-weight: 700;
         }
-
-        .close-btn {
+        .modal-close {
             background: none;
             border: none;
             font-size: 32px;
             cursor: pointer;
-            color: #999;
+            color: var(--text-secondary);
         }
-
-        .upload-section {
-            border: 3px dashed #ddd;
+        .upload-section { margin-bottom: 32px; }
+        .upload-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .upload-area {
+            border: 2px dashed var(--border-color);
             border-radius: 12px;
-            padding: 48px;
+            padding: 40px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 24px;
         }
-
-        .upload-section:hover {
+        .upload-area:hover {
             border-color: var(--vmize-purple);
             background: #f5f3ff;
         }
-
-        .upload-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
+        .upload-area.has-image {
+            border-style: solid;
+            border-color: var(--vmize-purple);
         }
-
-        .loading {
-            text-align: center;
-            padding: 48px;
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-top: 16px;
             display: none;
         }
-
-        .loading.active {
-            display: block;
+        .result-section { margin-top: 32px; }
+        .result-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 16px;
         }
-
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
         .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--vmize-purple);
+            border-radius: 50%;
             width: 50px;
             height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--vmize-purple);
-            border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .result-section {
-            display: none;
-        }
-
-        .result-section.active {
-            display: block;
-        }
-
-        .result-image {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-
-        /* Footer */
         footer {
             background: white;
             padding: 48px 32px;
-            margin-top: 80px;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
-
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
         }
-
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
             gap: 48px;
             margin-bottom: 40px;
         }
-
-        .footer-logo img {
-            height: 50px;
-            margin-bottom: 16px;
-        }
-
         .footer-desc {
             color: var(--text-secondary);
             line-height: 1.6;
             max-width: 300px;
         }
-
         .footer-links h4 {
             margin-bottom: 16px;
             font-weight: 700;
+            color: #000000;
         }
-
         .footer-links a {
             display: block;
             color: var(--text-secondary);
@@ -367,51 +307,54 @@
             margin-bottom: 12px;
             transition: color 0.3s;
         }
-
-        .footer-links a:hover {
-            color: var(--vmize-purple);
-        }
-
+        .footer-links a:hover { color: var(--vmize-purple); }
         .footer-bottom {
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid var(--border-color);
             padding-top: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-bottom p {
+            text-align: center;
             color: #999;
             font-size: 14px;
         }
-
         @media (max-width: 900px) {
-            .product-grid {
+            nav { display: none; }
+            .product-container {
                 grid-template-columns: 1fr;
+                padding: 32px 24px;
             }
-            nav {
-                display: none;
-            }
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="header-content">
             <a href="index.html" class="logo">
-                                <span id="logoImg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
-                                        <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="40" height="40"/>
-                                    </svg>
-                                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                  <defs>
+                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(30, 40)">
+                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  </g>
+                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                </svg>
             </a>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
-                <a href="demo-public.html">Demo</a>
-                <a href="integration.html">Integration</a>
-                <a href="login.html" class="btn-dashboard">Dashboard</a>
+                <a href="demo-public.html" class="active">Demo</a>
+                <a href="integration-hub-complete.html">Integration</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="login.html">Login</a>
             </nav>
             <button class="back-btn" onclick="goBack()">
                 <span>←</span> Back
@@ -419,81 +362,118 @@
         </div>
     </header>
 
-    <!-- Product Container -->
     <div class="product-container">
-        <div class="product-grid">
-            <!-- Product Image (Full Length) -->
-            <div class="product-image-section">
-                <div class="product-main-image">
-                    <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=600&h=900&fit=crop&q=80" alt="Classic Oxford Shirt" id="productImage">
-                </div>
-                <div class="badge">NEW</div>
+        <div class="product-images">
+            <div class="main-image">
+                <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=800&h=1200&fit=crop" 
+                     alt="Classic Oxford Shirt" 
+                     id="productImage">
+            </div>
+        </div>
+
+        <div class="product-info">
+            <div class="product-brand">Premium Basics</div>
+            <h1 class="product-title">Classic Oxford Shirt</h1>
+            <div class="product-price">$79.99</div>
+
+            <div class="product-description">
+                <p>A timeless wardrobe essential. Our Classic Oxford Shirt combines traditional craftsmanship with modern comfort. Made from premium cotton oxford cloth, this shirt features a button-down collar and relaxed fit that works equally well for business or casual occasions.</p>
+                <p>The versatile design pairs perfectly with everything from dress pants to jeans, making it an indispensable piece for any wardrobe.</p>
             </div>
 
-            <!-- Product Info -->
-            <div class="product-info">
-                <div class="brand">Premium Menswear</div>
-                <div class="product-name">Classic Oxford Shirt - Premium cotton blend, tailored fit</div>
-                
-                <div class="rating">
-                    <span class="stars">★★★★☆</span>
-                    <span class="review-count">4.3 (213 reviews)</span>
-                </div>
+            <div class="product-features">
+                <h3>Features</h3>
+                <ul>
+                    <li>100% Premium Cotton Oxford Cloth</li>
+                    <li>Button-down collar</li>
+                    <li>Relaxed fit for comfort</li>
+                    <li>Long sleeves with adjustable cuffs</li>
+                    <li>Machine washable</li>
+                    <li>Available in multiple colors</li>
+                </ul>
+            </div>
 
-                <div class="price-section">
-                    <span class="current-price">$79.99</span>
-                    <span class="discount">(50% off)</span>
-                    <span class="original-price">$159.98</span>
+            <div class="size-selector">
+                <h3>Select Size</h3>
+                <div class="size-options">
+                    <div class="size-option" onclick="selectSize(this)">S</div>
+                    <div class="size-option selected" onclick="selectSize(this)">M</div>
+                    <div class="size-option" onclick="selectSize(this)">L</div>
+                    <div class="size-option" onclick="selectSize(this)">XL</div>
                 </div>
+            </div>
 
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button class="btn btn-add-bag">Add To Bag</button>
-                    <button class="btn btn-tryon" onclick="openTryOnModal()">
-                        <span>👗</span>
-                        <span>Virtual Try-On</span>
-                    </button>
-                </div>
+            <div class="product-actions">
+                <button class="btn btn-primary" onclick="openTryOnModal()">
+                    👕 Try It On Virtually
+                </button>
+                <button class="btn btn-secondary">
+                    Add to Cart
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Try-On Modal -->
-    <div class="modal" id="tryonModal">
+    <div class="modal" id="tryOnModal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Virtual Try-On</div>
-                <button class="close-btn" onclick="closeTryOnModal()">×</button>
+                <h2 class="modal-title">Virtual Try-On</h2>
+                <button class="modal-close" onclick="closeTryOnModal()">&times;</button>
             </div>
 
-            <div class="upload-section" id="uploadSection" onclick="document.getElementById('photoUpload').click()">
-                <div class="upload-icon">📸</div>
-                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Upload Your Photo</div>
-                <div style="font-size: 14px; color: #666;">Click to upload or drag and drop</div>
-                <input type="file" id="photoUpload" accept="image/*" onchange="handleUpload(event)" style="display: none;">
+            <div class="upload-section">
+                <label class="upload-label">Upload Your Photo</label>
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('photoInput').click()">
+                    <p>Click to upload or drag and drop</p>
+                    <p style="font-size: 14px; color: #999; margin-top: 8px;">JPG, PNG (max 5MB)</p>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                    <img id="previewImage" class="preview-image">
+                </div>
             </div>
 
-            <div class="loading" id="loadingSection" style="display: none;">
+            <button class="btn btn-primary" id="generateBtn" onclick="generateTryOn()" style="width: 100%; display: none;">
+                Generate Virtual Try-On
+            </button>
+
+            <div id="loadingSection" class="loading" style="display: none;">
                 <div class="spinner"></div>
-                <p style="color: #666;">Processing your try-on... This may take 10-30 seconds</p>
+                <p>Generating your virtual try-on...</p>
+                <p style="font-size: 14px; color: #999; margin-top: 8px;">This may take 10-15 seconds</p>
             </div>
 
-            <div class="result-section" id="resultSection">
-                <img src="" alt="Try-on result" class="result-image" id="resultImage">
-                <button class="btn btn-add-bag" style="width: 100%;">Add To Bag</button>
+            <div id="resultSection" class="result-section" style="display: none;">
+                <h3>Your Virtual Try-On Result</h3>
+                <img id="resultImage" class="result-image">
+                <button class="btn btn-primary" onclick="resetTryOn()" style="width: 100%; margin-top: 16px;">
+                    Try Another Photo
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-grid">
                 <div>
                     <div class="footer-logo">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
-                                                    <image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABA... (base64 continues) ..." width="40" height="40"/>
-                                                </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                          <defs>
+                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <g transform="translate(30, 40)">
+                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
+                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
+                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                          </g>
+                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                        </svg>
                     </div>
                     <p class="footer-desc">
                         AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
@@ -501,250 +481,187 @@
                 </div>
                 <div class="footer-links">
                     <h4>Product</h4>
-                    <a href="demo-public.html">Demo</a>
-                    <a href="integration.html">Integration</a>
-                    <a href="dashboard-complete.html">Dashboard</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="demo-public.html">Try Demo</a>
+                    <a href="register-final-pricing.html">Pricing</a>
+                    <a href="integration-hub-complete.html">Integration</a>
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="about.html">About</a>
-                    <a href="#">Careers</a>
+                    <a href="mailto:support@vmizestudio.com">Contact</a>
                     <a href="#">Contact</a>
                 </div>
                 <div class="footer-links">
-                    <h4>Support</h4>
-                    <a href="#">Help Center</a>
-                    <a href="#">Documentation</a>
-                    <a href="#">API Reference</a>
+                    <h4>Resources</h4>
+                    <a href="documentation.html">Documentation</a>
+                    <a href="api-reference.html">API Reference</a>
+                    <a href="help-center.html">Help Center</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 Vmize Studio. All rights reserved. Based in San Jose, California.</p>
-                <div class="footer-legal">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
+                <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Load logo
-        fetch('/mnt/user-data/uploads/ChatGPT_Image_Dec_26__2025__08_25_13_PM.png')
-            .then(response => response.blob())
-            .then(blob => {
-                const url = URL.createObjectURL(blob);
-                document.getElementById('logoImg').src = url;
-                document.querySelector('.footer-logo-img').src = url;
-            })
-            .catch(() => console.log('Logo loading failed'));
+        const BACKEND_URL = 'http://localhost:50277';
+        const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
+        let uploadedPhoto = null;
 
-        // Smart back button - tracks user's navigation history
         function goBack() {
-            // Get session history
-            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
-            
-            if (sessionHistory.length > 1) {
-                // Remove current page
-                sessionHistory.pop();
-                // Get previous page
-                const previousPage = sessionHistory[sessionHistory.length - 1];
-                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
-                window.location.href = previousPage;
-            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
-                window.history.back();
-            } else {
-                window.location.href = 'demo-public.html';
-            }
+            window.location.href = 'demo-public.html';
         }
 
-        // Track navigation
-        window.addEventListener('load', () => {
-            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
-            sessionHistory.push(window.location.pathname);
-            // Keep only last 10 pages
-            if (sessionHistory.length > 10) sessionHistory.shift();
-            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
-        });
+        function selectSize(element) {
+            document.querySelectorAll('.size-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
 
-        // Try-On Modal Functions
         function openTryOnModal() {
-            document.getElementById('tryonModal').classList.add('active');
-            // Track event
-            trackEvent('try_on_initiated', {
-                product: 'mens-shirt',
-                product_name: 'Classic Oxford Shirt',
-                price: 79.99
-            });
+            document.getElementById('tryOnModal').classList.add('active');
         }
 
         function closeTryOnModal() {
-            document.getElementById('tryonModal').classList.remove('active');
-            // Reset modal
-            document.getElementById('uploadSection').style.display = 'block';
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('tryOnModal').classList.remove('active');
+            resetTryOn();
         }
 
-        async function handleUpload(event) {
+        function handlePhotoUpload(event) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPhoto = e.target.result;
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('previewImage').style.display = 'block';
+                    document.getElementById('uploadArea').classList.add('has-image');
+                    document.getElementById('generateBtn').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
-            // Track upload event
-            trackEvent('photo_uploaded', {
-                product: 'mens-shirt',
-                file_size: file.size
-            });
+        async function generateTryOn() {
+            if (!uploadedPhoto) {
+                alert('Please upload a photo first');
+                return;
+            }
 
-            // Show loading
-            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('generateBtn').style.display = 'none';
             document.getElementById('loadingSection').style.display = 'block';
 
-            // Get product image URL
-            const garmentImageUrl = document.getElementById('productImage').src;
-            
-            // Convert uploaded file to base64
-            const modelImageBase64 = await fileToBase64(file);
-
             try {
-                // Call Fashn API through backend proxy (hidden from frontend)
-                const result = await callFashnAPI(modelImageBase64, garmentImageUrl);
+                const productImage = document.getElementById('productImage').src;
 
-                // Show result
-                document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('resultSection').classList.add('active');
-                document.getElementById('resultImage').src = result.output_url || result.raw?.output?.image_url || '';
-
-                // Track success
-                trackEvent('result_generated', {
-                    product: 'mens-shirt',
-                    success: true
+                const response = await fetch(`${BACKEND_URL}/api/tryon/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': DEMO_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model_image: uploadedPhoto,
+                        garment_image: productImage,
+                        category: 'tops'
+                    })
                 });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate try-on');
+                }
+
+                const data = await response.json();
+                const predictionId = data.prediction_id;
+
+                await pollForResult(predictionId);
 
             } catch (error) {
-                console.error('Try-on failed:', error);
+                console.error('Error:', error);
+                alert('Failed to generate try-on. Please try again.');
                 document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('uploadSection').style.display = 'block';
-                alert('Try-on failed. Please try again.');
-
-                // Track error
-                trackEvent('result_generated', {
-                    product: 'mens-shirt',
-                    success: false,
-                    error: error.message
-                });
+                document.getElementById('generateBtn').style.display = 'block';
             }
         }
 
-        // Convert file to base64
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
+        async function pollForResult(predictionId) {
+            const maxAttempts = 30;
+            let attempts = 0;
 
-        // Call Fashn API through backend proxy (HIDDEN FROM FRONTEND)
-        // Now uses start->poll flow and a demo key header for demo pages
-        async function callFashnAPI(modelImageBase64, garmentImageUrl) {
-            const DEMO_KEY = 'vmize_pk_demo_test_1234567890';
+            const checkStatus = async () => {
+                try {
+                    const response = await fetch(`${BACKEND_URL}/api/tryon/${predictionId}`, {
+                        headers: {
+                            'x-api-key': DEMO_API_KEY
+                        }
+                    });
 
-            // Start
-            const startResp = await fetch('/api/v1/tryon', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${DEMO_KEY}`,
-                    'x-vmize-api-key': DEMO_KEY
-                },
-                body: JSON.stringify({
-                    model_image: `data:image/png;base64,${modelImageBase64}`,
-                    garment_image: garmentImageUrl,
-                    category: 'tops'
-                })
-            });
+                    if (!response.ok) {
+                        throw new Error('Failed to check status');
+                    }
 
-            if (!startResp.ok) {
-                const err = await startResp.json().catch(() => ({}));
-                throw new Error(err.error || 'API request failed');
-            }
+                    const data = await response.json();
 
-            const startData = await startResp.json();
-            const id = startData.prediction_id || startData.id || startData.predictionId;
-            if (!id) throw new Error('No prediction id returned');
-
-            // Poll for result (timeout 30s)
-            const timeout = 30000;
-            const interval = 1500;
-            const deadline = Date.now() + timeout;
-
-            while (Date.now() < deadline) {
-                await new Promise(r => setTimeout(r, interval));
-
-                const statusResp = await fetch(`/api/v1/tryon/${id}`, {
-                    headers: { 'Authorization': `Bearer ${DEMO_KEY}`, 'x-vmize-api-key': DEMO_KEY }
-                });
-
-                if (!statusResp.ok) {
-                    const err = await statusResp.json().catch(() => ({}));
-                    throw new Error(err.error || 'Status check failed');
+                    if (data.status === 'completed') {
+                        document.getElementById('loadingSection').style.display = 'none';
+                        document.getElementById('resultSection').style.display = 'block';
+                        document.getElementById('resultImage').src = data.output.image_url;
+                    } else if (data.status === 'failed') {
+                        throw new Error('Try-on generation failed');
+                    } else {
+                        attempts++;
+                        if (attempts < maxAttempts) {
+                            setTimeout(checkStatus, 2000);
+                        } else {
+                            throw new Error('Request timeout');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Polling error:', error);
+                    alert('Failed to get result. Please try again.');
+                    document.getElementById('loadingSection').style.display = 'none';
+                    document.getElementById('generateBtn').style.display = 'block';
                 }
+            };
 
-                const statusData = await statusResp.json();
-                if (statusData.status === 'completed' || statusData.status === 'succeeded') {
-                    const outputUrl = statusData.output?.image_url || statusData.output_url || statusData.result?.image_url;
-                    return { output_url: outputUrl, raw: statusData };
-                }
-            }
-
-            throw new Error('Timeout waiting for try-on result');
+            checkStatus();
         }
 
-        // Track events to analytics
-        function trackEvent(eventName, properties) {
-            // Send to backend for analytics
-            fetch('/api/analytics/track', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    event: eventName,
-                    properties: properties,
-                    timestamp: new Date().toISOString(),
-                    session_id: getSessionId(),
-                    user_ip: null // Backend will add this
-                })
-            }).catch(err => console.log('Analytics tracking failed:', err));
+        function resetTryOn() {
+            uploadedPhoto = null;
+            document.getElementById('previewImage').style.display = 'none';
+            document.getElementById('previewImage').src = '';
+            document.getElementById('uploadArea').classList.remove('has-image');
+            document.getElementById('generateBtn').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('photoInput').value = '';
+        }
 
-            // Also store locally for demo
+        window.addEventListener('load', () => {
             const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
             events.push({
-                event: eventName,
-                properties: properties,
-                timestamp: new Date().toISOString()
+                event: 'product_view',
+                properties: { 
+                    product: 'Classic Oxford Shirt',
+                    price: 79.99,
+                    category: 'tops'
+                },
+                timestamp: new Date().toISOString(),
+                visitor_id: localStorage.getItem('vmize_visitor_id') || 'visitor_' + Date.now()
             });
-            // Keep only last 100 events
             if (events.length > 100) events.shift();
             localStorage.setItem('vmize_events', JSON.stringify(events));
-        }
-
-        // Get or create session ID
-        function getSessionId() {
-            let sessionId = sessionStorage.getItem('vmize_session_id');
-            if (!sessionId) {
-                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                sessionStorage.setItem('vmize_session_id', sessionId);
-            }
-            return sessionId;
-        }
-
-        // Track page view
-        trackEvent('page_view', {
-            page: 'product-mens-shirt',
-            product: 'Classic Oxford Shirt'
         });
     </script>
 </body>
