@@ -5,11 +5,993 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - VMIZE Studio</title>
     <style>
-        /* ...existing code from user-provided pricing page... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vmize-purple: #6B4CE6;
+            --vmize-blue: #4CC9F0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --border-color: #e0e0e0;
+            --bg-light: #f8f9fa;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            background: white;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--vmize-purple);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        /* Hero Section */
+        .pricing-hero {
+            text-align: center;
+            padding: 80px 32px 60px;
+            background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
+        }
+
+        .pricing-hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pricing-hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* Billing Toggle */
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 60px;
+        }
+
+        .toggle-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .toggle-label.active {
+            color: var(--vmize-purple);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background: var(--border-color);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: var(--vmize-purple);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(28px);
+        }
+
+        .savings-badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Pricing Cards */
+        .pricing-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px 80px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 80px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.featured {
+            border: 3px solid var(--vmize-purple);
+            box-shadow: 0 8px 24px rgba(107, 76, 230, 0.15);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .plan-price {
+            margin-bottom: 24px;
+        }
+
+        .price-amount {
+            font-size: 56px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .price-period {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            color: var(--text-primary);
+        }
+
+        .plan-features li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .plan-features li.unavailable {
+            color: var(--text-secondary);
+        }
+
+        .plan-features li.unavailable::before {
+            content: "—";
+            color: var(--text-secondary);
+        }
+
+        .cta-btn {
+            width: 100%;
+            padding: 16px 32px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .cta-btn-primary {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+        }
+
+        .cta-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 76, 230, 0.3);
+        }
+
+        .cta-btn-secondary {
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+        }
+
+        .cta-btn-secondary:hover {
+            background: #f5f3ff;
+        }
+
+        /* Enterprise Section */
+        .enterprise-section {
+            background: linear-gradient(135deg, var(--vmize-purple), var(--vmize-blue));
+            color: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .enterprise-section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .enterprise-section p {
+            font-size: 18px;
+            margin-bottom: 32px;
+            opacity: 0.95;
+        }
+
+        .enterprise-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .enterprise-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .enterprise-feature-icon {
+            font-size: 24px;
+        }
+
+        .enterprise-cta {
+            background: white;
+            color: var(--vmize-purple);
+            padding: 16px 48px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .enterprise-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Comparison Table */
+        .comparison-section {
+            margin-bottom: 80px;
+        }
+
+        .comparison-section h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 48px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+        }
+
+        .comparison-table thead {
+            background: var(--bg-light);
+        }
+
+        .comparison-table th {
+            padding: 24px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .comparison-table th:first-child {
+            width: 40%;
+        }
+
+        .comparison-table td {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .cross-icon {
+            color: var(--text-secondary);
+            font-size: 20px;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-bottom: 80px;
+        }
+
+        .faq-section h2 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 48px;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .faq-item {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .final-cta {
+            text-align: center;
+            padding: 80px 32px;
+            background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
+            border-radius: 16px;
+        }
+
+        .final-cta h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .final-cta p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .final-cta-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 48px 32px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+
+        .footer-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--vmize-purple);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .enterprise-features {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 14px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .pricing-hero h1 {
+                font-size: 36px;
+            }
+
+            .final-cta-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Full pricing page HTML as provided by user -->
-    <!-- ...existing code from user-provided pricing page... -->
-</body>
-</html>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                  <defs>
+                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(30, 40)">
+                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
+                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
+                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  </g>
+                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                </svg>
+            </a>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="demo-public-updated.html">Demo</a>
+                <a href="integration-hub-complete.html">Integration</a>
+                <a href="pricing-complete.html" class="active">Pricing</a>
+                <a href="login.html">Login</a>
+            </nav>
+            <button class="back-btn" onclick="goBack()">
+                <span>←</span> Back
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pricing-hero">
+        <h1>Simple, Transparent Pricing</h1>
+        <p>Choose the perfect plan for your business. No hidden fees, cancel anytime.</p>
+    </section>
+
+    <!-- Pricing Cards -->
+    <div class="pricing-container">
+        <div class="pricing-grid">
+            <!-- Starter Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-description">Perfect for small businesses getting started</div>
+                <div class="plan-price">
+                    <div>
+                        <span class="price-amount" id="starterPrice">$49</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p style="font-size: 14px; color: #666; margin-top: 8px;" id="starterBilling">300 monthly try-ons</p>
+                </div>
+                <ul class="plan-features">
+                    <li>300 monthly try-ons</li>
+                    <li>Full API access</li>
+                    <li>Real-time analytics</li>
+                    <li>White-label solution</li>
+                    <li>1 website / domain</li>
+                    <li>Standard support</li>
+                    <li>Custom integrations</li>
+                    <li class="unavailable">Priority support</li>
+                    <li class="unavailable">Daily bonus try-ons</li>
+                </ul>
+                <a href="register-final-pricing.html?plan=starter" class="cta-btn cta-btn-secondary">Get Started</a>
+            </div>
+
+            <!-- Professional Plan (Featured) -->
+            <div class="pricing-card featured">
+                <div class="popular-badge">MOST POPULAR</div>
+                <div class="plan-name">Professional</div>
+                <div class="plan-description">For growing businesses that need more</div>
+                <div class="plan-price">
+                    <div>
+                        <span class="price-amount" id="proPrice">$129</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p style="font-size: 14px; color: #666; margin-top: 8px;" id="proBilling">1,000 monthly try-ons + 100 daily bonus</p>
+                </div>
+                <ul class="plan-features">
+                    <li>1,000 monthly try-ons</li>
+                    <li>100 daily bonus try-ons</li>
+                    <li>Priority support</li>
+                    <li>Real-time analytics</li>
+                    <li>Up to 3 websites</li>
+                    <li>$0.129/try-on effective rate</li>
+                    <li>Full API access</li>
+                    <li>White-label solution</li>
+                    <li>Custom integrations</li>
+                    <li>A/B testing tools</li>
+                </ul>
+                <a href="register-final-pricing.html?plan=professional" class="cta-btn cta-btn-primary">Get Started</a>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-description">For large businesses with high volume needs</div>
+                <div class="plan-price">
+                    <div>
+                        <span class="price-amount">$299</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <p style="font-size: 14px; color: #666; margin-top: 8px;">3,000 monthly try-ons + 300 daily bonus</p>
+                </div>
+                <ul class="plan-features">
+                    <li>3,000 monthly try-ons</li>
+                    <li>300 daily bonus try-ons</li>
+                    <li>Dedicated support</li>
+                    <li>Priority features</li>
+                    <li>Up to 5 websites</li>
+                    <li>$0.099/try-on effective rate</li>
+                    <li>Full API access</li>
+                    <li>White-label solution</li>
+                    <li>Custom integrations</li>
+                    <li>A/B testing tools</li>
+                    <li>99.99% SLA guarantee</li>
+                </ul>
+                <a href="register-final-pricing.html?plan=enterprise" class="cta-btn cta-btn-secondary">Start Now</a>
+            </div>
+        </div>
+
+        <!-- Enterprise Features Highlight -->
+        <div class="enterprise-section">
+            <h2>Enterprise Solutions</h2>
+            <p>Unlock the full potential of AI-powered virtual try-on for your enterprise</p>
+            
+            <div class="enterprise-features">
+                <div class="enterprise-feature">
+                    <div class="enterprise-feature-icon">🔒</div>
+                    <div>
+                        <h4>Security & Compliance</h4>
+                        <p>SOC 2, GDPR, CCPA compliant with enterprise-grade security</p>
+                    </div>
+                </div>
+                <div class="enterprise-feature">
+                    <div class="enterprise-feature-icon">⚡</div>
+                    <div>
+                        <h4>High Performance</h4>
+                        <p>Dedicated infrastructure with 99.99% uptime SLA</p>
+                    </div>
+                </div>
+                <div class="enterprise-feature">
+                    <div class="enterprise-feature-icon">🎨</div>
+                    <div>
+                        <h4>White Label</h4>
+                        <p>Fully customizable with your branding and domain</p>
+                    </div>
+                </div>
+                <div class="enterprise-feature">
+                    <div class="enterprise-feature-icon">👥</div>
+                    <div>
+                        <h4>Dedicated Support</h4>
+                        <p>Priority support with dedicated account manager</p>
+                    </div>
+                </div>
+                <div class="enterprise-feature">
+                    <div class="enterprise-feature-icon">🔌</div>
+                    <div>
+                        <h4>Custom Integrations</h4>
+                        <p>Built-to-order integrations with your existing systems</p>
+                    </div>
+                </div>
+                <div class="enterprise-feature">
+                    <div class="enterprise-feature-icon">📊</div>
+                    <div>
+                        <h4>Advanced Analytics</h4>
+                        <p>Real-time analytics with priority features and insights</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/cdn-cgi/l/email-protection#f784969b9284b7819a9e8d92848382939e98d994989a" class="enterprise-cta">Schedule a Demo</a>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison-section">
+            <h2>Compare Plans</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>Starter</th>
+                        <th>Professional</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Try-ons per month</strong></td>
+                        <td>300</td>
+                        <td>1,000</td>
+                        <td>3,000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Daily Bonus Try-ons</strong></td>
+                        <td><span class="cross-icon">—</span></td>
+                        <td>100</td>
+                        <td>300</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Websites/Stores</strong></td>
+                        <td>1</td>
+                        <td>3</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Effective Rate per Try-on</strong></td>
+                        <td>$0.163</td>
+                        <td>$0.129</td>
+                        <td>$0.099</td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Access</strong></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Analytics Dashboard</strong></td>
+                        <td>Real-time</td>
+                        <td>Real-time</td>
+                        <td>Real-time + Priority</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Support</strong></td>
+                        <td>Standard</td>
+                        <td>Priority</td>
+                        <td>Dedicated</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Response Time</strong></td>
+                        <td>24 hours</td>
+                        <td>4 hours</td>
+                        <td>1 hour</td>
+                    </tr>
+                    <tr>
+                        <td><strong>White-label Solution</strong></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>A/B Testing</strong></td>
+                        <td><span class="cross-icon">—</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Webhooks</strong></td>
+                        <td><span class="cross-icon">—</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>White Label</strong></td>
+                        <td><span class="cross-icon">—</span></td>
+                        <td><span class="cross-icon">—</span></td>
+                        <td><span class="check-icon">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>SLA Guarantee</strong></td>
+                        <td>99.5%</td>
+                        <td>99.9%</td>
+                        <td>99.99%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3 class="faq-question">Can I change plans later?</h3>
+                    <p class="faq-answer">Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any charges or credits.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">What happens if I exceed my try-on limit?</h3>
+                    <p class="faq-answer">We'll send you a notification when you reach 80% of your limit. You can upgrade your plan or purchase additional try-ons at $0.25 per try-on.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">How does billing work?</h3>
+                    <p class="faq-answer">You'll be billed monthly on the date you sign up. All plans include your monthly try-on allocation plus any daily bonuses. Overage charges are billed at the end of each month at $0.25 per additional try-on.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">What payment methods do you accept?</h3>
+                    <p class="faq-answer">We accept all major credit cards (Visa, Mastercard, Amex), PayPal, and wire transfers for Enterprise plans. All payments are processed securely through Stripe.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Can I cancel anytime?</h3>
+                    <p class="faq-answer">Absolutely! There are no long-term contracts. You can cancel your subscription at any time, and you'll continue to have access until the end of your billing period.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Do you offer refunds?</h3>
+                    <p class="faq-answer">We offer a 30-day money-back guarantee. If you're not satisfied with VMIZE Studio within the first 30 days, we'll refund your payment in full.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Is my data secure?</h3>
+                    <p class="faq-answer">Yes! We take security seriously. All data is encrypted in transit and at rest. We're SOC 2 compliant and follow GDPR, CCPA regulations.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Do you offer volume discounts?</h3>
+                    <p class="faq-answer">Yes! For Enterprise plans or high-volume usage, we offer custom pricing. Contact our sales team to discuss your specific needs and get a quote.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final CTA -->
+        <div class="final-cta">
+            <h2>Ready to Transform Your E-Commerce?</h2>
+            <p>Join thousands of brands using VMIZE to increase conversions and reduce returns</p>
+            <div class="final-cta-btns">
+                <a href="register-final-pricing.html" class="cta-btn cta-btn-primary" style="display: inline-block; padding: 16px 48px;">Get Started</a>
+                <a href="demo-public-updated.html" class="cta-btn cta-btn-secondary" style="display: inline-block; padding: 16px 48px;">Try Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
+                          <defs>
+                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
+                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <g transform="translate(30, 40)">
+                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
+                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
+                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                          </g>
+                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
+                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
+                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
+                        </svg>
+                    </div>
+                    <p class="footer-desc">
+                        AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <a href="index.html#features">Features</a>
+                    <a href="demo-public-updated.html">Try Demo</a>
+                    <a href="pricing-complete.html">Pricing</a>
+                    <a href="integration-hub-complete.html">Integration</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <a href="documentation.html">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="help-center.html">Help Center</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 VMIZE Studio. All rights reserved. Based in San Jose, California.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        function goBack() {
+            const history = sessionStorage.getItem('vmize_nav_history');
+            if (history && JSON.parse(history).length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Track page view
+        window.addEventListener('load', () => {
+            const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
+            events.push({
+                event: 'page_view',
+                properties: { page: 'pricing' },
+                timestamp: new Date().toISOString(),
+                visitor_id: localStorage.getItem('vmize_visitor_id') || 'visitor_' + Date.now()
+            });
+            if (events.length > 100) events.shift();
+            localStorage.setItem('vmize_events', JSON.stringify(events));
+
+            // Track session history
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) ses

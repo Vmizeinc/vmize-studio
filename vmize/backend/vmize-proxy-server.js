@@ -23,9 +23,16 @@ app.use(express.json({ limit: '50mb' }));
 const FASHN_API_KEY = process.env.FASHN_API_KEY; // YOUR secret Fashn.AI key
 const PORT = process.env.PORT || 3000;
 
-// In-memory store for customer API keys (use database in production)
-// Format: { 'vmize_pk_live_store123': { storeId: 'store123', plan: 'professional', ... } }
-const CUSTOMER_API_KEYS = new Map();
+
+// MongoDB Customer model
+const mongoose = require('mongoose');
+const Customer = require('../../backend/models/Customer');
+
+// Connect to MongoDB (update URI as needed)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/vmize', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 // =================================================================
 // MIDDLEWARE: Verify Customer API Key
@@ -49,65 +56,43 @@ async function verifyCustomerApiKey(req, res, next) {
     });
   }
   
-  // Look up customer from database (simplified here)
-  const customer = await getCustomerByApiKey(apiKey);
-  
+  // Look up customer from MongoDB
+  const customer = await Customer.findOne({ apiKey });
   if (!customer) {
-    return res.status(401).json({ 
-      error: 'Unauthorized', 
-      message: 'Invalid API key' 
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'Invalid API key'
     });
   }
-  
-  // Check if customer has active subscription
-  if (customer.status !== 'active') {
-    return res.status(403).json({ 
-      error: 'Forbidden', 
-      message: 'Subscription inactive. Please update billing.' 
+  if (customer.subscriptionStatus !== 'active') {
+    return res.status(403).json({
+      error: 'Forbidden',
+      message: 'Subscription inactive. Please update billing.'
     });
   }
-  
-  // Check usage limits
-  if (customer.usageThisMonth >= customer.planLimit) {
-    return res.status(429).json({ 
-      error: 'Quota Exceeded', 
-      message: 'Monthly try-on limit reached. Upgrade your plan.' 
+  if (customer.hasExceededLimit()) {
+    return res.status(429).json({
+      error: 'Quota Exceeded',
+      message: 'Monthly try-on limit reached. Upgrade your plan.'
     });
   }
-  
-  // Attach customer info to request
   req.customer = customer;
   next();
 }
 
-// =================================================================
-// HELPER: Get customer by API key
-// =================================================================
-
-async function getCustomerByApiKey(apiKey) {
-  // In production, query your MongoDB database:
-  // const customer = await Customer.findOne({ apiKey });
-  
-  // For now, simulate database lookup
-  if (CUSTOMER_API_KEYS.has(apiKey)) {
-    return CUSTOMER_API_KEYS.get(apiKey);
-  }
-  
-  return null;
-}
+// No longer needed: getCustomerByApiKey (now handled inline)
 
 // =================================================================
 // HELPER: Track usage
 // =================================================================
 
 async function trackUsage(customerId, tryonCount = 1) {
-  // In production, update MongoDB:
-  // await Customer.updateOne(
-  //   { _id: customerId },
-  //   { $inc: { 'usage.currentMonth': tryonCount } }
-  // );
-  
-  console.log(`📊 Tracked ${tryonCount} try-on(s) for customer ${customerId}`);
+  // Increment usage for the customer in MongoDB
+  const customer = await Customer.findById(customerId);
+  if (customer) {
+    await customer.incrementUsage(tryonCount);
+    console.log(`📊 Tracked ${tryonCount} try-on(s) for customer ${customer.email}`);
+  }
 }
 
 // =================================================================
@@ -216,14 +201,15 @@ app.get('/api/tryon/:id', verifyCustomerApiKey, async (req, res) => {
 
 app.get('/api/usage', verifyCustomerApiKey, async (req, res) => {
   const { customer } = req;
-  
   res.json({
-    customerId: customer.customerId,
+    email: customer.email,
     plan: customer.plan,
-    usageThisMonth: customer.usageThisMonth,
-    planLimit: customer.planLimit,
-    remaining: customer.planLimit - customer.usageThisMonth,
-    percentUsed: Math.round((customer.usageThisMonth / customer.planLimit) * 100)
+    used: customer.usage.currentMonth.tryons,
+    limit: customer.usage.limit,
+    remaining: customer.getRemainingUsage(),
+    percentUsed: customer.getUsagePercentage(),
+    overLimit: customer.hasExceededLimit(),
+    lastReset: customer.usage.lastResetDate
   });
 });
 
@@ -231,49 +217,37 @@ app.get('/api/usage', verifyCustomerApiKey, async (req, res) => {
 // ADMIN ROUTES: Generate API Keys (Your internal use only)
 // =================================================================
 
-// Generate new API key for customer
+// Generate new API key for customer (create new customer)
 app.post('/admin/generate-key', async (req, res) => {
-  const { customerId, plan, email } = req.body;
-  
-  // Generate unique API key
-  const apiKey = `vmize_pk_live_${customerId}_${Date.now()}`;
-  
-  // Get plan limits
-  const planLimits = {
-    'starter': 100,
-    'professional': 500,
-    'business': 2000,
-    'enterprise': 10000
-  };
-  
-  // Store customer info
-  CUSTOMER_API_KEYS.set(apiKey, {
-    customerId,
-    apiKey,
-    plan,
-    email,
-    status: 'active',
-    planLimit: planLimits[plan] || 100,
-    usageThisMonth: 0,
-    createdAt: new Date()
-  });
-  
-  res.json({
-    success: true,
-    apiKey,
-    message: 'API key generated successfully'
-  });
+  const { email, name, plan = 'starter', companyName } = req.body;
+  try {
+    // Check if customer already exists
+    let customer = await Customer.findOne({ email });
+    if (customer) {
+      return res.status(400).json({ error: 'Customer already exists', apiKey: customer.apiKey });
+    }
+    // Create new customer
+    customer = new Customer({ email, name, plan, companyName });
+    await customer.save();
+    res.json({ success: true, apiKey: customer.apiKey, message: 'API key generated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create customer', details: err.message });
+  }
 });
 
-// Revoke API key
+// Revoke API key (deactivate customer)
 app.post('/admin/revoke-key', async (req, res) => {
   const { apiKey } = req.body;
-  
-  if (CUSTOMER_API_KEYS.has(apiKey)) {
-    CUSTOMER_API_KEYS.delete(apiKey);
+  try {
+    const customer = await Customer.findOne({ apiKey });
+    if (!customer) {
+      return res.status(404).json({ error: 'Not Found', message: 'API key not found' });
+    }
+    customer.subscriptionStatus = 'inactive';
+    await customer.save();
     res.json({ success: true, message: 'API key revoked' });
-  } else {
-    res.status(404).json({ error: 'Not Found', message: 'API key not found' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to revoke key', details: err.message });
   }
 });
 

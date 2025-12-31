@@ -4,98 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - Vmize Studio</title>
-        <script>
-        // Highlight active nav link
-        document.addEventListener('DOMContentLoaded', function() {
-            const links = document.querySelectorAll('nav a');
-            const path = window.location.pathname.split('/').pop();
-            links.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href !== '#' && href !== '' && (href === path || (href !== '#' && path === '' && href === 'index.html'))) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-            // Admin login session management
-            let inactivityWarningShown = false;
-            let inactivityTimeout;
-            function adminSignOut() {
-                localStorage.removeItem('vmize_admin_token');
-                localStorage.removeItem('vmize_admin_last_activity');
-                window.location.href = 'admin-login.html';
-            }
-
-            function updateAdminActivity() {
-                localStorage.setItem('vmize_admin_last_activity', Date.now().toString());
-                if (inactivityWarningShown) {
-                    hideInactivityPopup();
-                    inactivityWarningShown = false;
-                }
-                clearTimeout(inactivityTimeout);
-                inactivityTimeout = setTimeout(showInactivityPopup, 18 * 60 * 1000); // 18 min warning
-            }
-
-            function checkAdminSession() {
-                const token = localStorage.getItem('vmize_admin_token');
-                const lastActivity = parseInt(localStorage.getItem('vmize_admin_last_activity') || '0');
-                const now = Date.now();
-                const maxIdle = 20 * 60 * 1000; // 20 minutes
-                if (!token) {
-                    window.location.href = 'admin-login.html';
-                    return;
-                }
-                if (now - lastActivity > maxIdle) {
-                    hideInactivityPopup();
-                    alert('Session expired due to inactivity. Please log in again.');
-                    adminSignOut();
-                    return;
-                }
-            }
-
-            function showInactivityPopup() {
-                inactivityWarningShown = true;
-                let popup = document.getElementById('adminInactivityPopup');
-                if (!popup) {
-                    popup = document.createElement('div');
-                    popup.id = 'adminInactivityPopup';
-                    popup.style.position = 'fixed';
-                    popup.style.left = '50%';
-                    popup.style.top = '30px';
-                    popup.style.transform = 'translateX(-50%)';
-                    popup.style.background = '#dc3545';
-                    popup.style.color = '#fff';
-                    popup.style.padding = '18px 32px';
-                    popup.style.borderRadius = '8px';
-                    popup.style.fontSize = '18px';
-                    popup.style.zIndex = '99999';
-                    popup.style.boxShadow = '0 2px 16px rgba(0,0,0,0.15)';
-                    popup.textContent = 'You have been inactive for a while. Please move your mouse, click, or type to stay logged in.';
-                    document.body.appendChild(popup);
-                } else {
-                    popup.style.display = 'block';
-                }
-            }
-
-            function hideInactivityPopup() {
-                let popup = document.getElementById('adminInactivityPopup');
-                if (popup) popup.style.display = 'none';
-            }
-
-            ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
-                window.addEventListener(evt, updateAdminActivity);
-            });
-
-            window.addEventListener('load', () => {
-                updateAdminActivity();
-                checkAdminSession();
-                setInterval(checkAdminSession, 60 * 1000);
-            });
-
-            window.addEventListener('beforeunload', () => {
-                adminSignOut();
-            });
-        </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -186,6 +94,12 @@
             box-shadow: 0 10px 30px rgba(107, 76, 230, 0.4);
         }
 
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .error-message {
             background: #f8d7da;
             color: #721c24;
@@ -223,26 +137,25 @@
             padding-top: 24px;
             border-top: 1px solid #e0e0e0;
         }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-        <!-- Navigation -->
-        <nav style="width:100%;background:rgba(255,255,255,0.95);border-bottom:1px solid #e0e0e0;padding:16px 0;position:fixed;top:0;z-index:1000;">
-            <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;">
-                <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
-                    <span style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#6B4CE6,#4CC9F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Vmize Studio</span>
-                </a>
-                <div style="display:flex;gap:32px;align-items:center;">
-                    <a href="index.html" style="color:#1a1a1a;text-decoration:none;font-weight:500;">Home</a>
-                    <a href="demo-public.html" style="color:#1a1a1a;text-decoration:none;font-weight:500;">Try Demo</a>
-                    <a href="#pricing" style="color:#1a1a1a;text-decoration:none;font-weight:500;">Pricing</a>
-                    <a href="integration.html" style="color:#1a1a1a;text-decoration:none;font-weight:500;">Integration</a>
-                    <a href="dashboard-complete.html" style="color:#1a1a1a;text-decoration:none;font-weight:500;">Dashboard</a>
-                    <a href="login.html" style="color:#1a1a1a;text-decoration:none;font-weight:500;">Login</a>
-                    <a href="checkout.html" class="btn btn-primary" style="background:linear-gradient(135deg,#6B4CE6,#4CC9F0);color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">Get Started</a>
-                </div>
-            </div>
-        </nav>
     <div class="login-container">
         <div class="logo">
             <h1>Vmize Studio</h1>
@@ -278,7 +191,7 @@
                 >
             </div>
 
-            <button type="submit" class="btn-login">
+            <button type="submit" class="btn-login" id="loginBtn">
                 🔓 Login to Admin Dashboard
             </button>
         </form>
@@ -294,28 +207,32 @@
     </div>
 
     <script>
+        // =============================================
+        // API CONFIGURATION
+        // =============================================
+        const API_BASE_URL = window.VMIZE_API_URL || window.location.origin;
+
+        // =============================================
+        // LOGIN HANDLER
+        // =============================================
         async function handleLogin(e) {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
             
             // Hide error message
             errorDiv.classList.remove('show');
             
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading-spinner"></span> Logging in...';
+            
             try {
-                const API_URL = (window.VMIZE_API_URL && window.VMIZE_API_URL.length) ? window.VMIZE_API_URL : window.location.origin;
-
-                // If demo credentials are used, bypass network call for reliability in tests
-                if (username === 'admin' && password === 'VmizeAdmin2025!') {
-                    localStorage.setItem('vmize_admin_token', 'demo_admin_token');
-                    window.location.href = 'admin-dashboard.html';
-                    return;
-                }
-
-                // In production, call your backend API
-                const response = await fetch(API_URL + '/admin/login', {
+                // Call backend API
+                const response = await fetch(`${API_BASE_URL}/admin/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -323,39 +240,63 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
+                const data = await response.json();
 
-                    // Store admin token
+                if (response.ok && data.token) {
+                    // Store admin token and user info
                     localStorage.setItem('vmize_admin_token', data.token);
-
+                    localStorage.setItem('vmize_admin_username', data.username || username);
+                    localStorage.setItem('vmize_admin_last_activity', Date.now().toString());
+                    
                     // Redirect to admin dashboard
                     window.location.href = 'admin-dashboard.html';
                 } else {
-                    // If server rejects but demo credentials were entered previously, offer demo fallback
-                    errorDiv.textContent = 'Invalid credentials. Please try again.';
+                    // Show error from server
+                    errorDiv.textContent = data.message || 'Invalid credentials. Please try again.';
                     errorDiv.classList.add('show');
+                    resetButton();
                 }
             } catch (error) {
                 console.error('Login error:', error);
-
-                // Network error: if demo credentials were used allow demo login, otherwise show error
+                
+                // Network error - check if demo credentials for local testing
                 if (username === 'admin' && password === 'VmizeAdmin2025!') {
-                    localStorage.setItem('vmize_admin_token', 'demo_admin_token');
+                    localStorage.setItem('vmize_admin_token', 'demo_admin_token_' + Date.now());
+                    localStorage.setItem('vmize_admin_username', 'admin');
+                    localStorage.setItem('vmize_admin_last_activity', Date.now().toString());
                     window.location.href = 'admin-dashboard.html';
-                } else {
-                    errorDiv.textContent = 'Network error. Please try again.';
-                    errorDiv.classList.add('show');
+                    return;
                 }
+                
+                errorDiv.textContent = 'Unable to connect to server. Please check your connection.';
+                errorDiv.classList.add('show');
+                resetButton();
             }
         }
+
+        function resetButton() {
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '🔓 Login to Admin Dashboard';
+        }
         
-        // Check if already logged in
-        window.addEventListener('load', () => {
+        // =============================================
+        // CHECK IF ALREADY LOGGED IN
+        // =============================================
+        window.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('vmize_admin_token');
-            if (token) {
-                // Redirect immediately when admin token exists
+            const lastActivity = parseInt(localStorage.getItem('vmize_admin_last_activity') || '0');
+            const now = Date.now();
+            const maxIdle = 60 * 60 * 1000; // 1 hour session timeout
+            
+            // If valid token exists and not expired, redirect to dashboard
+            if (token && (now - lastActivity) < maxIdle) {
                 window.location.href = 'admin-dashboard.html';
+            } else if (token) {
+                // Token expired, clean up
+                localStorage.removeItem('vmize_admin_token');
+                localStorage.removeItem('vmize_admin_username');
+                localStorage.removeItem('vmize_admin_last_activity');
             }
         });
     </script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sherpa Hooded Jacket - VMIZE Studio</title>
+    <title>Floral Midi Dress - VMIZE Studio</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -323,36 +323,36 @@
             }
             .footer-grid { grid-template-columns: 1fr; }
         }
+    
+        /* Mobile Menu */
+        .mobile-menu-btn { display: none; flex-direction: column; justify-content: space-between; width: 28px; height: 20px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 1001; }
+        .mobile-menu-btn span { display: block; width: 100%; height: 3px; background: #6B4CE6; border-radius: 2px; transition: all 0.3s ease; }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+        .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: white; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 999; flex-direction: column; }
+        .mobile-menu.active { display: flex; }
+        .mobile-menu a { padding: 16px 20px; color: #333; text-decoration: none; font-weight: 600; border-bottom: 1px solid #eee; }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu a:hover { color: #6B4CE6; background: #f5f3ff; }
+        @media (max-width: 900px) { .mobile-menu-btn { display: flex; } nav, .nav-links { display: none; } .back-btn { display: none; } .footer-grid { grid-template-columns: repeat(2, 1fr); } section, .section { padding: 60px 20px; } .product-container { grid-template-columns: 1fr; gap: 24px; } }
+        @media (max-width: 600px) { header { padding: 12px 16px; } .header-content { padding: 0; } .logo img { height: 35px; width: auto; } section, .section { padding: 40px 16px; } h1, .product-title { font-size: 24px; line-height: 1.3; } h2 { font-size: 20px; } h3 { font-size: 18px; } .product-container { padding: 16px; } .product-price { font-size: 24px; } .size-options { gap: 8px; } .size-option { min-width: 44px; padding: 10px; } .action-buttons { flex-direction: column; } .action-buttons .btn { width: 100%; } .footer-grid { grid-template-columns: 1fr; text-align: center; } .footer-bottom { font-size: 13px; } .btn, button { padding: 14px 20px; font-size: 15px; } .modal-content { margin: 10px; padding: 16px; max-height: 90vh; overflow-y: auto; border-radius: 12px; } .upload-area { padding: 24px 16px; } .modal-header { padding: 12px 0; } .modal-title { font-size: 20px; } }
+        @media (max-width: 400px) { h1 { font-size: 22px; } h2 { font-size: 20px; } }
+        @media (hover: none) and (pointer: coarse) { .btn, button, a { min-height: 44px; } }
+
     </style>
 </head>
 <body>
     <header>
         <div class="header-content">
             <a href="index.html" class="logo">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
-                  <defs>
-                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
-                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
-                    </linearGradient>
-                  </defs>
-                  <g transform="translate(30, 40)">
-                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
-                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
-                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                  </g>
-                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
-                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
-                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
-                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
-                </svg>
+                <img src="vmize-logo.png" alt="VMIZE Studio" style="height: 50px; width: auto;">
             </a>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
                 <a href="demo-public.html" class="active">Demo</a>
-                <a href="integration-hub-complete.html">Integration</a>
+                <a href="integration.html">Integration</a>
                 <a href="pricing.html">Pricing</a>
                 <a href="login.html">Login</a>
             </nav>
@@ -360,36 +360,44 @@
                 <span>←</span> Back
             </button>
         </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="demo-public.html">Demo</a>
+            <a href="integration.html">Integration</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="login.html">Login</a>
+        </div>
     </header>
 
     <div class="product-container">
         <div class="product-images">
             <div class="main-image">
-                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=1200&fit=crop" 
-                     alt="Sherpa Hooded Jacket" 
+                <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&h=1200&fit=crop" 
+                     alt="Floral Midi Dress" 
                      id="productImage">
             </div>
         </div>
 
         <div class="product-info">
-            <div class="product-brand">Outdoor</div>
-            <h1 class="product-title">Sherpa Hooded Jacket</h1>
-            <div class="product-price">$149.99</div>
+            <div class="product-brand">Summer Collection</div>
+            <h1 class="product-title">Floral Midi Dress</h1>
+            <div class="product-price">$119.99</div>
 
             <div class="product-description">
-                <p>Stay warm and stylish with our premium Sherpa Hooded Jacket. Featuring ultra-soft sherpa fleece lining and a durable weather-resistant outer shell, this jacket provides exceptional warmth without sacrificing style. The modern silhouette and neutral design make it perfect for any outdoor adventure or casual outing.</p>
-                <p>Designed for versatility and comfort, this unisex jacket includes practical features like zippered pockets, adjustable hood, and ribbed cuffs. Whether you're hiking mountain trails or running errands in town, this jacket keeps you comfortable in any weather.</p>
+                <p>Embrace effortless elegance with our Floral Midi Dress. Featuring a stunning botanical print on flowing fabric, this dress is perfect for garden parties, brunch dates, or any occasion where you want to look your best.</p>
+                <p>The flattering A-line silhouette and comfortable fit make this dress a wardrobe essential. Pair with sandals for a casual look or dress it up with heels for evening events.</p>
             </div>
 
             <div class="product-features">
                 <h3>Features</h3>
                 <ul>
-                    <li>Ultra-soft sherpa fleece lining</li>
-                    <li>Weather-resistant outer shell</li>
-                    <li>Adjustable drawstring hood</li>
-                    <li>Multiple zippered pockets</li>
-                    <li>Ribbed cuffs and hem for warmth</li>
-                    <li>Unisex fit - works for everyone</li>
+                    <li>100% Premium Viscose fabric</li>
+                    <li>Beautiful floral print</li>
+                    <li>Flattering A-line silhouette</li>
+                    <li>Midi length (hits below knee)</li>
+                    <li>Hidden side zipper</li>
+                    <li>Lined for comfort</li>
                 </ul>
             </div>
 
@@ -456,25 +464,8 @@
             <div class="footer-grid">
                 <div>
                     <div class="footer-logo">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="180" height="80">
-                          <defs>
-                            <linearGradient id="vGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
-                              <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
-                              <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
-                            </linearGradient>
-                          </defs>
-                          <g transform="translate(30, 40)">
-                            <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGrad2)" opacity="0.9"/>
-                            <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGrad2)"/>
-                            <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                          </g>
-                          <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
-                                font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
-                          <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
-                                font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
-                        </svg>
-                    </div>
+                    <img src="vmize-logo.png" alt="VMIZE Studio" style="height: 40px; width: auto;">
+                </div>
                     <p class="footer-desc">
                         AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.
                     </p>
@@ -483,24 +474,22 @@
                     <h4>Product</h4>
                     <a href="index.html#features">Features</a>
                     <a href="demo-public.html">Try Demo</a>
-                    <a href="register-final-pricing.html">Pricing</a>
-                    <a href="integration-hub-complete.html">Integration</a>
+                    <a href="pricing.html">Pricing</a>
+                    <a href="integration.html">Integration</a>
                 </div>
                 <div class="footer-links">
                     <h4>Company</h4>
-                    <a href="mailto:support@vmizestudio.com">Contact</a>
-                    <a href="#">Contact</a>
+                    <a href="about.html">About</a>
+                    <a href="/cdn-cgi/l/email-protection#d9aaaca9a9b6abad99afb4b0a3bcf7bab6b4">Contact</a>
                 </div>
                 <div class="footer-links">
                     <h4>Resources</h4>
                     <a href="documentation.html">Documentation</a>
-                    <a href="api-reference.html">API Reference</a>
                     <a href="help-center.html">Help Center</a>
                 </div>
                 <div class="footer-links">
                     <h4>Legal</h4>
                     <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
                     <a href="cookie-policy.html">Cookie Policy</a>
                 </div>
             </div>
@@ -510,159 +499,198 @@
         </div>
     </footer>
 
-    <script>
-        const BACKEND_URL = 'http://localhost:50277';
-        const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
-        let uploadedPhoto = null;
 
-        function goBack() {
-            window.location.href = 'demo-public.html';
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // =================================================================
+        // VMIZE STUDIO - VIRTUAL TRY-ON INTEGRATION
+        // =================================================================
+
+        const BACKEND_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5001' : '';
+        const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
+        
+        let uploadedPhoto = null;
+        let currentPredictionId = null;
+
+        const PRODUCT_CONFIG = {
+            name: 'Floral Midi Dress',
+            price: 119.99,
+            category: 'one-pieces'
+        };
+
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.mobile-menu-btn');
+            if (menu && btn) {
+                menu.classList.toggle('active');
+                btn.classList.toggle('active');
+                document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+            }
         }
 
+        function goBack() { window.location.href = 'demo-public.html'; }
         function selectSize(element) {
             document.querySelectorAll('.size-option').forEach(opt => opt.classList.remove('selected'));
             element.classList.add('selected');
         }
-
         function openTryOnModal() {
             document.getElementById('tryOnModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-
         function closeTryOnModal() {
             document.getElementById('tryOnModal').classList.remove('active');
+            document.body.style.overflow = '';
             resetTryOn();
         }
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeTryOnModal(); });
 
         function handlePhotoUpload(event) {
             const file = event.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    uploadedPhoto = e.target.result;
-                    document.getElementById('previewImage').src = e.target.result;
-                    document.getElementById('previewImage').style.display = 'block';
-                    document.getElementById('uploadArea').classList.add('has-image');
-                    document.getElementById('generateBtn').style.display = 'block';
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { showError('File size must be less than 5MB'); return; }
+            if (!file.type.startsWith('image/')) { showError('Please upload an image file'); return; }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedPhoto = e.target.result;
+                document.getElementById('previewImage').src = e.target.result;
+                document.getElementById('previewImage').style.display = 'block';
+                document.getElementById('uploadArea').classList.add('has-image');
+                document.getElementById('generateBtn').style.display = 'block';
+                trackEvent('photo_uploaded', { fileSize: file.size, fileType: file.type });
+            };
+            reader.onerror = () => showError('Failed to read image file');
+            reader.readAsDataURL(file);
+        }
+
+        async function compressImage(base64, maxWidth = 1024) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width, height = img.height;
+                    if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; }
+                    canvas.width = width; canvas.height = height;
+                    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.85));
                 };
-                reader.readAsDataURL(file);
-            }
+                img.src = base64;
+            });
         }
 
         async function generateTryOn() {
-            if (!uploadedPhoto) {
-                alert('Please upload a photo first');
-                return;
-            }
-
+            if (!uploadedPhoto) { showError('Please upload a photo first'); return; }
             document.getElementById('generateBtn').style.display = 'none';
             document.getElementById('loadingSection').style.display = 'block';
+            updateLoadingStatus('Preparing your image...');
 
             try {
                 const productImage = document.getElementById('productImage').src;
+                updateLoadingStatus('Optimizing image...');
+                const compressedPhoto = await compressImage(uploadedPhoto, 1200);
+                trackEvent('tryon_initiated', { product: PRODUCT_CONFIG.name, category: PRODUCT_CONFIG.category });
+                updateLoadingStatus('Sending to AI...');
 
                 const response = await fetch(`${BACKEND_URL}/api/tryon/generate`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': DEMO_API_KEY
-                    },
+                    headers: { 'Content-Type': 'application/json', 'x-api-key': DEMO_API_KEY },
                     body: JSON.stringify({
-                        model_image: uploadedPhoto,
+                        model_image: compressedPhoto,
                         garment_image: productImage,
-                        category: 'tops'
+                        category: PRODUCT_CONFIG.category,
+                        mode: 'quality',
+                        garment_photo_type: 'flat-lay',
+                        num_samples: 1
                     })
                 });
-
-                if (!response.ok) {
-                    throw new Error('Failed to generate try-on');
-                }
-
                 const data = await response.json();
-                const predictionId = data.prediction_id;
-
-                await pollForResult(predictionId);
-
+                if (!response.ok) throw new Error(data.error || 'Failed to initiate try-on');
+                currentPredictionId = data.prediction_id;
+                updateLoadingStatus('AI is generating your try-on...');
+                await pollForResult(currentPredictionId);
             } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to generate try-on. Please try again.');
+                console.error('Try-on error:', error);
+                showError(error.message || 'Failed to generate try-on. Please try again.');
                 document.getElementById('loadingSection').style.display = 'none';
                 document.getElementById('generateBtn').style.display = 'block';
+                trackEvent('api_error', { error: error.message });
             }
         }
 
         async function pollForResult(predictionId) {
-            const maxAttempts = 30;
+            const maxAttempts = 60;
             let attempts = 0;
-
             const checkStatus = async () => {
+                attempts++;
                 try {
                     const response = await fetch(`${BACKEND_URL}/api/tryon/${predictionId}`, {
-                        headers: {
-                            'x-api-key': DEMO_API_KEY
-                        }
+                        headers: { 'x-api-key': DEMO_API_KEY }
                     });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to check status');
-                    }
-
                     const data = await response.json();
+                    if (!response.ok) throw new Error(data.error || 'Failed to check status');
 
-                    if (data.status === 'completed') {
-                        document.getElementById('loadingSection').style.display = 'none';
-                        document.getElementById('resultSection').style.display = 'block';
-                        document.getElementById('resultImage').src = data.output.image_url;
-                    } else if (data.status === 'failed') {
-                        throw new Error('Try-on generation failed');
-                    } else {
-                        attempts++;
-                        if (attempts < maxAttempts) {
-                            setTimeout(checkStatus, 2000);
-                        } else {
-                            throw new Error('Request timeout');
-                        }
+                    switch (data.status) {
+                        case 'completed': handleSuccess(data); return;
+                        case 'failed': throw new Error(data.error?.message || 'Try-on generation failed');
+                        case 'starting': updateLoadingStatus('Starting AI engine...'); break;
+                        case 'in_queue': updateLoadingStatus('In queue, please wait...'); break;
+                        case 'processing': updateLoadingStatus('AI is working its magic...'); break;
+                        default: updateLoadingStatus('Processing...');
                     }
+                    if (attempts < maxAttempts) setTimeout(checkStatus, 2000);
+                    else throw new Error('Request timed out. Please try again.');
                 } catch (error) {
                     console.error('Polling error:', error);
-                    alert('Failed to get result. Please try again.');
+                    showError(error.message);
                     document.getElementById('loadingSection').style.display = 'none';
                     document.getElementById('generateBtn').style.display = 'block';
+                    trackEvent('api_error', { error: error.message, stage: 'polling' });
                 }
             };
-
             checkStatus();
         }
 
+        function handleSuccess(data) {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+            let imageUrl = Array.isArray(data.output) ? data.output[0] : (typeof data.output === 'string' ? data.output : data.output?.image_url);
+            if (imageUrl) {
+                document.getElementById('resultImage').src = imageUrl;
+                trackEvent('result_generated', { predictionId: currentPredictionId });
+                trackEvent('result_viewed', { predictionId: currentPredictionId });
+            } else showError('No result image received');
+        }
+
+        function updateLoadingStatus(message) {
+            const el = document.getElementById('loadingStatus');
+            if (el) el.textContent = message;
+        }
+        function showError(message) { alert(message); }
         function resetTryOn() {
-            uploadedPhoto = null;
-            document.getElementById('previewImage').style.display = 'none';
-            document.getElementById('previewImage').src = '';
-            document.getElementById('uploadArea').classList.remove('has-image');
+            uploadedPhoto = null; currentPredictionId = null;
+            const prev = document.getElementById('previewImage');
+            if (prev) { prev.style.display = 'none'; prev.src = ''; }
+            document.getElementById('uploadArea')?.classList.remove('has-image');
             document.getElementById('generateBtn').style.display = 'none';
             document.getElementById('loadingSection').style.display = 'none';
             document.getElementById('resultSection').style.display = 'none';
-            document.getElementById('photoInput').value = '';
+            const inp = document.getElementById('photoInput');
+            if (inp) inp.value = '';
+        }
+
+        function trackEvent(eventName, properties = {}) {
+            fetch(`${BACKEND_URL}/api/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-api-key': DEMO_API_KEY },
+                body: JSON.stringify({ eventName, data: { ...properties, page: window.location.pathname, timestamp: new Date().toISOString() } })
+            }).catch(err => console.log('Analytics error:', err));
+            console.log(`📊 Event: ${eventName}`, properties);
         }
 
         window.addEventListener('load', () => {
-            const events = JSON.parse(localStorage.getItem('vmize_events') || '[]');
-            events.push({
-                event: 'product_view',
-                properties: { 
-                    product: 'Sherpa Hooded Jacket',
-                    price: 149.99,
-                    category: 'tops'
-                },
-                timestamp: new Date().toISOString(),
-                visitor_id: localStorage.getItem('vmize_visitor_id') || 'visitor_' + Date.now()
-            });
-            if (events.length > 100) events.shift();
-            localStorage.setItem('vmize_events', JSON.stringify(events));
-        });
-    </script>
-</body>
-</html>
+            trackEvent('page_view', { product: PRODUCT_CONFIG.name, price: PRODUCT_CONFIG.price, category: PRODUCT_CONFIG.category });
+            const ls = document.getElementById('loadingSection');
+            if (ls && !document.getElementById('loadingStatus')) {
+                const el = document.createElement('p');
+                el.id = 'loadingStatus'

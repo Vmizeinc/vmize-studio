@@ -55,6 +55,12 @@
             text-decoration: none;
         }
 
+        .logo img,
+        .footer-logo img {
+            max-width: 100%;
+            height: auto;
+        }
+
         .logo-text {
             font-size: 20px;
             font-weight: 700;
@@ -115,6 +121,104 @@
 
         .btn-secondary:hover {
             background: var(--bg-light);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: white;
+            color: var(--vmize-purple);
+            border: 2px solid var(--vmize-purple);
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #f5f3ff;
+            transform: translateX(-4px);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 28px;
+            height: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--vmize-purple);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 6px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -6px);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 999;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            padding: 16px 20px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu a:hover,
+        .mobile-menu a.nav-active {
+            color: var(--vmize-purple);
+            background: #f5f3ff;
+        }
+
+        @media (max-width: 900px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
         }
 
         /* Hero Section */
@@ -513,9 +617,19 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
             gap: 48px;
             margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            margin-bottom: 16px;
+        }
+
+        .footer-desc {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 300px;
         }
 
         .footer-section h4 {
@@ -543,14 +657,26 @@
         }
 
         /* Responsive */
+        /* ============================================
+           MOBILE RESPONSIVE STYLES
+           ============================================ */
+        
+        /* Tablet (768px - 900px) */
         @media (max-width: 900px) {
             .hero h1 {
-                font-size: 40px;
+                font-size: 36px;
+                line-height: 1.2;
+            }
+
+            .hero p {
+                font-size: 16px;
+                padding: 0 20px;
             }
 
             .features-grid,
             .pricing-grid {
                 grid-template-columns: 1fr;
+                gap: 24px;
             }
 
             .tryon-grid {
@@ -565,27 +691,252 @@
                 display: none;
             }
 
+            .back-btn {
+                display: none;
+            }
+
             .footer-content {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 32px;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .stats {
+                gap: 24px;
+                flex-wrap: wrap;
             }
         }
 
+        /* Mobile (max 600px) */
         @media (max-width: 600px) {
-            .platforms-grid {
-                grid-template-columns: 1fr;
+            /* Navigation */
+            nav {
+                padding: 12px 16px;
+            }
+
+            .nav-container {
+                padding: 0;
+            }
+
+            .logo svg {
+                width: 100px;
+                height: 45px;
+            }
+
+            /* Hero Section */
+            .hero {
+                padding: 40px 16px 60px;
+                min-height: auto;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+                line-height: 1.3;
+                margin-bottom: 16px;
+            }
+
+            .hero p {
+                font-size: 15px;
+                margin-bottom: 24px;
+                padding: 0;
             }
 
             .hero-cta {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
+                gap: 12px;
+                width: 100%;
+                padding: 0 16px;
             }
 
+            .hero-cta .btn {
+                width: 100%;
+                text-align: center;
+                padding: 16px 24px;
+                font-size: 16px;
+            }
+
+            /* Stats */
+            .stats {
+                flex-direction: column;
+                gap: 16px;
+                padding: 24px 16px;
+            }
+
+            .stat-item {
+                padding: 16px;
+                min-width: auto;
+                width: 100%;
+            }
+
+            .stat-number {
+                font-size: 28px;
+            }
+
+            /* Sections */
+            section {
+                padding: 40px 16px;
+            }
+
+            .section-title {
+                font-size: 26px;
+                margin-bottom: 16px;
+            }
+
+            .section-subtitle {
+                font-size: 14px;
+                padding: 0;
+            }
+
+            /* Features Grid */
+            .features-grid {
+                gap: 16px;
+            }
+
+            .feature-card {
+                padding: 24px 20px;
+            }
+
+            .feature-card h3 {
+                font-size: 18px;
+            }
+
+            .feature-card p {
+                font-size: 14px;
+            }
+
+            /* Platforms Grid */
+            .platforms-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .platform-card {
+                padding: 20px;
+            }
+
+            /* Pricing */
+            .pricing-grid {
+                gap: 16px;
+            }
+
+            .pricing-card {
+                padding: 24px 20px;
+            }
+
+            .pricing-card h3 {
+                font-size: 20px;
+            }
+
+            .price {
+                font-size: 36px;
+            }
+
+            /* Try-On Section */
+            .tryon-container {
+                padding: 16px;
+            }
+
+            .upload-zone {
+                padding: 24px 16px;
+            }
+
+            /* Email Input */
             .email-input {
                 flex-direction: column;
+                gap: 12px;
             }
 
+            .email-input input {
+                width: 100%;
+                padding: 14px 16px;
+            }
+
+            .email-input button {
+                width: 100%;
+                padding: 14px 24px;
+            }
+
+            /* Footer */
             .footer-content {
                 grid-template-columns: 1fr;
+                gap: 32px;
+                text-align: center;
+            }
+
+            .footer-section {
+                margin-bottom: 0;
+            }
+
+            .footer-section h4 {
+                margin-bottom: 12px;
+            }
+
+            .footer-bottom {
+                padding: 20px 16px;
+                font-size: 13px;
+            }
+
+            .footer-logo svg {
+                width: 100px;
+                height: 45px;
+            }
+
+            /* Buttons */
+            .btn {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+
+            /* Cards general */
+            .card {
+                padding: 20px;
+            }
+
+            /* Modal adjustments */
+            .modal-content {
+                margin: 10px;
+                padding: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+
+        /* Extra small devices (max 400px) */
+        @media (max-width: 400px) {
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .price {
+                font-size: 32px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .btn, button, a {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .nav-links a {
+                padding: 12px 16px;
             }
         }
 
@@ -599,34 +950,40 @@
     <nav>
         <div class="nav-container">
             <a href="index.html" class="logo" style="gap: 12px; align-items: center; display: flex;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 200" width="120" height="54">
-                  <defs>
-                    <linearGradient id="vGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style="stop-color:#4CC9F0;stop-opacity:1" />
-                      <stop offset="50%" style="stop-color:#6B4CE6;stop-opacity:1" />
-                      <stop offset="100%" style="stop-color:#5a3dd5;stop-opacity:1" />
-                    </linearGradient>
-                  </defs>
-                  <g transform="translate(30, 40)">
-                    <polygon points="0,0 30,150 50,150 20,0" fill="url(#vGradient)" opacity="0.9"/>
-                    <polygon points="40,0 70,150 90,150 60,0" fill="url(#vGradient)"/>
-                    <line x1="15" y1="20" x2="35" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                  </g>
-                  <text x="140" y="125" font-family="Arial, Helvetica, sans-serif" 
-                        font-size="85" font-weight="bold" font-style="italic" fill="#1a1a1a">mize</text>
-                  <text x="170" y="155" font-family="Arial, Helvetica, sans-serif" 
-                        font-size="28" font-weight="normal" letter-spacing="6" fill="#7a7a7a">STUDIO</text>
-                </svg>
+                <img 
+                    src="assets/images/vmize-logo.png"
+                    alt="VMIZE Studio Logo"
+                    width="180"
+                    height="80"
+                    style="display:block;"
+                >
             </a>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="demo-public.html">Try Demo</a>
-                <a href="#pricing">Pricing</a>
+                <a href="index.html" class="nav-active">Home</a>
+                <a href="about.html">About</a>
+                <a href="demo-public.html">Demo</a>
                 <a href="integration.html">Integration</a>
-                <a href="dashboard-complete.html">Dashboard</a>
+                <a href="pricing.html">Pricing</a>
                 <a href="login.html">Login</a>
-                <a href="checkout.html" class="btn btn-primary">Get Started</a>
             </div>
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <button class="back-btn" onclick="goBack()">
+                <span>←</span> Back
+            </button>
+        </div>
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="demo-public.html">Demo</a>
+            <a href="integration.html">Integration</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="login.html">Login</a>
         </div>
     </nav>
         <script>
@@ -676,7 +1033,7 @@
             <div class="feature-card">
                 <div class="feature-icon">🎨</div>
                 <h3>AI-Powered Try-On</h3>
-                <p>State-of-the-art AI generates realistic virtual try-ons in seconds using Fashn.AI technology</p>
+                <p>State-of-the-art AI generates realistic virtual try-ons in seconds using advanced neural network technology</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
@@ -886,27 +1243,31 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
+                <div class="footer-logo">
+                    <img src="assets/images/vmize-logo.png" alt="VMIZE Studio Logo" width="180" height="80" style="display:block;">
+                </div>
+                <p class="footer-desc">AI-powered virtual try-on technology that helps e-commerce brands increase conversion and reduce returns.</p>
+            </div>
+            <div class="footer-section">
                 <h4>Product</h4>
-                <a href="#features">Features</a>
+                <a href="index.html#features">Features</a>
                 <a href="demo-public.html">Try Demo</a>
-                <a href="#pricing">Pricing</a>
+                <a href="pricing.html">Pricing</a>
                 <a href="integration.html">Integration</a>
             </div>
             <div class="footer-section">
                 <h4>Company</h4>
-                <a href="mailto:support@vmizestudio.com">Contact</a>
-                <a href="#">Contact</a>
+                <a href="about.html">About</a>
+                <a href="/cdn-cgi/l/email-protection#40333530302f323400362d293a256e232f2d">Contact</a>
             </div>
             <div class="footer-section">
                 <h4>Resources</h4>
                 <a href="documentation.html">Documentation</a>
-                <a href="api-reference.html">API Reference</a>
                 <a href="help-center.html">Help Center</a>
             </div>
             <div class="footer-section">
                 <h4>Legal</h4>
                 <a href="privacy.html">Privacy Policy</a>
-                <a href="terms.html">Terms of Service</a>
                 <a href="cookie-policy.html">Cookie Policy</a>
             </div>
         </div>
@@ -915,7 +1276,50 @@
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Navigation tracking
+        window.addEventListener('load', () => {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            sessionHistory.push(window.location.pathname);
+            if (sessionHistory.length > 10) sessionHistory.shift();
+            sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+        });
+
+        // Smart back button
+        function goBack() {
+            const sessionHistory = JSON.parse(sessionStorage.getItem('vmize_nav_history') || '[]');
+            if (sessionHistory.length > 1) {
+                sessionHistory.pop();
+                const previousPage = sessionHistory[sessionHistory.length - 1];
+                sessionStorage.setItem('vmize_nav_history', JSON.stringify(sessionHistory));
+                window.location.href = previousPage;
+            } else if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.mobile-menu-btn');
+            menu.classList.toggle('active');
+            btn.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+        }
+
+        // Close mobile menu on resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) {
+                const menu = document.getElementById('mobileMenu');
+                const btn = document.querySelector('.mobile-menu-btn');
+                if (menu) menu.classList.remove('active');
+                if (btn) btn.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
         const BACKEND_URL = 'http://localhost:50277'; // Change to your production URL
         const DEMO_API_KEY = 'vmize_pk_demo_test_1234567890';
 
@@ -1104,13 +1508,3 @@
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
-</body>
-</html>

@@ -869,13 +869,33 @@
             updateCode();
         }
 
+        let realApiKey = 'YOUR_API_KEY_HERE';
+        let usageInfo = '';
+        // Fetch real API key from backend
+        fetch('/api/client/me').then(r => r.json()).then(data => {
+            if (data.apiKey) {
+                realApiKey = data.apiKey;
+                usageInfo = `${data.used || 0} / ${data.limit || ''}`;
+                // Show API key and usage in UI if desired
+                const apiKeyBox = document.createElement('div');
+                apiKeyBox.style.margin = '16px 0';
+                apiKeyBox.innerHTML = `<b>Your API Key:</b> <code style="font-size:15px;">${realApiKey}</code> <span style="color:#666;font-size:13px;">${usageInfo}</span>`;
+                const codeSection = document.querySelector('.code-output');
+                if (codeSection && !document.getElementById('apiKeyBox')) {
+                    apiKeyBox.id = 'apiKeyBox';
+                    codeSection.parentNode.insertBefore(apiKeyBox, codeSection);
+                }
+                updateCode();
+            }
+        });
+
         function updateCode() {
             const config = getConfig();
             const code = `<span class="comment">&lt;!-- Vmize Virtual Try-On Widget --&gt;</span>
 
 &lt;<span class="keyword">script</span>&gt;
 <span class="keyword">const</span> <span class="property">VMIZE_CONFIG</span> = {
-    <span class="property">apiKey</span>: <span class="string">'YOUR_API_KEY_HERE'</span>,
+    <span class="property">apiKey</span>: <span class="string">'${realApiKey}'</span>,
     <span class="property">button</span>: {
         <span class="property">text</span>: <span class="string">'${config.buttonText}'</span>,
         <span class="property">backgroundColor</span>: <span class="string">'${config.buttonBgColor}'</span>,
@@ -902,7 +922,6 @@
     document.head.<span class="function">appendChild</span>(script);
 })();
 &lt;/<span class="keyword">script</span>&gt;`;
-            
             document.getElementById('generatedCode').innerHTML = code;
         }
 
